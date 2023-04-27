@@ -91,41 +91,29 @@ public:
     {
         Config config_temp = config;
         config_temp.LB2 = 0;
-        while (config_temp.block[config_temp.pos[config_temp.priority - 1].x][config_temp.pos[config_temp.priority - 1].y] == 0)
+        while (config_temp.priority != NBLOCK)
         {
-            if (config_temp.priority == NBLOCK)
-                return config.LB2;
-            config_temp.priority++;
-        }
-        int block1 = count(dir1, config_temp);
-        int block2 = count(dir2, config_temp);
-        while ((block1 == 0) && (block2 == 0))
-        {
-            config_temp.block[config_temp.pos[config_temp.priority - 1].x][config_temp.pos[config_temp.priority - 1].y] = 0;
-            config_temp.priority++;
-            if (config_temp.priority == NBLOCK)
-                return config.LB2;
-            block1 = count(dir1, config_temp);
-            block2 = count(dir2, config_temp);
-        }
-        if (block1 < block2)
-        {
+            while (config_temp.block[config_temp.pos[config_temp.priority - 1].x][config_temp.pos[config_temp.priority - 1].y] == 0)
+            {
+                if (config_temp.priority == NBLOCK)
+                    return config.LB2;
+                config_temp.priority++;
+            }
+            int block1 = count(dir1, config_temp);
+            int block2 = count(dir2, config_temp);
+            while ((block1 == 0) || (block2 == 0))
+            {
+                config_temp.block[config_temp.pos[config_temp.priority - 1].x][config_temp.pos[config_temp.priority - 1].y] = 0;
+                config_temp.priority++;
+                if (config_temp.priority == NBLOCK)
+                    return config.LB2;
+                block1 = count(dir1, config_temp);
+                block2 = count(dir2, config_temp);
+            }
             delete_block(dir1, config_temp);
-            config.LB2 += block1 + LB2(dir1, dir2, config_temp);
-        }
-        else if (block1 > block2)
-        {
             delete_block(dir2, config_temp);
-            config.LB2 += block2 + LB2(dir1, dir2, config_temp);
-        }
-        else
-        {
-            Config config_temp2 = config_temp;
-            delete_block(dir1, config_temp);
-            delete_block(dir2, config_temp2);
-            config_temp.LB2 = block1 + LB2(dir1, dir2, config_temp);
-            config_temp2.LB2 = block2 + LB2(dir1, dir2, config_temp2);
-            config.LB2 += (config_temp.LB2 < config_temp2.LB2) ? config_temp.LB2 : config_temp2.LB2;
+            config_temp.priority++;
+            config.LB2 += (block1 < block2) ? block1 : block2;
         }
         return config.LB2;
     }
@@ -134,61 +122,32 @@ public:
     {
         Config config_temp = config;
         config_temp.LB3 = 0;
-        while (config_temp.block[config_temp.pos[config_temp.priority - 1].x][config_temp.pos[config_temp.priority - 1].y] == 0)
+        while (config_temp.priority != NBLOCK)
         {
-            if (config_temp.priority == NBLOCK)
-                return config.LB3;
-            config_temp.priority++;
-        }
-        int block1 = count(dir1, config_temp);
-        int block2 = count(dir2, config_temp);
-        int block3 = count(dir3, config_temp);
-        while ((block1 == 0) || (block2 == 0) || (block3 == 0))
-        {
-            config_temp.block[config_temp.pos[config_temp.priority - 1].x][config_temp.pos[config_temp.priority - 1].y] = 0;
-            config_temp.priority++;
-            if (config_temp.priority == NBLOCK)
-                return config.LB3;
-            block1 = count(dir1, config_temp);
-            block2 = count(dir2, config_temp);
-            block3 = count(dir3, config_temp);
-        }
-        // 取り出し方向とブロッキングブロックの個数をペアとする
-        vector<pair<int, Direction> > v;
-        v.push_back(make_pair(block1, dir1));
-        v.push_back(make_pair(block2, dir2));
-        v.push_back(make_pair(block3, dir3));
-
-        // ブロッキングブロックの個数で昇順にソートする
-        sort(v.begin(), v.end());
-        if (v[0].first < v[1].first)
-        {
-            delete_block(v[0].second, config_temp);
-            config.LB3 += v[0].first + LB3(dir1, dir2, dir3, config_temp);
-        }
-        else
-        {
-            if (v[1].first < v[2].first)
+            while (config_temp.block[config_temp.pos[config_temp.priority - 1].x][config_temp.pos[config_temp.priority - 1].y] == 0)
             {
-                Config config_temp2 = config_temp;
-                delete_block(v[0].second, config_temp);
-                delete_block(v[1].second, config_temp2);
-                config_temp.LB3 = v[0].first + LB3(dir1, dir2, dir3, config_temp);
-                config_temp2.LB3 = v[1].first + LB3(dir1, dir2, dir3, config_temp2);
-                config.LB3 += (config_temp.LB3 < config_temp2.LB3) ? config_temp.LB3 : config_temp2.LB3;
+                if (config_temp.priority == NBLOCK)
+                    return config.LB3;
+                config_temp.priority++;
             }
-            else
+            int block1 = count(dir1, config_temp);
+            int block2 = count(dir2, config_temp);
+            int block3 = count(dir3, config_temp);
+            while ((block1 == 0) || (block2 == 0) || (block3 == 0))
             {
-                Config config_temp2 = config_temp;
-                Config config_temp3 = config_temp;
-                delete_block(v[0].second, config_temp);
-                delete_block(v[1].second, config_temp2);
-                delete_block(v[2].second, config_temp2);
-                config_temp.LB3 = v[0].first + LB3(dir1, dir2, dir3, config_temp);
-                config_temp2.LB3 = v[1].first + LB3(dir1, dir2, dir3, config_temp2);
-                config_temp3.LB3 = v[2].first + LB3(dir1, dir2, dir3, config_temp3);
-                config.LB3 += min(std::min(config_temp.LB3, config_temp2.LB3), config_temp3.LB3);
+                config_temp.block[config_temp.pos[config_temp.priority - 1].x][config_temp.pos[config_temp.priority - 1].y] = 0;
+                config_temp.priority++;
+                if (config_temp.priority == NBLOCK)
+                    return config.LB3;
+                block1 = count(dir1, config_temp);
+                block2 = count(dir2, config_temp);
+                block3 = count(dir3, config_temp);
             }
+            delete_block(dir1, config_temp);
+            delete_block(dir2, config_temp);
+            delete_block(dir3, config_temp);
+            config_temp.priority++;
+            config.LB3 += min(min(block1, block2), block3);
         }
         return config.LB3;
     }
@@ -197,82 +156,34 @@ public:
     {
         Config config_temp = config;
         config_temp.LB4 = 0;
-        while (config_temp.block[config_temp.pos[config_temp.priority - 1].x][config_temp.pos[config_temp.priority - 1].y] == 0)
+        while (config_temp.priority != NBLOCK)
         {
-            if (config_temp.priority == NBLOCK)
-                return config.LB4;
-            config_temp.priority++;
-        }
-        int block1 = count(dir1, config_temp);
-        int block2 = count(dir2, config_temp);
-        int block3 = count(dir3, config_temp);
-        int block4 = count(dir4, config_temp);
-        while ((block1 == 0) || (block2 == 0) || (block3 == 0) || (block4 == 0))
-        {
-            config_temp.block[config_temp.pos[config_temp.priority - 1].x][config_temp.pos[config_temp.priority - 1].y] = 0;
-            config_temp.priority++;
-            if (config_temp.priority == NBLOCK)
-                return config.LB4;
-            block1 = count(dir1, config_temp);
-            block2 = count(dir2, config_temp);
-            block3 = count(dir3, config_temp);
-            block4 = count(dir4, config_temp);
-        }
-        // 取り出し方向とブロッキングブロックの個数をペアとする
-        vector<pair<int, Direction> > v;
-        v.push_back(make_pair(block1, dir1));
-        v.push_back(make_pair(block2, dir2));
-        v.push_back(make_pair(block3, dir3));
-        v.push_back(make_pair(block4, dir4));
-
-        // ブロッキングブロックの個数で昇順にソートする
-        sort(v.begin(), v.end());
-        if (v[0].first < v[1].first)
-        {
-            delete_block(v[0].second, config_temp);
-            config.LB4 += v[0].first + LB4(dir1, dir2, dir3, dir4, config_temp);
-        }
-        else
-        {
-            if (v[1].first < v[2].first)
+            while (config_temp.block[config_temp.pos[config_temp.priority - 1].x][config_temp.pos[config_temp.priority - 1].y] == 0)
             {
-                Config config_temp2 = config_temp;
-                delete_block(v[0].second, config_temp);
-                delete_block(v[1].second, config_temp2);
-                config_temp.LB4 = v[0].first + LB4(dir1, dir2, dir3, dir4, config_temp);
-                config_temp2.LB4 = v[1].first + LB4(dir1, dir2, dir3, dir4, config_temp2);
-                config.LB4 += (config_temp.LB4 < config_temp2.LB4) ? config_temp.LB4 : config_temp2.LB4;
+                if (config_temp.priority == NBLOCK)
+                    return config.LB4;
+                config_temp.priority++;
             }
-            else
+            int block1 = count(dir1, config_temp);
+            int block2 = count(dir2, config_temp);
+            int block3 = count(dir3, config_temp);
+            int block4 = count(dir4, config_temp);
+            while ((block1 == 0) || (block2 == 0) || (block3 == 0) || (block4 == 0))
             {
-                if (v[2].first < v[3].first)
-                {
-                    Config config_temp2 = config_temp;
-                    Config config_temp3 = config_temp;
-                    delete_block(v[0].second, config_temp);
-                    delete_block(v[1].second, config_temp2);
-                    delete_block(v[2].second, config_temp3);
-                    config_temp.LB4 = v[0].first + LB4(dir1, dir2, dir3, dir4, config_temp);
-                    config_temp2.LB4 = v[1].first + LB4(dir1, dir2, dir3, dir4, config_temp2);
-                    config_temp3.LB4 = v[2].first + LB4(dir1, dir2, dir3, dir4, config_temp3);
-                    config.LB4 += min(std::min(config_temp.LB4, config_temp2.LB4), config_temp3.LB4);
-                }
-                else
-                {
-                    Config config_temp2 = config_temp;
-                    Config config_temp3 = config_temp;
-                    Config config_temp4 = config_temp;
-                    delete_block(v[0].second, config_temp);
-                    delete_block(v[1].second, config_temp2);
-                    delete_block(v[2].second, config_temp3);
-                    delete_block(v[3].second, config_temp4);
-                    config_temp.LB4 = v[0].first + LB4(dir1, dir2, dir3, dir4, config_temp);
-                    config_temp2.LB4 = v[1].first + LB4(dir1, dir2, dir3, dir4, config_temp2);
-                    config_temp3.LB4 = v[2].first + LB4(dir1, dir2, dir3, dir4, config_temp3);
-                    config_temp4.LB4 = v[3].first + LB4(dir1, dir2, dir3, dir4, config_temp4);
-                    config.LB4 += min(min(config_temp.LB4, config_temp2.LB4), min(config_temp3.LB4, config_temp4.LB4));
-                }
+                config_temp.block[config_temp.pos[config_temp.priority - 1].x][config_temp.pos[config_temp.priority - 1].y] = 0;
+                config_temp.priority++;
+                if (config_temp.priority == NBLOCK)
+                    return config.LB4;
+                block1 = count(dir1, config_temp);
+                block2 = count(dir2, config_temp);
+                block3 = count(dir3, config_temp);
+                block4 = count(dir4, config_temp);
             }
+            delete_block(dir1, config_temp);
+            delete_block(dir2, config_temp);
+            delete_block(dir3, config_temp);
+            delete_block(dir4, config_temp);
+            config.LB4 += min(min(block1, block2), min(block3, block4));
         }
         return config.LB4;
     }
@@ -349,6 +260,6 @@ public:
         default:
             break;
         }
-        config.priority++;
+        return;
     }
 };
