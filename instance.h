@@ -112,19 +112,19 @@ public:
                     return config.LB2;
                 config_temp.priority++;
             }
-            int block1 = count(dir1, config_temp);
-            int block2 = count(dir2, config_temp);
+            int block1 = config_temp.count(dir1);
+            int block2 = config_temp.count(dir2);
             while ((block1 == 0) || (block2 == 0))
             {
                 config_temp.block[config_temp.pos[config_temp.priority - 1].x][config_temp.pos[config_temp.priority - 1].y] = 0;
                 config_temp.priority++;
                 if (config_temp.priority == NBLOCK)
                     return config.LB2;
-                block1 = count(dir1, config_temp);
-                block2 = count(dir2, config_temp);
+                block1 = config_temp.count(dir1);
+                block2 = config_temp.count(dir2);
             }
-            delete_block(dir1, config_temp);
-            delete_block(dir2, config_temp);
+            config_temp.delete_block(dir1);
+            config_temp.delete_block(dir2);
             config_temp.priority++;
             config.LB2 += (block1 < block2) ? block1 : block2;
         }
@@ -143,22 +143,22 @@ public:
                     return config.LB3;
                 config_temp.priority++;
             }
-            int block1 = count(dir1, config_temp);
-            int block2 = count(dir2, config_temp);
-            int block3 = count(dir3, config_temp);
+            int block1 = config_temp.count(dir1);
+            int block2 = config_temp.count(dir2);
+            int block3 = config_temp.count(dir3);
             while ((block1 == 0) || (block2 == 0) || (block3 == 0))
             {
                 config_temp.block[config_temp.pos[config_temp.priority - 1].x][config_temp.pos[config_temp.priority - 1].y] = 0;
                 config_temp.priority++;
                 if (config_temp.priority == NBLOCK)
                     return config.LB3;
-                block1 = count(dir1, config_temp);
-                block2 = count(dir2, config_temp);
-                block3 = count(dir3, config_temp);
+                block1 = config_temp.count(dir1);
+                block2 = config_temp.count(dir2);
+                block3 = config_temp.count(dir3);
             }
-            delete_block(dir1, config_temp);
-            delete_block(dir2, config_temp);
-            delete_block(dir3, config_temp);
+            config_temp.delete_block(dir1);
+            config_temp.delete_block(dir2);
+            config_temp.delete_block(dir3);
             config_temp.priority++;
             config.LB3 += min(min(block1, block2), block3);
         }
@@ -177,25 +177,25 @@ public:
                     return config.LB4;
                 config_temp.priority++;
             }
-            int block1 = count(dir1, config_temp);
-            int block2 = count(dir2, config_temp);
-            int block3 = count(dir3, config_temp);
-            int block4 = count(dir4, config_temp);
+            int block1 = config_temp.count(dir1);
+            int block2 = config_temp.count(dir2);
+            int block3 = config_temp.count(dir3);
+            int block4 = config_temp.count(dir4);
             while ((block1 == 0) || (block2 == 0) || (block3 == 0) || (block4 == 0))
             {
                 config_temp.block[config_temp.pos[config_temp.priority - 1].x][config_temp.pos[config_temp.priority - 1].y] = 0;
                 config_temp.priority++;
                 if (config_temp.priority == NBLOCK)
                     return config.LB4;
-                block1 = count(dir1, config_temp);
-                block2 = count(dir2, config_temp);
-                block3 = count(dir3, config_temp);
-                block4 = count(dir4, config_temp);
+                block1 = config_temp.count(dir1);
+                block2 = config_temp.count(dir2);
+                block3 = config_temp.count(dir3);
+                block4 = config_temp.count(dir4);
             }
-            delete_block(dir1, config_temp);
-            delete_block(dir2, config_temp);
-            delete_block(dir3, config_temp);
-            delete_block(dir4, config_temp);
+            config_temp.delete_block(dir1);
+            config_temp.delete_block(dir2);
+            config_temp.delete_block(dir3);
+            config_temp.delete_block(dir4);
             config.LB4 += min(min(block1, block2), min(block3, block4));
         }
         return config.LB4;
@@ -229,87 +229,12 @@ public:
                     Point src = {config_temp.pos[n - 1].x, j};
                     config_temp.relocate(Upp, src, dst);
                 }
-                config_temp.print();
             }
             Point src = {config_temp.pos[n - 1].x, config_temp.pos[n - 1].y};
             config_temp.retrieve(src);
-            config_temp.print();
         }
         return config.UB1;
     }
 
-    // ブロッキングブロックの個数を数える
-    int count(Direction dir, Config &config)
-    {
-        int sum = 0;
-        switch (dir)
-        {
-        case (Left):
-            for (int i = config.pos[config.priority - 1].x - 1; i >= 0; i--)
-            {
-                if (config.block[i][config.pos[config.priority - 1].y])
-                    sum++;
-            }
-            break;
-        case (Right):
-            for (int i = config.pos[config.priority - 1].x + 1; i < STACK; i++)
-            {
-                if (config.block[i][config.pos[config.priority - 1].y])
-                    sum++;
-            }
-            break;
-        case (Low):
-            for (int j = config.pos[config.priority - 1].y - 1; j >= 0; j--)
-            {
-                if (config.block[config.pos[config.priority - 1].x][j])
-                    sum++;
-            }
-            break;
-        case (Upp):
-            for (int j = config.pos[config.priority - 1].y + 1; j < TIER; j++)
-            {
-                if (config.block[config.pos[config.priority - 1].x][j])
-                    sum++;
-            }
-            break;
-        default:
-            break;
-        }
-        return sum;
-    }
-
-    // ブロッキングブロックを削除
-    void delete_block(Direction dir, Config &config)
-    {
-        switch (dir)
-        {
-        case (Left):
-            for (int i = config.pos[config.priority - 1].x; i >= 0; i--)
-            {
-                config.block[i][config.pos[config.priority - 1].y] = 0;
-            }
-            break;
-        case (Right):
-            for (int i = config.pos[config.priority - 1].x; i < STACK; i++)
-            {
-                config.block[i][config.pos[config.priority - 1].y] = 0;
-            }
-            break;
-        case (Low):
-            for (int j = config.pos[config.priority - 1].y; j >= 0; j--)
-            {
-                config.block[config.pos[config.priority - 1].x][j] = 0;
-            }
-            break;
-        case (Upp):
-            for (int j = config.pos[config.priority - 1].y; j < TIER; j++)
-            {
-                config.block[config.pos[config.priority - 1].x][j] = 0;
-            }
-            break;
-        default:
-            break;
-        }
-        return;
-    }
+    
 };
