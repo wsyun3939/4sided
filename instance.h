@@ -216,18 +216,20 @@ public:
                     // 最大優先度が最も低いスタックを格納
                     int temp = 0;
                     // 積み替え先
-                    int dst;
+                    Point dst = {0, TIER - 1};
                     // 積み替え先スタックを決定
                     for (int i = 0; i < STACK; i++)
                     {
                         if ((i != config_temp.pos[n - 1].x) && !config_temp.block[i][TIER - 1] && (temp < config_temp.P_UL[i]))
                         {
                             temp = config_temp.P_UL[i];
-                            dst = i;
+                            dst.x = i;
                         }
                     }
+                    while (!config_temp.block[dst.x][dst.y - 1] && (dst.y > 0))
+                        dst.y--;
                     Point src = {config_temp.pos[n - 1].x, j};
-                    config_temp.relocate(Upp, src, dst);
+                    config_temp.relocate(src, dst);
                 }
             }
             Point src = {config_temp.pos[n - 1].x, config_temp.pos[n - 1].y};
@@ -236,5 +238,124 @@ public:
         return config.UB1;
     }
 
-    
+    int UB2(Direction dir1, Direction dir2)
+    {
+        Config config_temp = config;
+        for (int n = config_temp.priority; n <= NBLOCK; n++)
+        {
+            int block1 = config_temp.count(dir1);
+            int block2 = config_temp.count(dir2);
+            if ((block1 == 0) || (block2 == 0))
+            {
+                Point src = {config_temp.pos[n - 1].x, config_temp.pos[n - 1].y};
+                config_temp.retrieve(src);
+            }
+            else
+            {
+                Direction dir_rel = (block1 < block2) ? dir1 : dir2;
+                switch (dir_rel)
+                {
+                case Upp:
+                    // ブロッキングブロックを積み替える場合
+                    for (int j = TIER - 1; j >= config_temp.pos[n - 1].y + 1; j--)
+                    {
+                        // ブロックが配置されていた場合，ブロックを積み替える
+                        if (config_temp.block[config_temp.pos[n - 1].x][j])
+                        {
+                            config.UB2++;
+                            // 最大優先度が最も低いスタックを格納
+                            int temp = 0;
+                            // 積み替え先
+                            Point dst = {0, TIER - 1};
+                            // 積み替え先を決定
+                            for (int i = 0; i < STACK; i++)
+                            {
+                                int dst_y = TIER - 1;
+                                if ((i != config_temp.pos[n - 1].x) && !config_temp.block[i][TIER - 1])
+                                {
+                                    while (!config_temp.block[i][dst_y - 1] && (dst_y > 0))
+                                        dst_y--;
+                                    if (temp < config_temp.P[i][dst_y])
+                                    {
+                                        temp = config_temp.P[i][dst_y];
+                                        dst.x = i;
+                                        dst.y = dst_y;
+                                    }
+                                }
+                            }
+                            for (int i = 0; i < TIER; i++)
+                            {
+                                int dst_x = STACK - 1;
+                                if ((i != config_temp.pos[n - 1].y) && !config_temp.block[STACK - 1][i])
+                                {
+                                    while (!config_temp.block[dst_x - 1][i] && (dst_x > 0))
+                                        dst_x--;
+                                    if (temp < config_temp.P[dst_x][i])
+                                    {
+                                        temp = config_temp.P[dst_x][i];
+                                        dst.x = dst_x;
+                                        dst.y = i;
+                                    }
+                                }
+                            }
+                            Point src = {config_temp.pos[n - 1].x, j};
+                            config_temp.relocate(src, dst);
+                        }
+                    }
+                    break;
+                case Right:
+                    // ブロッキングブロックを積み替える場合
+                    for (int j = STACK - 1; j >= config_temp.pos[n - 1].x + 1; j--)
+                    {
+                        // ブロックが配置されていた場合，ブロックを積み替える
+                        if (config_temp.block[j][config_temp.pos[n - 1].y])
+                        {
+                            config.UB2++;
+                            // 最大優先度が最も低いスタックを格納
+                            int temp = 0;
+                            // 積み替え先
+                            Point dst = {0, TIER - 1};
+                            // 積み替え先を決定
+                            for (int i = 0; i < STACK; i++)
+                            {
+                                int dst_y = TIER - 1;
+                                if ((i != config_temp.pos[n - 1].x) && !config_temp.block[i][TIER - 1])
+                                {
+                                    while (!config_temp.block[i][dst_y - 1] && (dst_y > 0))
+                                        dst_y--;
+                                    if (temp < config_temp.P[i][dst_y])
+                                    {
+                                        temp = config_temp.P[i][dst_y];
+                                        dst.x = i;
+                                        dst.y = dst_y;
+                                    }
+                                }
+                            }
+                            for (int i = 0; i < TIER; i++)
+                            {
+                                int dst_x = STACK - 1;
+                                if ((i != config_temp.pos[n - 1].y) && !config_temp.block[STACK - 1][i])
+                                {
+                                    while (!config_temp.block[dst_x - 1][i] && (dst_x > 0))
+                                        dst_x--;
+                                    if (temp < config_temp.P[dst_x][i])
+                                    {
+                                        temp = config_temp.P[dst_x][i];
+                                        dst.x = dst_x;
+                                        dst.y = i;
+                                    }
+                                }
+                            }
+                            Point src = {j, config_temp.pos[n - 1].y};
+                            config_temp.relocate(src, dst);
+                        }
+                    }
+                    break;
+                }
+                Point src = {config_temp.pos[n - 1].x, config_temp.pos[n - 1].y};
+                config_temp.retrieve(src);
+            }
+        }
+        return config.UB2;
+    }
 };

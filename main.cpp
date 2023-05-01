@@ -26,5 +26,6 @@ int main()
     instance.LB4(Upp, Right, Low, Left, instance.config);
     cout << instance.config.LB4 << endl;
     cout << "UB1=" << instance.UB1() << endl;
+    cout << "UB2=" << instance.UB2(Upp, Right) << endl;
     return 0;
 }
