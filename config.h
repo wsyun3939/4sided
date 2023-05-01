@@ -14,6 +14,15 @@ struct Point
     int y;
 };
 
+// 積み替え・取り出し方向
+typedef enum
+{
+    Upp,
+    Low,
+    Left,
+    Right
+} Direction;
+
 class Config
 {
 public:
@@ -29,6 +38,14 @@ public:
     // 下界値
     int LB1, LB2, LB3, LB4;
 
+    // 上界値
+    int UB1, UB2, UB3, UB4;
+
+    // 各方向における最大優先度
+    int P_UL[STACK];
+    int P_LR[TIER];
+    int P[STACK][TIER];
+
     // コンストラクタ
     Config()
     {
@@ -41,6 +58,16 @@ public:
             }
         }
 
+        // 各方向における最大優先度を100で初期化
+        for (int i = 0; i < STACK; i++)
+        {
+            P_UL[i] = 100;
+        }
+        for (int j = 0; j < TIER; j++)
+        {
+            P_LR[j] = 100;
+        }
+
         // ターゲットブロックの優先順位を１で初期化
         priority = 1;
 
@@ -50,18 +77,110 @@ public:
 
     // ブロック積み替え
     void
-    relocate(Point src, Point dst)
+    relocate(Direction dir, Point src, int dst)
     {
-        block[dst.x][dst.y] = block[src.x][src.y];
+        switch (dir)
+        {
+        case Upp:
+            for (int j = TIER - 1; j >= 0; j--)
+            {
+                // ブロックを下まで押し込む
+                if (block[dst][j])
+                {
+                    block[dst][j + 1] = block[src.x][src.y];
+                    pos[block[dst][j + 1]].x = dst;
+                    pos[block[dst][j + 1]].y = j + 1;
+                }
+            }
+            break;
+        case Low:
+            for (int j = 0; j < TIER; j++)
+            {
+                // ブロックを上まで押し込む
+                if (block[dst][j])
+                {
+                    block[dst][j - 1] = block[src.x][src.y];
+                    pos[block[dst][j - 1]].x = dst;
+                    pos[block[dst][j - 1]].y = j - 1;
+                }
+            }
+            break;
+        case Left:
+            for (int i = 0; i < STACK; i++)
+            {
+                // ブロックを右まで押し込む
+                if (block[i][dst])
+                {
+                    block[i - 1][dst] = block[src.x][src.y];
+                    pos[block[i - 1][dst]].x = i - 1;
+                    pos[block[i - 1][dst]].y = dst;
+                }
+            }
+            break;
+        case Right:
+            for (int i = STACK - 1; i >= 0; i--)
+            {
+                // ブロックを右まで押し込む
+                if (block[i][dst])
+                {
+                    block[i + 1][dst] = block[src.x][src.y];
+                    pos[block[i + 1][dst]].x = i + 1;
+                    pos[block[i + 1][dst]].y = dst;
+                }
+            }
+            break;
+        }
+        if (P_LR[src.y] == block[src.x][src.y])
+        {
+            P_LR[src.y] = 100;
+            for (int i = 0; i < STACK; i++)
+            {
+                if (P_LR[src.y] > block[i][src.y])
+                    P_LR[src.y] = block[i][src.y];
+            }
+        }
+        if (P_LR[pos[block[src.x][src.y]].y] > block[src.x][src.y])
+            P_LR[pos[block[src.x][src.y]].y] = block[src.x][src.y];
+        if (P_UL[src.x] == block[src.x][src.y])
+        {
+            P_UL[src.x] = 100;
+            for (int j = 0; j < TIER; j++)
+            {
+                if (P_UL[src.x] > block[src.x][j])
+                    P_UL[src.x] = block[src.x][j];
+            }
+        }
+        if (P_UL[pos[block[src.x][src.y]].x] > block[src.x][src.y])
+            P_UL[pos[block[src.x][src.y]].x] = block[src.x][src.y];
         block[src.x][src.y] = 0;
     }
 
     // ブロック取り出し
     void retrieve(Point src)
     {
+        if (P_LR[src.y] == block[src.x][src.y])
+        {
+            P_LR[src.y] = 100;
+            for (int i = 0; i < STACK; i++)
+            {
+                if (P_LR[src.y] > block[i][src.y])
+                    P_LR[src.y] = block[i][src.y];
+            }
+        }
+        if (P_UL[src.x] == block[src.x][src.y])
+        {
+            P_UL[src.x] = 100;
+            for (int j = 0; j < TIER; j++)
+            {
+                if (P_UL[src.x] > block[src.x][j])
+                    P_UL[src.x] = block[src.x][j];
+            }
+        }
         block[src.x][src.y] = 0;
         priority++;
     }
+
+    
 
     // ブロック配置を出力
     void print()
@@ -74,5 +193,6 @@ public:
             }
             cout << endl;
         }
+        cout << endl;
     }
 };

@@ -6,15 +6,6 @@
 
 using namespace std;
 
-// 積み替え・取り出し方向
-typedef enum
-{
-    Upp,
-    Low,
-    Left,
-    Right
-} Direction;
-
 class Instance
 {
 public:
@@ -52,6 +43,8 @@ public:
                 iss >> value;
                 if (value != 0)
                 {
+                    if (config.P_UL[i] > value)
+                        config.P_UL[i] = value;
                     config.pos[value - 1].x = i;
                     config.pos[value - 1].y = j;
                 }
@@ -62,6 +55,26 @@ public:
             i++;
         }
         file.close();
+
+        // 横方向の最大優先度を設定
+        for (int j = 0; j < TIER; j++)
+        {
+            for (int i = 0; i < STACK; i++)
+            {
+                if (config.block[i][j] == 0)
+                    continue;
+                if (config.P_LR[j] > config.block[i][j])
+                    config.P_LR[j] = config.block[i][j];
+            }
+        }
+        // 各ブロックスペースに対して，最大優先度を設定
+        for (int i = 0; i < STACK; i++)
+        {
+            for (int j = 0; j < TIER; j++)
+            {
+                config.P[i][j] = config.P_UL[i] + config.P_LR[j];
+            }
+        }
     }
 
     // LB1(1方向)を計算
@@ -186,6 +199,43 @@ public:
             config.LB4 += min(min(block1, block2), min(block3, block4));
         }
         return config.LB4;
+    }
+
+    int UB1()
+    {
+        Config config_temp = config;
+        for (int n = config_temp.priority; n <= NBLOCK; n++)
+        {
+            // ブロッキングブロックを積み替える場合
+            for (int j = TIER - 1; j >= config_temp.pos[n - 1].y + 1; j--)
+            {
+                // ブロックが配置されていた場合，ブロックを積み替える
+                if (config_temp.block[config_temp.pos[n - 1].x][j])
+                {
+                    config.UB1++;
+                    // 最大優先度が最も低いスタックを格納
+                    int temp = 0;
+                    // 積み替え先
+                    int dst;
+                    // 積み替え先スタックを決定
+                    for (int i = 0; i < STACK; i++)
+                    {
+                        if ((i != config_temp.pos[n - 1].x) && !config_temp.block[i][TIER - 1] && (temp < config_temp.P_UL[i]))
+                        {
+                            temp = config_temp.P_UL[i];
+                            dst = i;
+                        }
+                    }
+                    Point src = {config_temp.pos[n - 1].x, j};
+                    config_temp.relocate(Upp, src, dst);
+                }
+                config_temp.print();
+            }
+            Point src = {config_temp.pos[n - 1].x, config_temp.pos[n - 1].y};
+            config_temp.retrieve(src);
+            config_temp.print();
+        }
+        return config.UB1;
     }
 
     // ブロッキングブロックの個数を数える

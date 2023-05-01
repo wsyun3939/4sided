@@ -15,11 +15,7 @@ int main()
     snprintf(filename, BUFFER, "../Benchmark/%d-%d-%d/%05d.txt", TIER, STACK, NBLOCK, NUMBER);
     instance.readFile(filename);
 
-    Point src = {0, 0};
-    Point dst = {0, 2};
-    // instance.config.print();
-    // instance.config.relocate(src, dst);
-    // instance.config.retrieve(dst);
+    cout << instance.config.P_LR[1] << endl;
     instance.config.print();
     instance.LB1();
     cout << instance.config.LB1 << endl;
@@ -29,5 +25,6 @@ int main()
     cout << instance.config.LB3 << endl;
     instance.LB4(Upp, Right, Low, Left, instance.config);
     cout << instance.config.LB4 << endl;
+    cout << "UB1=" << instance.UB1() << endl;
     return 0;
 }
