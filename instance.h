@@ -358,4 +358,612 @@ public:
         }
         return config.UB2;
     }
+
+    int UB3(Direction dir1, Direction dir2, Direction dir3)
+    {
+        Config config_temp = config;
+        for (int n = config_temp.priority; n <= NBLOCK; n++)
+        {
+            int block1 = config_temp.count(dir1);
+            int block2 = config_temp.count(dir2);
+            int block3 = config_temp.count(dir3);
+            if ((block1 == 0) || (block2 == 0) || (block3 == 0))
+            {
+                Point src = {config_temp.pos[n - 1].x, config_temp.pos[n - 1].y};
+                config_temp.retrieve(src);
+            }
+            else
+            {
+                Direction dir_rel;
+                int a = min(min(block1, block2), block3);
+                if (a == block1)
+                    dir_rel = dir1;
+                else if (a == block2)
+                    dir_rel = dir2;
+                else
+                    dir_rel = dir3;
+                switch (dir_rel)
+                {
+                case Upp:
+                    // ブロッキングブロックを積み替える場合
+                    for (int j = TIER - 1; j >= config_temp.pos[n - 1].y + 1; j--)
+                    {
+                        // ブロックが配置されていた場合，ブロックを積み替える
+                        if (config_temp.block[config_temp.pos[n - 1].x][j])
+                        {
+                            config.UB3++;
+                            // 最大優先度が最も低いスタックを格納
+                            int temp = 0;
+                            // 積み替え先
+                            Point dst = {0, TIER - 1};
+                            // 積み替え先を決定
+                            // 上方向
+                            for (int i = 0; i < STACK; i++)
+                            {
+                                int dst_y = TIER - 1;
+                                if ((i != config_temp.pos[n - 1].x) && !config_temp.block[i][TIER - 1])
+                                {
+                                    while (!config_temp.block[i][dst_y - 1] && (dst_y > 0))
+                                        dst_y--;
+                                    if (temp < config_temp.P[i][dst_y])
+                                    {
+                                        temp = config_temp.P[i][dst_y];
+                                        dst.x = i;
+                                        dst.y = dst_y;
+                                    }
+                                }
+                            }
+                            // 右方向
+                            for (int i = 0; i < TIER; i++)
+                            {
+                                int dst_x = STACK - 1;
+                                if ((i != config_temp.pos[n - 1].y) && !config_temp.block[STACK - 1][i])
+                                {
+                                    while (!config_temp.block[dst_x - 1][i] && (dst_x > 0))
+                                        dst_x--;
+                                    if (temp < config_temp.P[dst_x][i])
+                                    {
+                                        temp = config_temp.P[dst_x][i];
+                                        dst.x = dst_x;
+                                        dst.y = i;
+                                    }
+                                }
+                            }
+                            // 下方向
+                            for (int i = 0; i < STACK; i++)
+                            {
+                                int dst_y = 0;
+                                if ((i != config_temp.pos[n - 1].x) && !config_temp.block[i][0])
+                                {
+                                    while (!config_temp.block[i][dst_y + 1] && (dst_y < TIER - 1))
+                                        dst_y++;
+                                    if (temp < config_temp.P[i][dst_y])
+                                    {
+                                        temp = config_temp.P[i][dst_y];
+                                        dst.x = i;
+                                        dst.y = dst_y;
+                                    }
+
+                                    Point src = {config_temp.pos[n - 1].x, j};
+                                    config_temp.relocate(src, dst);
+                                }
+                            }
+                        }
+                    }
+                    break;
+                case Right:
+                    // ブロッキングブロックを積み替える場合
+                    for (int j = STACK - 1; j >= config_temp.pos[n - 1].x + 1; j--)
+                    {
+                        // ブロックが配置されていた場合，ブロックを積み替える
+                        if (config_temp.block[j][config_temp.pos[n - 1].y])
+                        {
+                            config.UB3++;
+                            // 最大優先度が最も低いスタックを格納
+                            int temp = 0;
+                            // 積み替え先
+                            Point dst = {0, TIER - 1};
+                            // 積み替え先を決定
+                            // 上方向
+                            for (int i = 0; i < STACK; i++)
+                            {
+                                int dst_y = TIER - 1;
+                                if ((i != config_temp.pos[n - 1].x) && !config_temp.block[i][TIER - 1])
+                                {
+                                    while (!config_temp.block[i][dst_y - 1] && (dst_y > 0))
+                                        dst_y--;
+                                    if (temp < config_temp.P[i][dst_y])
+                                    {
+                                        temp = config_temp.P[i][dst_y];
+                                        dst.x = i;
+                                        dst.y = dst_y;
+                                    }
+                                }
+                            }
+                            // 右方向
+                            for (int i = 0; i < TIER; i++)
+                            {
+                                int dst_x = STACK - 1;
+                                if ((i != config_temp.pos[n - 1].y) && !config_temp.block[STACK - 1][i])
+                                {
+                                    while (!config_temp.block[dst_x - 1][i] && (dst_x > 0))
+                                        dst_x--;
+                                    if (temp < config_temp.P[dst_x][i])
+                                    {
+                                        temp = config_temp.P[dst_x][i];
+                                        dst.x = dst_x;
+                                        dst.y = i;
+                                    }
+                                }
+                            }
+                            // 下方向
+                            for (int i = 0; i < STACK; i++)
+                            {
+                                int dst_y = 0;
+                                if ((i != config_temp.pos[n - 1].x) && !config_temp.block[i][0])
+                                {
+                                    while (!config_temp.block[i][dst_y + 1] && (dst_y < TIER - 1))
+                                        dst_y++;
+                                    if (temp < config_temp.P[i][dst_y])
+                                    {
+                                        temp = config_temp.P[i][dst_y];
+                                        dst.x = i;
+                                        dst.y = dst_y;
+                                    }
+
+                                    Point src = {config_temp.pos[n - 1].x, j};
+                                    config_temp.relocate(src, dst);
+                                }
+                                Point src = {j, config_temp.pos[n - 1].y};
+                                config_temp.relocate(src, dst);
+                            }
+                        }
+                    }
+                    break;
+                case Low:
+                    // ブロッキングブロックを積み替える場合
+                    for (int j = 0; j <= config_temp.pos[n - 1].y - 1; j++)
+                    {
+                        // ブロックが配置されていた場合，ブロックを積み替える
+                        if (config_temp.block[config_temp.pos[n - 1].x][j])
+                        {
+                            config.UB3++;
+                            // 最大優先度が最も低いスタックを格納
+                            int temp = 0;
+                            // 積み替え先
+                            Point dst = {0, TIER - 1};
+                            // 積み替え先を決定
+                            // 上方向
+                            for (int i = 0; i < STACK; i++)
+                            {
+                                int dst_y = TIER - 1;
+                                if ((i != config_temp.pos[n - 1].x) && !config_temp.block[i][TIER - 1])
+                                {
+                                    while (!config_temp.block[i][dst_y - 1] && (dst_y > 0))
+                                        dst_y--;
+                                    if (temp < config_temp.P[i][dst_y])
+                                    {
+                                        temp = config_temp.P[i][dst_y];
+                                        dst.x = i;
+                                        dst.y = dst_y;
+                                    }
+                                }
+                            }
+                            // 右方向
+                            for (int i = 0; i < TIER; i++)
+                            {
+                                int dst_x = STACK - 1;
+                                if ((i != config_temp.pos[n - 1].y) && !config_temp.block[STACK - 1][i])
+                                {
+                                    while (!config_temp.block[dst_x - 1][i] && (dst_x > 0))
+                                        dst_x--;
+                                    if (temp < config_temp.P[dst_x][i])
+                                    {
+                                        temp = config_temp.P[dst_x][i];
+                                        dst.x = dst_x;
+                                        dst.y = i;
+                                    }
+                                }
+                            }
+                            // 下方向
+                            for (int i = 0; i < STACK; i++)
+                            {
+                                int dst_y = 0;
+                                if ((i != config_temp.pos[n - 1].x) && !config_temp.block[i][0])
+                                {
+                                    while (!config_temp.block[i][dst_y + 1] && (dst_y < TIER - 1))
+                                        dst_y++;
+                                    if (temp < config_temp.P[i][dst_y])
+                                    {
+                                        temp = config_temp.P[i][dst_y];
+                                        dst.x = i;
+                                        dst.y = dst_y;
+                                    }
+
+                                    Point src = {config_temp.pos[n - 1].x, j};
+                                    config_temp.relocate(src, dst);
+                                }
+                            }
+                        }
+                    }
+                    break;
+                }
+                Point src = {config_temp.pos[n - 1].x, config_temp.pos[n - 1].y};
+                config_temp.retrieve(src);
+            }
+        }
+        return config.UB3;
+    }
+
+    int UB4(Direction dir1, Direction dir2, Direction dir3, Direction dir4)
+    {
+        Config config_temp = config;
+        for (int n = config_temp.priority; n <= NBLOCK; n++)
+        {
+            int block1 = config_temp.count(dir1);
+            int block2 = config_temp.count(dir2);
+            int block3 = config_temp.count(dir3);
+            int block4 = config_temp.count(dir4);
+            if ((block1 == 0) || (block2 == 0) || (block3 == 0) || (block4 == 0))
+            {
+                Point src = {config_temp.pos[n - 1].x, config_temp.pos[n - 1].y};
+                config_temp.retrieve(src);
+            }
+            else
+            {
+                Direction dir_rel;
+                int a = min(min(block1, block2), min(block3, block4));
+                if (a == block1)
+                    dir_rel = dir1;
+                else if (a == block2)
+                    dir_rel = dir2;
+                else if (a == block3)
+                    dir_rel = dir3;
+                else
+                    dir_rel = dir4;
+                switch (dir_rel)
+                {
+                case Upp:
+                    // ブロッキングブロックを積み替える場合
+                    for (int j = TIER - 1; j >= config_temp.pos[n - 1].y + 1; j--)
+                    {
+                        // ブロックが配置されていた場合，ブロックを積み替える
+                        if (config_temp.block[config_temp.pos[n - 1].x][j])
+                        {
+                            config.UB4++;
+                            // 最大優先度が最も低いスタックを格納
+                            int temp = 0;
+                            // 積み替え先
+                            Point dst = {0, TIER - 1};
+                            // 積み替え先を決定
+                            // 上方向
+                            for (int i = 0; i < STACK; i++)
+                            {
+                                int dst_y = TIER - 1;
+                                if ((i != config_temp.pos[n - 1].x) && !config_temp.block[i][TIER - 1])
+                                {
+                                    while (!config_temp.block[i][dst_y - 1] && (dst_y > 0))
+                                        dst_y--;
+                                    if (temp < config_temp.P[i][dst_y])
+                                    {
+                                        temp = config_temp.P[i][dst_y];
+                                        dst.x = i;
+                                        dst.y = dst_y;
+                                    }
+                                }
+                            }
+                            // 右方向
+                            for (int i = 0; i < TIER; i++)
+                            {
+                                int dst_x = STACK - 1;
+                                if ((i != config_temp.pos[n - 1].y) && !config_temp.block[STACK - 1][i])
+                                {
+                                    while (!config_temp.block[dst_x - 1][i] && (dst_x > 0))
+                                        dst_x--;
+                                    if (temp < config_temp.P[dst_x][i])
+                                    {
+                                        temp = config_temp.P[dst_x][i];
+                                        dst.x = dst_x;
+                                        dst.y = i;
+                                    }
+                                }
+                            }
+                            // 下方向
+                            for (int i = 0; i < STACK; i++)
+                            {
+                                int dst_y = 0;
+                                if ((i != config_temp.pos[n - 1].x) && !config_temp.block[i][0])
+                                {
+                                    while (!config_temp.block[i][dst_y + 1] && (dst_y < TIER - 1))
+                                        dst_y++;
+                                    if (temp < config_temp.P[i][dst_y])
+                                    {
+                                        temp = config_temp.P[i][dst_y];
+                                        dst.x = i;
+                                        dst.y = dst_y;
+                                    }
+
+                                    Point src = {config_temp.pos[n - 1].x, j};
+                                    config_temp.relocate(src, dst);
+                                }
+                            }
+                            // 左方向
+                            for (int i = 0; i < TIER; i++)
+                            {
+                                int dst_x = 0;
+                                if ((i != config_temp.pos[n - 1].y) && !config_temp.block[0][i])
+                                {
+                                    while (!config_temp.block[dst_x + 1][i] && (dst_x < STACK - 1))
+                                        dst_x++;
+                                    if (temp < config_temp.P[dst_x][i])
+                                    {
+                                        temp = config_temp.P[dst_x][i];
+                                        dst.x = dst_x;
+                                        dst.y = i;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    break;
+                case Right:
+                    // ブロッキングブロックを積み替える場合
+                    for (int j = STACK - 1; j >= config_temp.pos[n - 1].x + 1; j--)
+                    {
+                        // ブロックが配置されていた場合，ブロックを積み替える
+                        if (config_temp.block[j][config_temp.pos[n - 1].y])
+                        {
+                            config.UB4++;
+                            // 最大優先度が最も低いスタックを格納
+                            int temp = 0;
+                            // 積み替え先
+                            Point dst = {0, TIER - 1};
+                            // 積み替え先を決定
+                            // 上方向
+                            for (int i = 0; i < STACK; i++)
+                            {
+                                int dst_y = TIER - 1;
+                                if ((i != config_temp.pos[n - 1].x) && !config_temp.block[i][TIER - 1])
+                                {
+                                    while (!config_temp.block[i][dst_y - 1] && (dst_y > 0))
+                                        dst_y--;
+                                    if (temp < config_temp.P[i][dst_y])
+                                    {
+                                        temp = config_temp.P[i][dst_y];
+                                        dst.x = i;
+                                        dst.y = dst_y;
+                                    }
+                                }
+                            }
+                            // 右方向
+                            for (int i = 0; i < TIER; i++)
+                            {
+                                int dst_x = STACK - 1;
+                                if ((i != config_temp.pos[n - 1].y) && !config_temp.block[STACK - 1][i])
+                                {
+                                    while (!config_temp.block[dst_x - 1][i] && (dst_x > 0))
+                                        dst_x--;
+                                    if (temp < config_temp.P[dst_x][i])
+                                    {
+                                        temp = config_temp.P[dst_x][i];
+                                        dst.x = dst_x;
+                                        dst.y = i;
+                                    }
+                                }
+                            }
+                            // 下方向
+                            for (int i = 0; i < STACK; i++)
+                            {
+                                int dst_y = 0;
+                                if ((i != config_temp.pos[n - 1].x) && !config_temp.block[i][0])
+                                {
+                                    while (!config_temp.block[i][dst_y + 1] && (dst_y < TIER - 1))
+                                        dst_y++;
+                                    if (temp < config_temp.P[i][dst_y])
+                                    {
+                                        temp = config_temp.P[i][dst_y];
+                                        dst.x = i;
+                                        dst.y = dst_y;
+                                    }
+
+                                    Point src = {config_temp.pos[n - 1].x, j};
+                                    config_temp.relocate(src, dst);
+                                }
+                                Point src = {j, config_temp.pos[n - 1].y};
+                                config_temp.relocate(src, dst);
+                            }
+                            // 左方向
+                            for (int i = 0; i < TIER; i++)
+                            {
+                                int dst_x = 0;
+                                if ((i != config_temp.pos[n - 1].y) && !config_temp.block[0][i])
+                                {
+                                    while (!config_temp.block[dst_x + 1][i] && (dst_x < STACK - 1))
+                                        dst_x++;
+                                    if (temp < config_temp.P[dst_x][i])
+                                    {
+                                        temp = config_temp.P[dst_x][i];
+                                        dst.x = dst_x;
+                                        dst.y = i;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    break;
+                case Low:
+                    // ブロッキングブロックを積み替える場合
+                    for (int j = 0; j <= config_temp.pos[n - 1].y - 1; j++)
+                    {
+                        // ブロックが配置されていた場合，ブロックを積み替える
+                        if (config_temp.block[config_temp.pos[n - 1].x][j])
+                        {
+                            config.UB4++;
+                            // 最大優先度が最も低いスタックを格納
+                            int temp = 0;
+                            // 積み替え先
+                            Point dst = {0, TIER - 1};
+                            // 積み替え先を決定
+                            // 上方向
+                            for (int i = 0; i < STACK; i++)
+                            {
+                                int dst_y = TIER - 1;
+                                if ((i != config_temp.pos[n - 1].x) && !config_temp.block[i][TIER - 1])
+                                {
+                                    while (!config_temp.block[i][dst_y - 1] && (dst_y > 0))
+                                        dst_y--;
+                                    if (temp < config_temp.P[i][dst_y])
+                                    {
+                                        temp = config_temp.P[i][dst_y];
+                                        dst.x = i;
+                                        dst.y = dst_y;
+                                    }
+                                }
+                            }
+                            // 右方向
+                            for (int i = 0; i < TIER; i++)
+                            {
+                                int dst_x = STACK - 1;
+                                if ((i != config_temp.pos[n - 1].y) && !config_temp.block[STACK - 1][i])
+                                {
+                                    while (!config_temp.block[dst_x - 1][i] && (dst_x > 0))
+                                        dst_x--;
+                                    if (temp < config_temp.P[dst_x][i])
+                                    {
+                                        temp = config_temp.P[dst_x][i];
+                                        dst.x = dst_x;
+                                        dst.y = i;
+                                    }
+                                }
+                            }
+                            // 下方向
+                            for (int i = 0; i < STACK; i++)
+                            {
+                                int dst_y = 0;
+                                if ((i != config_temp.pos[n - 1].x) && !config_temp.block[i][0])
+                                {
+                                    while (!config_temp.block[i][dst_y + 1] && (dst_y < TIER - 1))
+                                        dst_y++;
+                                    if (temp < config_temp.P[i][dst_y])
+                                    {
+                                        temp = config_temp.P[i][dst_y];
+                                        dst.x = i;
+                                        dst.y = dst_y;
+                                    }
+
+                                    Point src = {config_temp.pos[n - 1].x, j};
+                                    config_temp.relocate(src, dst);
+                                }
+                            }
+                            // 左方向
+                            for (int i = 0; i < TIER; i++)
+                            {
+                                int dst_x = 0;
+                                if ((i != config_temp.pos[n - 1].y) && !config_temp.block[0][i])
+                                {
+                                    while (!config_temp.block[dst_x + 1][i] && (dst_x < STACK - 1))
+                                        dst_x++;
+                                    if (temp < config_temp.P[dst_x][i])
+                                    {
+                                        temp = config_temp.P[dst_x][i];
+                                        dst.x = dst_x;
+                                        dst.y = i;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    break;
+                case Left:
+                    // ブロッキングブロックを積み替える場合
+                    for (int j = 0; j <= config_temp.pos[n - 1].x - 1; j++)
+                    {
+                        // ブロックが配置されていた場合，ブロックを積み替える
+                        if (config_temp.block[j][config_temp.pos[n - 1].y])
+                        {
+                            config.UB4++;
+                            // 最大優先度が最も低いスタックを格納
+                            int temp = 0;
+                            // 積み替え先
+                            Point dst = {0, TIER - 1};
+                            // 積み替え先を決定
+                            // 上方向
+                            for (int i = 0; i < STACK; i++)
+                            {
+                                int dst_y = TIER - 1;
+                                if ((i != config_temp.pos[n - 1].x) && !config_temp.block[i][TIER - 1])
+                                {
+                                    while (!config_temp.block[i][dst_y - 1] && (dst_y > 0))
+                                        dst_y--;
+                                    if (temp < config_temp.P[i][dst_y])
+                                    {
+                                        temp = config_temp.P[i][dst_y];
+                                        dst.x = i;
+                                        dst.y = dst_y;
+                                    }
+                                }
+                            }
+                            // 右方向
+                            for (int i = 0; i < TIER; i++)
+                            {
+                                int dst_x = STACK - 1;
+                                if ((i != config_temp.pos[n - 1].y) && !config_temp.block[STACK - 1][i])
+                                {
+                                    while (!config_temp.block[dst_x - 1][i] && (dst_x > 0))
+                                        dst_x--;
+                                    if (temp < config_temp.P[dst_x][i])
+                                    {
+                                        temp = config_temp.P[dst_x][i];
+                                        dst.x = dst_x;
+                                        dst.y = i;
+                                    }
+                                }
+                            }
+                            // 下方向
+                            for (int i = 0; i < STACK; i++)
+                            {
+                                int dst_y = 0;
+                                if ((i != config_temp.pos[n - 1].x) && !config_temp.block[i][0])
+                                {
+                                    while (!config_temp.block[i][dst_y + 1] && (dst_y < TIER - 1))
+                                        dst_y++;
+                                    if (temp < config_temp.P[i][dst_y])
+                                    {
+                                        temp = config_temp.P[i][dst_y];
+                                        dst.x = i;
+                                        dst.y = dst_y;
+                                    }
+
+                                    Point src = {config_temp.pos[n - 1].x, j};
+                                    config_temp.relocate(src, dst);
+                                }
+                                Point src = {j, config_temp.pos[n - 1].y};
+                                config_temp.relocate(src, dst);
+                            }
+                            // 左方向
+                            for (int i = 0; i < TIER; i++)
+                            {
+                                int dst_x = 0;
+                                if ((i != config_temp.pos[n - 1].y) && !config_temp.block[0][i])
+                                {
+                                    while (!config_temp.block[dst_x + 1][i] && (dst_x < STACK - 1))
+                                        dst_x++;
+                                    if (temp < config_temp.P[dst_x][i])
+                                    {
+                                        temp = config_temp.P[dst_x][i];
+                                        dst.x = dst_x;
+                                        dst.y = i;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    break;
+                }
+                Point src = {config_temp.pos[n - 1].x, config_temp.pos[n - 1].y};
+                config_temp.retrieve(src);
+            }
+        }
+        return config.UB3;
+    }
 };
