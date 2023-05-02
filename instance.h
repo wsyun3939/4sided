@@ -78,8 +78,9 @@ public:
     }
 
     // LB1(1方向)を計算
-    void LB1()
+    int LB1()
     {
+        int LB1 = 0;
         Config config_temp = config;
         for (int n = config_temp.priority; n <= NBLOCK; n++)
         {
@@ -90,7 +91,7 @@ public:
                 {
                     if (config_temp.block[config_temp.pos[n - 1].x][j])
                     {
-                        config.LB1++;
+                        LB1++;
                         config_temp.block[config_temp.pos[n - 1].x][j] = 0;
                     }
                     else
@@ -98,18 +99,19 @@ public:
                 }
             }
         }
+        return LB1;
     }
 
-    int LB2(Direction dir1, Direction dir2, Config &config)
+    int LB2(Direction dir1, Direction dir2)
     {
+        int LB2 = 0;
         Config config_temp = config;
-        config_temp.LB2 = 0;
         while (config_temp.priority != NBLOCK)
         {
             while (config_temp.block[config_temp.pos[config_temp.priority - 1].x][config_temp.pos[config_temp.priority - 1].y] == 0)
             {
                 if (config_temp.priority == NBLOCK)
-                    return config.LB2;
+                    return LB2;
                 config_temp.priority++;
             }
             int block1 = config_temp.count(dir1);
@@ -119,28 +121,28 @@ public:
                 config_temp.block[config_temp.pos[config_temp.priority - 1].x][config_temp.pos[config_temp.priority - 1].y] = 0;
                 config_temp.priority++;
                 if (config_temp.priority == NBLOCK)
-                    return config.LB2;
+                    return LB2;
                 block1 = config_temp.count(dir1);
                 block2 = config_temp.count(dir2);
             }
             config_temp.delete_block(dir1);
             config_temp.delete_block(dir2);
             config_temp.priority++;
-            config.LB2 += (block1 < block2) ? block1 : block2;
+            LB2 += (block1 < block2) ? block1 : block2;
         }
         return config.LB2;
     }
 
-    int LB3(Direction dir1, Direction dir2, Direction dir3, Config &config)
+    int LB3(Direction dir1, Direction dir2, Direction dir3)
     {
         Config config_temp = config;
-        config_temp.LB3 = 0;
+        int LB3 = 0;
         while (config_temp.priority != NBLOCK)
         {
             while (config_temp.block[config_temp.pos[config_temp.priority - 1].x][config_temp.pos[config_temp.priority - 1].y] == 0)
             {
                 if (config_temp.priority == NBLOCK)
-                    return config.LB3;
+                    return LB3;
                 config_temp.priority++;
             }
             int block1 = config_temp.count(dir1);
@@ -151,7 +153,7 @@ public:
                 config_temp.block[config_temp.pos[config_temp.priority - 1].x][config_temp.pos[config_temp.priority - 1].y] = 0;
                 config_temp.priority++;
                 if (config_temp.priority == NBLOCK)
-                    return config.LB3;
+                    return LB3;
                 block1 = config_temp.count(dir1);
                 block2 = config_temp.count(dir2);
                 block3 = config_temp.count(dir3);
@@ -160,21 +162,21 @@ public:
             config_temp.delete_block(dir2);
             config_temp.delete_block(dir3);
             config_temp.priority++;
-            config.LB3 += min(min(block1, block2), block3);
+            LB3 += min(min(block1, block2), block3);
         }
-        return config.LB3;
+        return LB3;
     }
 
-    int LB4(Direction dir1, Direction dir2, Direction dir3, Direction dir4, Config &config)
+    int LB4(Direction dir1, Direction dir2, Direction dir3, Direction dir4)
     {
         Config config_temp = config;
-        config_temp.LB4 = 0;
+        int LB4 = 0;
         while (config_temp.priority != NBLOCK)
         {
             while (config_temp.block[config_temp.pos[config_temp.priority - 1].x][config_temp.pos[config_temp.priority - 1].y] == 0)
             {
                 if (config_temp.priority == NBLOCK)
-                    return config.LB4;
+                    return LB4;
                 config_temp.priority++;
             }
             int block1 = config_temp.count(dir1);
@@ -186,7 +188,7 @@ public:
                 config_temp.block[config_temp.pos[config_temp.priority - 1].x][config_temp.pos[config_temp.priority - 1].y] = 0;
                 config_temp.priority++;
                 if (config_temp.priority == NBLOCK)
-                    return config.LB4;
+                    return LB4;
                 block1 = config_temp.count(dir1);
                 block2 = config_temp.count(dir2);
                 block3 = config_temp.count(dir3);
@@ -196,14 +198,15 @@ public:
             config_temp.delete_block(dir2);
             config_temp.delete_block(dir3);
             config_temp.delete_block(dir4);
-            config.LB4 += min(min(block1, block2), min(block3, block4));
+            LB4 += min(min(block1, block2), min(block3, block4));
         }
-        return config.LB4;
+        return LB4;
     }
 
     int UB1()
     {
         Config config_temp = config;
+        int UB1 = 0;
         for (int n = config_temp.priority; n <= NBLOCK; n++)
         {
             // ブロッキングブロックを積み替える場合
@@ -212,7 +215,7 @@ public:
                 // ブロックが配置されていた場合，ブロックを積み替える
                 if (config_temp.block[config_temp.pos[n - 1].x][j])
                 {
-                    config.UB1++;
+                    UB1++;
                     // 最大優先度が最も低いスタックを格納
                     int temp = 0;
                     // 積み替え先
@@ -235,12 +238,13 @@ public:
             Point src = {config_temp.pos[n - 1].x, config_temp.pos[n - 1].y};
             config_temp.retrieve(src);
         }
-        return config.UB1;
+        return UB1;
     }
 
     int UB2(Direction dir1, Direction dir2)
     {
         Config config_temp = config;
+        int UB2 = 0;
         for (int n = config_temp.priority; n <= NBLOCK; n++)
         {
             int block1 = config_temp.count(dir1);
@@ -262,7 +266,7 @@ public:
                         // ブロックが配置されていた場合，ブロックを積み替える
                         if (config_temp.block[config_temp.pos[n - 1].x][j])
                         {
-                            config.UB2++;
+                            UB2++;
                             // 最大優先度が最も低いスタックを格納
                             int temp = 0;
                             // 積み替え先
@@ -310,7 +314,7 @@ public:
                         // ブロックが配置されていた場合，ブロックを積み替える
                         if (config_temp.block[j][config_temp.pos[n - 1].y])
                         {
-                            config.UB2++;
+                            UB2++;
                             // 最大優先度が最も低いスタックを格納
                             int temp = 0;
                             // 積み替え先
@@ -356,12 +360,13 @@ public:
                 config_temp.retrieve(src);
             }
         }
-        return config.UB2;
+        return UB2;
     }
 
     int UB3(Direction dir1, Direction dir2, Direction dir3)
     {
         Config config_temp = config;
+        int UB3 = 0;
         for (int n = config_temp.priority; n <= NBLOCK; n++)
         {
             int block1 = config_temp.count(dir1);
@@ -391,7 +396,7 @@ public:
                         // ブロックが配置されていた場合，ブロックを積み替える
                         if (config_temp.block[config_temp.pos[n - 1].x][j])
                         {
-                            config.UB3++;
+                            UB3++;
                             // 最大優先度が最も低いスタックを格納
                             int temp = 0;
                             // 積み替え先
@@ -458,7 +463,7 @@ public:
                         // ブロックが配置されていた場合，ブロックを積み替える
                         if (config_temp.block[j][config_temp.pos[n - 1].y])
                         {
-                            config.UB3++;
+                            UB3++;
                             // 最大優先度が最も低いスタックを格納
                             int temp = 0;
                             // 積み替え先
@@ -527,7 +532,7 @@ public:
                         // ブロックが配置されていた場合，ブロックを積み替える
                         if (config_temp.block[config_temp.pos[n - 1].x][j])
                         {
-                            config.UB3++;
+                            UB3++;
                             // 最大優先度が最も低いスタックを格納
                             int temp = 0;
                             // 積み替え先
@@ -592,12 +597,13 @@ public:
                 config_temp.retrieve(src);
             }
         }
-        return config.UB3;
+        return UB3;
     }
 
     int UB4(Direction dir1, Direction dir2, Direction dir3, Direction dir4)
     {
         Config config_temp = config;
+        int UB4 = 0;
         for (int n = config_temp.priority; n <= NBLOCK; n++)
         {
             int block1 = config_temp.count(dir1);
@@ -630,7 +636,7 @@ public:
                         // ブロックが配置されていた場合，ブロックを積み替える
                         if (config_temp.block[config_temp.pos[n - 1].x][j])
                         {
-                            config.UB4++;
+                            UB4++;
                             // 最大優先度が最も低いスタックを格納
                             int temp = 0;
                             // 積み替え先
@@ -713,7 +719,7 @@ public:
                         // ブロックが配置されていた場合，ブロックを積み替える
                         if (config_temp.block[j][config_temp.pos[n - 1].y])
                         {
-                            config.UB4++;
+                            UB4++;
                             // 最大優先度が最も低いスタックを格納
                             int temp = 0;
                             // 積み替え先
@@ -798,7 +804,7 @@ public:
                         // ブロックが配置されていた場合，ブロックを積み替える
                         if (config_temp.block[config_temp.pos[n - 1].x][j])
                         {
-                            config.UB4++;
+                            UB4++;
                             // 最大優先度が最も低いスタックを格納
                             int temp = 0;
                             // 積み替え先
@@ -881,7 +887,7 @@ public:
                         // ブロックが配置されていた場合，ブロックを積み替える
                         if (config_temp.block[j][config_temp.pos[n - 1].y])
                         {
-                            config.UB4++;
+                            UB4++;
                             // 最大優先度が最も低いスタックを格納
                             int temp = 0;
                             // 積み替え先
@@ -964,6 +970,6 @@ public:
                 config_temp.retrieve(src);
             }
         }
-        return config.UB3;
+        return UB4;
     }
 };

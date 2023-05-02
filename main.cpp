@@ -19,11 +19,11 @@ int main()
     instance.config.print();
     instance.LB1();
     cout << instance.config.LB1 << endl;
-    instance.LB2(Upp, Right, instance.config);
+    instance.LB2(Upp, Right);
     cout << instance.config.LB2 << endl;
-    instance.LB3(Upp, Right, Low, instance.config);
+    instance.LB3(Upp, Right, Low);
     cout << instance.config.LB3 << endl;
-    instance.LB4(Upp, Right, Low, Left, instance.config);
+    instance.LB4(Upp, Right, Low, Left);
     cout << instance.config.LB4 << endl;
     cout << "UB1=" << instance.UB1() << endl;
     cout << "UB2=" << instance.UB2(Upp, Right) << endl;
