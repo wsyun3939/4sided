@@ -1,3 +1,5 @@
+#ifndef ___config
+#define ___config
 #include <iostream>
 
 #define TIER 3
@@ -268,3 +270,4 @@ public:
         cout << endl;
     }
 };
+#endif

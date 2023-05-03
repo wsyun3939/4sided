@@ -3,6 +3,7 @@
 #include <sstream>
 #include <vector>
 #include "instance.h"
+#include "bb.cpp"
 
 using namespace std;
 
@@ -15,19 +16,19 @@ int main()
     snprintf(filename, BUFFER, "../Benchmark/%d-%d-%d/%05d.txt", TIER, STACK, NBLOCK, NUMBER);
     instance.readFile(filename);
 
-    cout << instance.config.P_LR[1] << endl;
     instance.config.print();
-    instance.LB1();
+    instance.config.LB1 = instance.LB1();
     cout << instance.config.LB1 << endl;
-    instance.LB2(Upp, Right);
+    instance.config.LB2 = instance.LB2(Upp, Right);
     cout << instance.config.LB2 << endl;
-    instance.LB3(Upp, Right, Low);
+    instance.config.LB3 = instance.LB3(Upp, Right, Low);
     cout << instance.config.LB3 << endl;
-    instance.LB4(Upp, Right, Low, Left);
+    instance.config.LB4 = instance.LB4(Upp, Right, Low, Left);
     cout << instance.config.LB4 << endl;
     cout << "UB1=" << instance.UB1() << endl;
     cout << "UB2=" << instance.UB2(Upp, Right) << endl;
     cout << "UB3=" << instance.UB3(Upp, Right, Low) << endl;
     cout << "UB4=" << instance.UB4(Upp, Right, Low, Left) << endl;
+    cout << bb1(instance, instance.config.LB1) << endl;
     return 0;
 }

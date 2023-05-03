@@ -1,3 +1,5 @@
+#ifndef ___instance
+#define ___instance
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -355,6 +357,8 @@ public:
                         }
                     }
                     break;
+                default:
+                    break;
                 }
                 Point src = {config_temp.pos[n - 1].x, config_temp.pos[n - 1].y};
                 config_temp.retrieve(src);
@@ -591,6 +595,8 @@ public:
                             }
                         }
                     }
+                    break;
+                default:
                     break;
                 }
                 Point src = {config_temp.pos[n - 1].x, config_temp.pos[n - 1].y};
@@ -973,3 +979,4 @@ public:
         return UB4;
     }
 };
+#endif
