@@ -25,10 +25,14 @@ int main()
     cout << instance.config.LB3 << endl;
     instance.config.LB4 = instance.LB4(Upp, Right, Low, Left);
     cout << instance.config.LB4 << endl;
-    cout << "UB1=" << instance.UB1() << endl;
-    cout << "UB2=" << instance.UB2(Upp, Right) << endl;
-    cout << "UB3=" << instance.UB3(Upp, Right, Low) << endl;
-    cout << "UB4=" << instance.UB4(Upp, Right, Low, Left) << endl;
+    instance.config.UB1 = instance.UB1();
+    instance.config.UB2 = instance.UB2(Upp, Right);
+    instance.config.UB3 = instance.UB3(Upp, Right, Low);
+    instance.config.UB4 = instance.UB4(Upp, Right, Low, Left);
+    cout << "UB1=" << instance.config.UB1 << endl;
+    cout << "UB2=" << instance.config.UB2 << endl;
+    cout << "UB3=" << instance.config.UB3 << endl;
+    cout << "UB4=" << instance.config.UB4 << endl;
     cout << bb1(instance, instance.config.LB1) << endl;
     return 0;
 }

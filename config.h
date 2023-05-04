@@ -14,6 +14,17 @@ struct Point
 {
     int x;
     int y;
+
+    bool operator==(const Point &other) const
+    {
+        return (x == other.x && y == other.y);
+    }
+
+    void operator=(const Point &point)
+    {
+        x = point.x;
+        y = point.y;
+    }
 };
 
 // 積み替え・取り出し方向
