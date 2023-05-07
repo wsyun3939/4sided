@@ -33,6 +33,7 @@ int main()
     cout << "UB2=" << instance.config.UB2 << endl;
     cout << "UB3=" << instance.config.UB3 << endl;
     cout << "UB4=" << instance.config.UB4 << endl;
-    cout << bb1(instance, instance.config.LB1) << endl;
+    // cout << bb1(instance, instance.config.LB1) << endl;
+    cout << bb2(instance, instance.config.LB2) << endl;
     return 0;
 }
