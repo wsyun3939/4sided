@@ -111,7 +111,6 @@ int bb1(Instance &instance, int UB_cur)
         }
         // 積み替え先を下界値の小さい順に並べる.下界値が等しい場合，最大優先度の降順に並べる
         sort(vec_dst.begin(), vec_dst.end(), asc_desc);
-        instance.config.print();
         for (auto it = vec_dst.begin(); it != vec_dst.end(); it++)
         {
             if (it->LB + depth > UB_cur)
@@ -162,7 +161,6 @@ int bb1(Instance &instance, int UB_cur)
         }
         // 積み替え先を下界値の小さい順に並べる.下界値が等しい場合，最大優先度の降順に並べる
         sort(vec_dst.begin(), vec_dst.end(), asc_desc);
-        instance.config.print();
         for (auto it = vec_dst.begin(); it != vec_dst.end(); it++)
         {
             if (it->LB + depth > UB_cur)
@@ -220,6 +218,11 @@ int bb2(Instance &instance, int UB_cur, Direction dir)
         {
             Point src = instance.config.pos[instance.config.priority - 1];
             instance.config.retrieve(src);
+
+#if TEST == 0
+            instance.config.print();
+#endif
+
             if (instance.config.priority == NBLOCK + 1)
             {
                 min_rel = depth;
@@ -229,7 +232,6 @@ int bb2(Instance &instance, int UB_cur, Direction dir)
             block1 = instance.config.count(Upp);
             block2 = instance.config.count(Right);
         }
-        instance.config.print();
         vector<Src> src_vec;
         Src temp1 = {block1, Upp};
         Src temp2 = {block2, Right};
@@ -284,7 +286,7 @@ int bb2(Instance &instance, int UB_cur, Direction dir)
                     instance.config.block[src.x][src.y] = 0;
                     instance.config.block[dst.x][dst.y] = p;
                     instance.config.pos[p - 1] = dst;
-                    LB_temp = instance.LB2(Upp, Right);
+                    LB_temp = instance.LB2(Upp, Right, element.dir);
                     Dst temp = {dst, LB_temp, instance.config.P_UL[dst.x]};
                     vec_dst.push_back(temp);
                     instance.config.block[dst.x][dst.y] = 0;
@@ -311,7 +313,7 @@ int bb2(Instance &instance, int UB_cur, Direction dir)
                     instance.config.block[src.x][src.y] = 0;
                     instance.config.block[dst.x][dst.y] = p;
                     instance.config.pos[p - 1] = dst;
-                    LB_temp = instance.LB2(Upp, Right);
+                    LB_temp = instance.LB2(Upp, Right, element.dir);
                     Dst temp = {dst, LB_temp, instance.config.P_UL[dst.x]};
                     vec_dst.push_back(temp);
                     instance.config.block[dst.x][dst.y] = 0;
@@ -332,6 +334,11 @@ int bb2(Instance &instance, int UB_cur, Direction dir)
                         break;
                     }
                     instance_temp.config.relocate(src, it->dst);
+
+#if TEST == 0
+                    instance_temp.config.print();
+#endif
+
                     if (bb2(instance_temp, UB_cur, Any))
                     {
                         return min_rel;
@@ -348,6 +355,11 @@ int bb2(Instance &instance, int UB_cur, Direction dir)
                         break;
                     }
                     instance.config.relocate(src, it->dst);
+
+#if TEST == 0
+                    instance.config.print();
+#endif
+
                     if (bb2(instance, UB_cur, element.dir))
                     {
                         return min_rel;
@@ -402,7 +414,7 @@ int bb2(Instance &instance, int UB_cur, Direction dir)
                 instance.config.block[src.x][src.y] = 0;
                 instance.config.block[dst.x][dst.y] = p;
                 instance.config.pos[p - 1] = dst;
-                LB_temp = instance.LB2(Upp, Right);
+                LB_temp = instance.LB2(Upp, Right, dir);
                 Dst temp = {dst, LB_temp, instance.config.P_UL[dst.x]};
                 vec_dst.push_back(temp);
                 instance.config.block[dst.x][dst.y] = 0;
@@ -429,7 +441,7 @@ int bb2(Instance &instance, int UB_cur, Direction dir)
                 instance.config.block[src.x][src.y] = 0;
                 instance.config.block[dst.x][dst.y] = p;
                 instance.config.pos[p - 1] = dst;
-                LB_temp = instance.LB2(Upp, Right);
+                LB_temp = instance.LB2(Upp, Right, dir);
                 Dst temp = {dst, LB_temp, instance.config.P_UL[dst.x]};
                 vec_dst.push_back(temp);
                 instance.config.block[dst.x][dst.y] = 0;
@@ -450,6 +462,11 @@ int bb2(Instance &instance, int UB_cur, Direction dir)
                     break;
                 }
                 instance_temp.config.relocate(src, it->dst);
+
+#if TEST == 0
+                instance_temp.config.print();
+#endif
+
                 if (bb2(instance_temp, UB_cur, Any))
                 {
                     return min_rel;
@@ -466,6 +483,11 @@ int bb2(Instance &instance, int UB_cur, Direction dir)
                     break;
                 }
                 instance.config.relocate(src, it->dst);
+
+#if TEST == 0
+                instance.config.print();
+#endif
+
                 if (bb2(instance, UB_cur, dir))
                 {
                     return min_rel;

@@ -104,15 +104,22 @@ public:
         return LB1;
     }
 
-    int LB2(Direction dir1, Direction dir2)
+    int LB2(Direction dir1, Direction dir2, Direction rel)
     {
         int LB2 = 0;
         Config config_temp = config;
+        if (rel != Any)
+        {
+            int block = config_temp.count(rel);
+            LB2 += block;
+            config_temp.delete_block(rel);
+            config_temp.priority++;
+        }
         while (config_temp.priority != NBLOCK)
         {
             while (config_temp.block[config_temp.pos[config_temp.priority - 1].x][config_temp.pos[config_temp.priority - 1].y] == 0)
             {
-                if (config_temp.priority == NBLOCK)
+                if (config_temp.priority == NBLOCK - 1)
                     return LB2;
                 config_temp.priority++;
             }
@@ -121,9 +128,9 @@ public:
             while ((block1 == 0) || (block2 == 0))
             {
                 config_temp.block[config_temp.pos[config_temp.priority - 1].x][config_temp.pos[config_temp.priority - 1].y] = 0;
-                config_temp.priority++;
                 if (config_temp.priority == NBLOCK)
                     return LB2;
+                config_temp.priority++;
                 block1 = config_temp.count(dir1);
                 block2 = config_temp.count(dir2);
             }
@@ -135,15 +142,22 @@ public:
         return config.LB2;
     }
 
-    int LB3(Direction dir1, Direction dir2, Direction dir3)
+    int LB3(Direction dir1, Direction dir2, Direction dir3, Direction rel)
     {
         Config config_temp = config;
         int LB3 = 0;
+        if (rel != Any)
+        {
+            int block = config_temp.count(rel);
+            LB3 += block;
+            config_temp.delete_block(rel);
+            config_temp.priority++;
+        }
         while (config_temp.priority != NBLOCK)
         {
             while (config_temp.block[config_temp.pos[config_temp.priority - 1].x][config_temp.pos[config_temp.priority - 1].y] == 0)
             {
-                if (config_temp.priority == NBLOCK)
+                if (config_temp.priority == NBLOCK - 1)
                     return LB3;
                 config_temp.priority++;
             }
@@ -153,9 +167,9 @@ public:
             while ((block1 == 0) || (block2 == 0) || (block3 == 0))
             {
                 config_temp.block[config_temp.pos[config_temp.priority - 1].x][config_temp.pos[config_temp.priority - 1].y] = 0;
-                config_temp.priority++;
                 if (config_temp.priority == NBLOCK)
                     return LB3;
+                config_temp.priority++;
                 block1 = config_temp.count(dir1);
                 block2 = config_temp.count(dir2);
                 block3 = config_temp.count(dir3);
@@ -169,15 +183,22 @@ public:
         return LB3;
     }
 
-    int LB4(Direction dir1, Direction dir2, Direction dir3, Direction dir4)
+    int LB4(Direction dir1, Direction dir2, Direction dir3, Direction dir4, Direction rel)
     {
         Config config_temp = config;
         int LB4 = 0;
+        if (rel != Any)
+        {
+            int block = config_temp.count(rel);
+            LB4 += block;
+            config_temp.delete_block(rel);
+            config_temp.priority++;
+        }
         while (config_temp.priority != NBLOCK)
         {
             while (config_temp.block[config_temp.pos[config_temp.priority - 1].x][config_temp.pos[config_temp.priority - 1].y] == 0)
             {
-                if (config_temp.priority == NBLOCK)
+                if (config_temp.priority == NBLOCK - 1)
                     return LB4;
                 config_temp.priority++;
             }
@@ -188,9 +209,9 @@ public:
             while ((block1 == 0) || (block2 == 0) || (block3 == 0) || (block4 == 0))
             {
                 config_temp.block[config_temp.pos[config_temp.priority - 1].x][config_temp.pos[config_temp.priority - 1].y] = 0;
-                config_temp.priority++;
                 if (config_temp.priority == NBLOCK)
                     return LB4;
+                config_temp.priority++;
                 block1 = config_temp.count(dir1);
                 block2 = config_temp.count(dir2);
                 block3 = config_temp.count(dir3);
@@ -235,6 +256,10 @@ public:
                         dst.y--;
                     Point src = {config_temp.pos[n - 1].x, j};
                     config_temp.relocate(src, dst);
+
+#if UB_TEST == 0
+                    config_temp.print();
+#endif
                 }
             }
             Point src = {config_temp.pos[n - 1].x, config_temp.pos[n - 1].y};

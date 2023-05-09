@@ -3,9 +3,11 @@
 #include <iostream>
 
 #define TIER 3
-#define STACK 6
-#define NBLOCK 15
-#define NUMBER 1
+#define STACK 8
+#define NBLOCK 21
+#define NUMBER 5001
+#define TEST 1
+#define UB_TEST 1
 
 using namespace std;
 
@@ -44,7 +46,7 @@ public:
     int block[STACK][TIER];
 
     // 各優先順位に対するブロックの位置
-    Point pos[NBLOCK];
+    Point pos[STACK * TIER];
 
     // ターゲットブロックの優先順位
     int priority;
