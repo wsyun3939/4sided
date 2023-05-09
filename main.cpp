@@ -17,6 +17,7 @@ int main()
     int gap = 0;
     int temp;
     int nblock = NBLOCK;
+    FILE *fp_csv = NULL;
     for (int a = NUMBER; a < NUMBER + 100 * TIER; a++)
     {
         Instance *instance = new Instance();
@@ -43,6 +44,12 @@ int main()
         cout << "UB4=" << instance->config.UB4 << endl;
         temp = bb1(*instance, instance->config.LB1);
         cout << temp << endl;
+        if (a % 100 == 1)
+        {
+            sprintf(filename, "../Benchmark/%d-%d-%d(Upp0).csv", TIER, STACK, nblock);
+            fp_csv = fopen(filename, "w");
+        }
+        fprintf(fp_csv, "%d\n", temp);
         sum += temp;
         // temp = bb2(*instance, instance->config.LB2, Any);
         // cout << temp << endl;
@@ -51,6 +58,7 @@ int main()
         if (a % 100 == 0)
         {
             nblock++;
+            fclose(fp_csv);
         }
     }
     cout << "平均積み替え変え回数：" << (double)sum / (100 * TIER) << endl;

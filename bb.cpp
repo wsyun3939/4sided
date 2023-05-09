@@ -67,6 +67,11 @@ int bb1(Instance &instance, int UB_cur)
     {
         Point src = instance.config.pos[instance.config.priority - 1];
         instance.config.retrieve(src);
+
+#if TEST == 0
+        instance.config.print();
+#endif
+
         if (instance.config.priority == instance.nblock + 1)
         {
             min_rel = depth;
@@ -119,6 +124,11 @@ int bb1(Instance &instance, int UB_cur)
                 break;
             }
             instance_temp.config.relocate(src, it->dst);
+
+#if TEST == 0
+            instance_temp.config.print();
+#endif
+
             if (bb1(instance_temp, UB_cur))
             {
                 return min_rel;
@@ -169,6 +179,11 @@ int bb1(Instance &instance, int UB_cur)
                 break;
             }
             instance.config.relocate(src, it->dst);
+
+#if TEST == 0
+            instance.config.print();
+#endif
+
             if (bb1(instance, UB_cur))
             {
                 return min_rel;

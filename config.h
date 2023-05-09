@@ -2,11 +2,11 @@
 #define ___config
 #include <iostream>
 
-#define TIER 4
+#define TIER 3
 #define STACK 6
-#define NBLOCK 20
-#define NUMBER 301
-#define TEST 1
+#define NBLOCK 15
+#define NUMBER 90
+#define TEST 0
 #define UB_TEST 1
 
 using namespace std;
