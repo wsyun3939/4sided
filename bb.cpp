@@ -192,7 +192,7 @@ int bb1(Instance &instance, int UB_cur)
         return 0;
 }
 
-int bb2(Instance &instance, int UB_cur)
+int bb2(Instance &instance, int UB_cur, Direction dir)
 {
     // 節点の深さ
     static int depth = 0;
@@ -211,37 +211,157 @@ int bb2(Instance &instance, int UB_cur)
         depth = 0;
         return min_rel = instance.config.UB2;
     }
+    Point src;
     int block1 = instance.config.count(Upp);
     int block2 = instance.config.count(Right);
-    while ((block1 == 0) || (block2 == 0))
+    if (dir == Any)
     {
-        Point src = instance.config.pos[instance.config.priority - 1];
-        instance.config.retrieve(src);
-        if (instance.config.priority == NBLOCK + 1)
+        while ((block1 == 0) || (block2 == 0))
         {
-            min_rel = depth;
-            depth = 0;
-            return min_rel;
+            Point src = instance.config.pos[instance.config.priority - 1];
+            instance.config.retrieve(src);
+            if (instance.config.priority == NBLOCK + 1)
+            {
+                min_rel = depth;
+                depth = 0;
+                return min_rel;
+            }
+            block1 = instance.config.count(Upp);
+            block2 = instance.config.count(Right);
         }
-        block1 = instance.config.count(Upp);
-        block2 = instance.config.count(Right);
-    }
-    instance.config.print();
-    vector<Src> src_vec;
-    Src temp1 = {block1, Upp};
-    Src temp2 = {block2, Right};
-    src_vec.push_back(temp1);
-    src_vec.push_back(temp2);
-    sort(src_vec.begin(), src_vec.end(), block_asc);
-    depth++;
-    for (auto element : src_vec)
-    {
-        Point src;
-        // ブロッキングブロックを積み替える場合
-        // 積み替え元
-        switch (element.dir)
+        instance.config.print();
+        vector<Src> src_vec;
+        Src temp1 = {block1, Upp};
+        Src temp2 = {block2, Right};
+        src_vec.push_back(temp1);
+        src_vec.push_back(temp2);
+        sort(src_vec.begin(), src_vec.end(), block_asc);
+        depth++;
+        for (auto element : src_vec)
         {
-        case Upp:
+            // ブロッキングブロックを積み替える場合
+            // 積み替え元
+            switch (element.dir)
+            {
+            case Upp:
+                src.x = instance.config.pos[instance.config.priority - 1].x;
+                src.y = TIER - 1;
+                // 積み替えるブロック位置を特定
+                while (!instance.config.block[src.x][src.y])
+                {
+                    src.y--;
+                }
+                break;
+            case Right:
+                src.y = instance.config.pos[instance.config.priority - 1].y;
+                src.x = STACK - 1;
+                // 積み替えるブロック位置を特定
+                while (!instance.config.block[src.x][src.y])
+                {
+                    src.x--;
+                }
+                break;
+            default:
+                break;
+            }
+            vector<Dst> vec_dst;
+            Point dst = {0, TIER - 1};
+            // 積み替え先スタックを決定
+            // 上側からの積み替え
+            for (dst.x = 0; dst.x < STACK; dst.x++)
+            {
+                if (!instance.config.block[dst.x][TIER - 1])
+                {
+                    int LB_temp = 0;
+                    while (!instance.config.block[dst.x][dst.y - 1] && (dst.y > 0))
+                        dst.y--;
+                    if (src == dst)
+                    {
+                        dst.y = TIER - 1;
+                        continue;
+                    }
+                    int p = instance.config.block[src.x][src.y];
+                    instance.config.block[src.x][src.y] = 0;
+                    instance.config.block[dst.x][dst.y] = p;
+                    instance.config.pos[p - 1] = dst;
+                    LB_temp = instance.LB2(Upp, Right);
+                    Dst temp = {dst, LB_temp, instance.config.P_UL[dst.x]};
+                    vec_dst.push_back(temp);
+                    instance.config.block[dst.x][dst.y] = 0;
+                    instance.config.block[src.x][src.y] = p;
+                    instance.config.pos[p - 1] = src;
+                    dst.y = TIER - 1;
+                }
+            }
+            dst.x = STACK - 1;
+            // 右側からの積み替え
+            for (dst.y = 0; dst.y < TIER; dst.y++)
+            {
+                if (!instance.config.block[STACK - 1][dst.y])
+                {
+                    int LB_temp = 0;
+                    while (!instance.config.block[dst.x - 1][dst.y] && (dst.x > 0))
+                        dst.x--;
+                    if (src == dst)
+                    {
+                        dst.x = STACK - 1;
+                        continue;
+                    }
+                    int p = instance.config.block[src.x][src.y];
+                    instance.config.block[src.x][src.y] = 0;
+                    instance.config.block[dst.x][dst.y] = p;
+                    instance.config.pos[p - 1] = dst;
+                    LB_temp = instance.LB2(Upp, Right);
+                    Dst temp = {dst, LB_temp, instance.config.P_UL[dst.x]};
+                    vec_dst.push_back(temp);
+                    instance.config.block[dst.x][dst.y] = 0;
+                    instance.config.block[src.x][src.y] = p;
+                    instance.config.pos[p - 1] = src;
+                    dst.x = STACK - 1;
+                }
+            }
+            // 積み替え先を下界値の小さい順に並べる.下界値が等しい場合，最大優先度の降順に並べる
+            sort(vec_dst.begin(), vec_dst.end(), asc_desc);
+            if (element.block == 1)
+            {
+                Instance instance_temp = instance;
+                for (auto it = vec_dst.begin(); it != vec_dst.end(); it++)
+                {
+                    if (it->LB + depth > UB_cur)
+                    {
+                        break;
+                    }
+                    instance_temp.config.relocate(src, it->dst);
+                    if (bb2(instance_temp, UB_cur, Any))
+                    {
+                        return min_rel;
+                    }
+                    instance_temp.config.relocate(it->dst, src);
+                }
+            }
+            else
+            {
+                for (auto it = vec_dst.begin(); it != vec_dst.end(); it++)
+                {
+                    if (it->LB + depth > UB_cur)
+                    {
+                        break;
+                    }
+                    instance.config.relocate(src, it->dst);
+                    if (bb2(instance, UB_cur, element.dir))
+                    {
+                        return min_rel;
+                    }
+                    instance.config.relocate(it->dst, src);
+                }
+            }
+        }
+    }
+    else
+    {
+        int block;
+        if (dir == Upp)
+        {
             src.x = instance.config.pos[instance.config.priority - 1].x;
             src.y = TIER - 1;
             // 積み替えるブロック位置を特定
@@ -249,8 +369,10 @@ int bb2(Instance &instance, int UB_cur)
             {
                 src.y--;
             }
-            break;
-        case Right:
+            block = block1;
+        }
+        else if (dir == Right)
+        {
             src.y = instance.config.pos[instance.config.priority - 1].y;
             src.x = STACK - 1;
             // 積み替えるブロック位置を特定
@@ -258,9 +380,7 @@ int bb2(Instance &instance, int UB_cur)
             {
                 src.x--;
             }
-            break;
-        default:
-            break;
+            block = block2;
         }
         vector<Dst> vec_dst;
         Point dst = {0, TIER - 1};
@@ -320,7 +440,7 @@ int bb2(Instance &instance, int UB_cur)
         }
         // 積み替え先を下界値の小さい順に並べる.下界値が等しい場合，最大優先度の降順に並べる
         sort(vec_dst.begin(), vec_dst.end(), asc_desc);
-        if (element.block == 1)
+        if (block == 1)
         {
             Instance instance_temp = instance;
             for (auto it = vec_dst.begin(); it != vec_dst.end(); it++)
@@ -330,7 +450,7 @@ int bb2(Instance &instance, int UB_cur)
                     break;
                 }
                 instance_temp.config.relocate(src, it->dst);
-                if (bb2(instance_temp, UB_cur))
+                if (bb2(instance_temp, UB_cur, Any))
                 {
                     return min_rel;
                 }
@@ -346,7 +466,7 @@ int bb2(Instance &instance, int UB_cur)
                     break;
                 }
                 instance.config.relocate(src, it->dst);
-                if (bb2(instance, UB_cur))
+                if (bb2(instance, UB_cur, dir))
                 {
                     return min_rel;
                 }
@@ -358,7 +478,7 @@ int bb2(Instance &instance, int UB_cur)
     if (depth == 0)
     {
         UB_cur++;
-        if (bb2(instance, UB_cur))
+        if (bb2(instance, UB_cur, Any))
         {
             return min_rel;
         }

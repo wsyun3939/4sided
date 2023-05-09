@@ -33,7 +33,8 @@ typedef enum
     Upp,
     Low,
     Left,
-    Right
+    Right,
+    Any
 } Direction;
 
 class Config
