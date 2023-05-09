@@ -142,6 +142,52 @@ public:
         return config.LB2;
     }
 
+    // 上下からの積み替えを考慮した場合
+    int LB2a(Direction rel)
+    {
+        int LB2 = 0;
+        Config config_temp = config;
+        if (rel != Any)
+        {
+            int block = config_temp.count(rel);
+            LB2 += block;
+            config_temp.delete_block(rel);
+            config_temp.priority++;
+        }
+        while (config_temp.priority != NBLOCK)
+        {
+            while (config_temp.block[config_temp.pos[config_temp.priority - 1].x][config_temp.pos[config_temp.priority - 1].y] == 0)
+            {
+                if (config_temp.priority == NBLOCK - 1)
+                    return LB2;
+                config_temp.priority++;
+            }
+            int block1 = config_temp.count(Upp);
+            int block2 = config_temp.count(Low);
+            while ((block1 == 0) || (block2 == 0))
+            {
+                config_temp.block[config_temp.pos[config_temp.priority - 1].x][config_temp.pos[config_temp.priority - 1].y] = 0;
+                if (config_temp.priority == NBLOCK)
+                    return LB2;
+                config_temp.priority++;
+                block1 = config_temp.count(Upp);
+                block2 = config_temp.count(Low);
+            }
+            if (block1 < block2)
+            {
+                config_temp.delete_block(Upp);
+                LB2 += block1;
+                config_temp.priority++;
+            }
+            else{
+                config_temp.delete_block(Low);
+                LB2 += block2;
+                config_temp.priority++;
+            }
+        }
+        return config.LB2;
+    }
+
     int LB3(Direction dir1, Direction dir2, Direction dir3, Direction rel)
     {
         Config config_temp = config;
