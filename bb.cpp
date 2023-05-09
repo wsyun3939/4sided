@@ -261,7 +261,7 @@ int bb2(Instance &instance, int UB_cur, Direction dir)
                     int LB_temp = 0;
                     while (!instance.config.block[dst.x][dst.y - 1] && (dst.y > 0))
                         dst.y--;
-                    if (src == dst)
+                    if ((src.x == dst.x) && (src.y + 1 == dst.y))
                     {
                         dst.y = TIER - 1;
                         continue;
@@ -288,7 +288,7 @@ int bb2(Instance &instance, int UB_cur, Direction dir)
                     int LB_temp = 0;
                     while (!instance.config.block[dst.x - 1][dst.y] && (dst.x > 0))
                         dst.x--;
-                    if (src == dst)
+                    if ((src.y == dst.y) && (src.x + 1 == dst.x))
                     {
                         dst.x = STACK - 1;
                         continue;
@@ -390,7 +390,7 @@ int bb2(Instance &instance, int UB_cur, Direction dir)
                 int LB_temp = 0;
                 while (!instance.config.block[dst.x][dst.y - 1] && (dst.y > 0))
                     dst.y--;
-                if (src == dst)
+                if ((src.x == dst.x) && (src.y + 1 == dst.y))
                 {
                     dst.y = TIER - 1;
                     continue;
@@ -417,7 +417,7 @@ int bb2(Instance &instance, int UB_cur, Direction dir)
                 int LB_temp = 0;
                 while (!instance.config.block[dst.x - 1][dst.y] && (dst.x > 0))
                     dst.x--;
-                if (src == dst)
+                if ((src.y == dst.y) && (src.x + 1 == dst.x))
                 {
                     dst.x = STACK - 1;
                     continue;
@@ -585,7 +585,7 @@ int bb2a(Instance &instance, int UB_cur, Direction dir)
                     int LB_temp = 0;
                     while (!instance.config.block[dst.x][dst.y - 1] && (dst.y > 0))
                         dst.y--;
-                    if (src == dst)
+                    if ((src.x == dst.x) && (src.y + 1 == dst.y))
                     {
                         dst.y = TIER - 1;
                         continue;
@@ -612,7 +612,7 @@ int bb2a(Instance &instance, int UB_cur, Direction dir)
                     int LB_temp = 0;
                     while (!instance.config.block[dst.x][dst.y + 1] && (dst.y < TIER - 1))
                         dst.y++;
-                    if (src == dst)
+                    if ((src.x == dst.x) && (src.y - 1 == dst.y))
                     {
                         dst.y = 0;
                         continue;
@@ -714,7 +714,7 @@ int bb2a(Instance &instance, int UB_cur, Direction dir)
                 int LB_temp = 0;
                 while (!instance.config.block[dst.x][dst.y - 1] && (dst.y > 0))
                     dst.y--;
-                if (src == dst)
+                if ((src.x == dst.x) && (src.y + 1 == dst.y))
                 {
                     dst.y = TIER - 1;
                     continue;
@@ -741,7 +741,7 @@ int bb2a(Instance &instance, int UB_cur, Direction dir)
                 int LB_temp = 0;
                 while (!instance.config.block[dst.x][dst.y + 1] && (dst.y < TIER - 1))
                     dst.y++;
-                if (src == dst)
+                if ((src.x == dst.x) && (src.y - 1 == dst.y))
                 {
                     dst.y = 0;
                     continue;

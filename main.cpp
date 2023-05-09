@@ -42,18 +42,19 @@ int main()
         cout << "UB2=" << instance->config.UB2 << endl;
         cout << "UB3=" << instance->config.UB3 << endl;
         cout << "UB4=" << instance->config.UB4 << endl;
-        temp = bb1(*instance, instance->config.LB1);
+
+        // temp = bb1(*instance, instance->config.LB1);
+        // cout << temp << endl;
+
+        temp = bb2(*instance, instance->config.LB2, Any);
         cout << temp << endl;
         if (a % 100 == 1)
         {
-            sprintf(filename, "../Benchmark/%d-%d-%d(Upp0).csv", TIER, STACK, nblock);
+            sprintf(filename, "../Benchmark/%d-%d-%d(Upp2).csv", TIER, STACK, nblock);
             fp_csv = fopen(filename, "w");
         }
         fprintf(fp_csv, "%d\n", temp);
         sum += temp;
-        // temp = bb2(*instance, instance->config.LB2, Any);
-        // cout << temp << endl;
-        // sum += temp;
         delete instance;
         if (a % 100 == 0)
         {
