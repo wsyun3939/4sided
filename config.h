@@ -3,10 +3,10 @@
 #include <iostream>
 
 #define TIER 3
-#define STACK 6
-#define NBLOCK 15
-#define NUMBER 90
-#define TEST 0
+#define STACK 7
+#define NBLOCK 18
+#define NUMBER 2501
+#define TEST 1
 #define UB_TEST 1
 
 using namespace std;

@@ -80,98 +80,65 @@ int bb1(Instance &instance, int UB_cur)
         }
         block1 = instance.config.count(Upp);
     }
+    // ブロッキングブロックを積み替える場合
+    // 積み替え元
+    Point src = {instance.config.pos[instance.config.priority - 1].x, TIER - 1};
+    // 積み替えるブロック位置を特定
+    while (!instance.config.block[src.x][src.y])
+    {
+        src.y--;
+    }
+    depth++;
+    vector<Dst> vec_dst;
+    Point dst = {0, TIER - 1};
+    // 積み替え先スタックを決定
+    for (dst.x = 0; dst.x < STACK; dst.x++)
+    {
+        if ((dst.x != src.x) && !instance.config.block[dst.x][TIER - 1])
+        {
+            int LB_temp = 0;
+            while (!instance.config.block[dst.x][dst.y - 1] && (dst.y > 0))
+                dst.y--;
+            int p = instance.config.block[src.x][src.y];
+            instance.config.block[src.x][src.y] = 0;
+            instance.config.block[dst.x][dst.y] = p;
+            instance.config.pos[p - 1] = dst;
+            LB_temp = instance.LB1();
+            Dst temp = {dst, LB_temp, instance.config.P_UL[dst.x]};
+            vec_dst.push_back(temp);
+            instance.config.block[dst.x][dst.y] = 0;
+            instance.config.block[src.x][src.y] = p;
+            instance.config.pos[p - 1] = src;
+            dst.y = TIER - 1;
+        }
+    }
+    // 積み替え先を下界値の小さい順に並べる.下界値が等しい場合，最大優先度の降順に並べる
+    sort(vec_dst.begin(), vec_dst.end(), asc_desc);
     if (block1 == 1)
     {
-        Instance instance_temp = instance;
-        // ブロッキングブロックを積み替える場合
-        // 積み替え元
-        Point src = {instance_temp.config.pos[instance_temp.config.priority - 1].x, TIER - 1};
-        // 積み替えるブロック位置を特定
-        while (!instance_temp.config.block[src.x][src.y])
-        {
-            src.y--;
-        }
-        depth++;
-        vector<Dst> vec_dst;
-        Point dst = {0, TIER - 1};
-        // 積み替え先スタックを決定
-        for (dst.x = 0; dst.x < STACK; dst.x++)
-        {
-            if ((dst.x != src.x) && !instance_temp.config.block[dst.x][TIER - 1])
-            {
-                int LB_temp = 0;
-                while (!instance_temp.config.block[dst.x][dst.y - 1] && (dst.y > 0))
-                    dst.y--;
-                int p = instance_temp.config.block[src.x][src.y];
-                instance_temp.config.block[src.x][src.y] = 0;
-                instance_temp.config.block[dst.x][dst.y] = p;
-                instance_temp.config.pos[p - 1] = dst;
-                LB_temp = instance_temp.LB1();
-                Dst temp = {dst, LB_temp, instance_temp.config.P_UL[dst.x]};
-                vec_dst.push_back(temp);
-                instance_temp.config.block[dst.x][dst.y] = 0;
-                instance_temp.config.block[src.x][src.y] = p;
-                instance_temp.config.pos[p - 1] = src;
-                dst.y = TIER - 1;
-            }
-        }
-        // 積み替え先を下界値の小さい順に並べる.下界値が等しい場合，最大優先度の降順に並べる
-        sort(vec_dst.begin(), vec_dst.end(), asc_desc);
+        Instance instance_temp;
         for (auto it = vec_dst.begin(); it != vec_dst.end(); it++)
         {
             if (it->LB + depth > UB_cur)
             {
                 break;
             }
-            instance_temp.config.relocate(src, it->dst);
+            instance.config.relocate(src, it->dst);
 
 #if TEST == 0
-            instance_temp.config.print();
+            instance.config.print();
 #endif
 
+            instance_temp = instance;
             if (bb1(instance_temp, UB_cur))
             {
                 return min_rel;
             }
-            instance_temp.config.relocate(it->dst, src);
+            instance.config.relocate(it->dst, src);
         }
     }
     else
     {
-        // ブロッキングブロックを積み替える場合
-        // 積み替え元
-        Point src = {instance.config.pos[instance.config.priority - 1].x, TIER - 1};
-        // 積み替えるブロック位置を特定
-        while (!instance.config.block[src.x][src.y])
-        {
-            src.y--;
-        }
-        depth++;
-        vector<Dst> vec_dst;
-        Point dst = {0, TIER - 1};
-        // 積み替え先スタックを決定
-        for (dst.x = 0; dst.x < STACK; dst.x++)
-        {
-            if ((dst.x != src.x) && !instance.config.block[dst.x][TIER - 1])
-            {
-                int LB_temp = 0;
-                while (!instance.config.block[dst.x][dst.y - 1] && (dst.y > 0))
-                    dst.y--;
-                int p = instance.config.block[src.x][src.y];
-                instance.config.block[src.x][src.y] = 0;
-                instance.config.block[dst.x][dst.y] = p;
-                instance.config.pos[p - 1] = dst;
-                LB_temp = instance.LB1();
-                Dst temp = {dst, LB_temp, instance.config.P_UL[dst.x]};
-                vec_dst.push_back(temp);
-                instance.config.block[dst.x][dst.y] = 0;
-                instance.config.block[src.x][src.y] = p;
-                instance.config.pos[p - 1] = src;
-                dst.y = TIER - 1;
-            }
-        }
-        // 積み替え先を下界値の小さい順に並べる.下界値が等しい場合，最大優先度の降順に並べる
-        sort(vec_dst.begin(), vec_dst.end(), asc_desc);
         for (auto it = vec_dst.begin(); it != vec_dst.end(); it++)
         {
             if (it->LB + depth > UB_cur)
@@ -343,24 +310,25 @@ int bb2(Instance &instance, int UB_cur, Direction dir)
             sort(vec_dst.begin(), vec_dst.end(), asc_desc);
             if (element.block == 1)
             {
-                Instance instance_temp = instance;
+                Instance instance_temp;
                 for (auto it = vec_dst.begin(); it != vec_dst.end(); it++)
                 {
                     if (it->LB + depth > UB_cur)
                     {
                         break;
                     }
-                    instance_temp.config.relocate(src, it->dst);
+                    instance.config.relocate(src, it->dst);
 
 #if TEST == 0
-                    instance_temp.config.print();
+                    instance.config.print();
 #endif
 
+                    instance_temp = instance;
                     if (bb2(instance_temp, UB_cur, Any))
                     {
                         return min_rel;
                     }
-                    instance_temp.config.relocate(it->dst, src);
+                    instance.config.relocate(it->dst, src);
                 }
             }
             else
@@ -471,24 +439,25 @@ int bb2(Instance &instance, int UB_cur, Direction dir)
         sort(vec_dst.begin(), vec_dst.end(), asc_desc);
         if (block == 1)
         {
-            Instance instance_temp = instance;
+            Instance instance_temp;
             for (auto it = vec_dst.begin(); it != vec_dst.end(); it++)
             {
                 if (it->LB + depth > UB_cur)
                 {
                     break;
                 }
-                instance_temp.config.relocate(src, it->dst);
+                instance.config.relocate(src, it->dst);
 
 #if TEST == 0
-                instance_temp.config.print();
+                instance.config.print();
 #endif
 
+                instance_temp = instance;
                 if (bb2(instance_temp, UB_cur, Any))
                 {
                     return min_rel;
                 }
-                instance_temp.config.relocate(it->dst, src);
+                instance.config.relocate(it->dst, src);
             }
         }
         else
@@ -665,24 +634,25 @@ int bb2a(Instance &instance, int UB_cur, Direction dir)
             sort(vec_dst.begin(), vec_dst.end(), asc_desc);
             if (element.block == 1)
             {
-                Instance instance_temp = instance;
+                Instance instance_temp;
                 for (auto it = vec_dst.begin(); it != vec_dst.end(); it++)
                 {
                     if (it->LB + depth > UB_cur)
                     {
                         break;
                     }
-                    instance_temp.config.relocate(src, it->dst);
+                    instance.config.relocate(src, it->dst);
 
 #if TEST == 0
-                    instance_temp.config.print();
+                    instance.config.print();
 #endif
 
+                    instance_temp = instance;
                     if (bb2a(instance_temp, UB_cur, Any))
                     {
                         return min_rel;
                     }
-                    instance_temp.config.relocate(it->dst, src);
+                    instance.config.relocate(it->dst, src);
                 }
             }
             else
@@ -793,24 +763,25 @@ int bb2a(Instance &instance, int UB_cur, Direction dir)
         sort(vec_dst.begin(), vec_dst.end(), asc_desc);
         if (block == 1)
         {
-            Instance instance_temp = instance;
+            Instance instance_temp;
             for (auto it = vec_dst.begin(); it != vec_dst.end(); it++)
             {
                 if (it->LB + depth > UB_cur)
                 {
                     break;
                 }
-                instance_temp.config.relocate(src, it->dst);
+                instance.config.relocate(src, it->dst);
 
 #if TEST == 0
-                instance_temp.config.print();
+                instance.config.print();
 #endif
 
+                instance_temp = instance;
                 if (bb2a(instance_temp, UB_cur, Any))
                 {
                     return min_rel;
                 }
-                instance_temp.config.relocate(it->dst, src);
+                instance.config.relocate(it->dst, src);
             }
         }
         else
