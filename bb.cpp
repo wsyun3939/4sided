@@ -67,7 +67,7 @@ int bb1(Instance &instance, int UB_cur)
     {
         Point src = instance.config.pos[instance.config.priority - 1];
         instance.config.retrieve(src);
-        if (instance.config.priority == NBLOCK + 1)
+        if (instance.config.priority == instance.nblock + 1)
         {
             min_rel = depth;
             depth = 0;
@@ -225,7 +225,7 @@ int bb2(Instance &instance, int UB_cur, Direction dir)
             instance.config.print();
 #endif
 
-            if (instance.config.priority == NBLOCK + 1)
+            if (instance.config.priority == instance.nblock + 1)
             {
                 min_rel = depth;
                 depth = 0;
@@ -547,7 +547,7 @@ int bb2a(Instance &instance, int UB_cur, Direction dir)
             instance.config.print();
 #endif
 
-            if (instance.config.priority == NBLOCK + 1)
+            if (instance.config.priority == instance.nblock + 1)
             {
                 min_rel = depth;
                 depth = 0;

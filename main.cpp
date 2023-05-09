@@ -24,19 +24,15 @@ int main()
         snprintf(filename, BUFFER, "../Benchmark/%d-%d-%d/%05d.txt", TIER, STACK, nblock, a);
         instance->readFile(filename);
         cout << filename << endl;
-        if (a == 156)
-        {
-            cout << a << endl;
-        }
         instance->config.print();
         instance->config.LB1 = instance->LB1();
-        cout << instance->config.LB1 << endl;
+        cout << "LB1=" << instance->config.LB1 << endl;
         instance->config.LB2 = instance->LB2(Upp, Right, Any);
-        cout << instance->config.LB2 << endl;
+        cout << "LB2=" << instance->config.LB2 << endl;
         instance->config.LB3 = instance->LB3(Upp, Right, Low, Any);
-        cout << instance->config.LB3 << endl;
+        cout << "LB3=" << instance->config.LB3 << endl;
         instance->config.LB4 = instance->LB4(Upp, Right, Low, Left, Any);
-        cout << instance->config.LB4 << endl;
+        cout << "LB4=" << instance->config.LB4 << endl;
         instance->config.UB1 = instance->UB1();
         instance->config.UB2 = instance->UB2(Upp, Right);
         instance->config.UB3 = instance->UB3(Upp, Right, Low);
@@ -48,7 +44,9 @@ int main()
         temp = bb1(*instance, instance->config.LB1);
         cout << temp << endl;
         sum += temp;
-        // cout << bb2(*instance, instance->config.LB2, Any) << endl;
+        // temp = bb2(*instance, instance->config.LB2, Any);
+        // cout << temp << endl;
+        // sum += temp;
         delete instance;
         if (a % 100 == 0)
         {

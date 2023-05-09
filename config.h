@@ -2,10 +2,10 @@
 #define ___config
 #include <iostream>
 
-#define TIER 3
-#define STACK 8
-#define NBLOCK 21
-#define NUMBER 5001
+#define TIER 4
+#define STACK 6
+#define NBLOCK 20
+#define NUMBER 301
 #define TEST 1
 #define UB_TEST 1
 

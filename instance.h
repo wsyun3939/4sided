@@ -13,10 +13,13 @@ class Instance
 public:
     // ブロック配置
     Config config;
+    // 総ブロック数
+    int nblock;
 
     // コンストラクタ
     Instance()
     {
+        nblock = 0;
     }
 
     // ファイル読み込み
@@ -40,6 +43,7 @@ public:
             std::istringstream iss(line);
             int num, value;
             iss >> num;
+            nblock += num;
             for (int k = 0; k < num; k++)
             {
                 iss >> value;
@@ -84,7 +88,7 @@ public:
     {
         int LB1 = 0;
         Config config_temp = config;
-        for (int n = config_temp.priority; n <= NBLOCK; n++)
+        for (int n = config_temp.priority; n <= nblock; n++)
         {
             if (config_temp.block[config_temp.pos[n - 1].x][config_temp.pos[n - 1].y])
             {
@@ -115,11 +119,11 @@ public:
             config_temp.delete_block(rel);
             config_temp.priority++;
         }
-        while (config_temp.priority != NBLOCK)
+        while (config_temp.priority != nblock)
         {
             while (config_temp.block[config_temp.pos[config_temp.priority - 1].x][config_temp.pos[config_temp.priority - 1].y] == 0)
             {
-                if (config_temp.priority == NBLOCK - 1)
+                if (config_temp.priority == nblock - 1)
                     return LB2;
                 config_temp.priority++;
             }
@@ -128,7 +132,7 @@ public:
             while ((block1 == 0) || (block2 == 0))
             {
                 config_temp.block[config_temp.pos[config_temp.priority - 1].x][config_temp.pos[config_temp.priority - 1].y] = 0;
-                if (config_temp.priority == NBLOCK)
+                if (config_temp.priority == nblock)
                     return LB2;
                 config_temp.priority++;
                 block1 = config_temp.count(dir1);
@@ -154,11 +158,11 @@ public:
             config_temp.delete_block(rel);
             config_temp.priority++;
         }
-        while (config_temp.priority != NBLOCK)
+        while (config_temp.priority != nblock)
         {
             while (config_temp.block[config_temp.pos[config_temp.priority - 1].x][config_temp.pos[config_temp.priority - 1].y] == 0)
             {
-                if (config_temp.priority == NBLOCK - 1)
+                if (config_temp.priority == nblock - 1)
                     return LB2;
                 config_temp.priority++;
             }
@@ -167,7 +171,7 @@ public:
             while ((block1 == 0) || (block2 == 0))
             {
                 config_temp.block[config_temp.pos[config_temp.priority - 1].x][config_temp.pos[config_temp.priority - 1].y] = 0;
-                if (config_temp.priority == NBLOCK)
+                if (config_temp.priority == nblock)
                     return LB2;
                 config_temp.priority++;
                 block1 = config_temp.count(Upp);
@@ -179,7 +183,8 @@ public:
                 LB2 += block1;
                 config_temp.priority++;
             }
-            else{
+            else
+            {
                 config_temp.delete_block(Low);
                 LB2 += block2;
                 config_temp.priority++;
@@ -199,11 +204,11 @@ public:
             config_temp.delete_block(rel);
             config_temp.priority++;
         }
-        while (config_temp.priority != NBLOCK)
+        while (config_temp.priority != nblock)
         {
             while (config_temp.block[config_temp.pos[config_temp.priority - 1].x][config_temp.pos[config_temp.priority - 1].y] == 0)
             {
-                if (config_temp.priority == NBLOCK - 1)
+                if (config_temp.priority == nblock - 1)
                     return LB3;
                 config_temp.priority++;
             }
@@ -213,7 +218,7 @@ public:
             while ((block1 == 0) || (block2 == 0) || (block3 == 0))
             {
                 config_temp.block[config_temp.pos[config_temp.priority - 1].x][config_temp.pos[config_temp.priority - 1].y] = 0;
-                if (config_temp.priority == NBLOCK)
+                if (config_temp.priority == nblock)
                     return LB3;
                 config_temp.priority++;
                 block1 = config_temp.count(dir1);
@@ -240,11 +245,11 @@ public:
             config_temp.delete_block(rel);
             config_temp.priority++;
         }
-        while (config_temp.priority != NBLOCK)
+        while (config_temp.priority != nblock)
         {
             while (config_temp.block[config_temp.pos[config_temp.priority - 1].x][config_temp.pos[config_temp.priority - 1].y] == 0)
             {
-                if (config_temp.priority == NBLOCK - 1)
+                if (config_temp.priority == nblock - 1)
                     return LB4;
                 config_temp.priority++;
             }
@@ -255,7 +260,7 @@ public:
             while ((block1 == 0) || (block2 == 0) || (block3 == 0) || (block4 == 0))
             {
                 config_temp.block[config_temp.pos[config_temp.priority - 1].x][config_temp.pos[config_temp.priority - 1].y] = 0;
-                if (config_temp.priority == NBLOCK)
+                if (config_temp.priority == nblock)
                     return LB4;
                 config_temp.priority++;
                 block1 = config_temp.count(dir1);
@@ -276,7 +281,7 @@ public:
     {
         Config config_temp = config;
         int UB1 = 0;
-        for (int n = config_temp.priority; n <= NBLOCK; n++)
+        for (int n = config_temp.priority; n <= nblock; n++)
         {
             // ブロッキングブロックを積み替える場合
             for (int j = TIER - 1; j >= config_temp.pos[n - 1].y + 1; j--)
@@ -318,7 +323,7 @@ public:
     {
         Config config_temp = config;
         int UB2 = 0;
-        for (int n = config_temp.priority; n <= NBLOCK; n++)
+        for (int n = config_temp.priority; n <= nblock; n++)
         {
             int block1 = config_temp.count(dir1);
             int block2 = config_temp.count(dir2);
@@ -442,7 +447,7 @@ public:
     {
         Config config_temp = config;
         int UB3 = 0;
-        for (int n = config_temp.priority; n <= NBLOCK; n++)
+        for (int n = config_temp.priority; n <= nblock; n++)
         {
             int block1 = config_temp.count(dir1);
             int block2 = config_temp.count(dir2);
@@ -681,7 +686,7 @@ public:
     {
         Config config_temp = config;
         int UB4 = 0;
-        for (int n = config_temp.priority; n <= NBLOCK; n++)
+        for (int n = config_temp.priority; n <= nblock; n++)
         {
             int block1 = config_temp.count(dir1);
             int block2 = config_temp.count(dir2);
