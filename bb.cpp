@@ -180,6 +180,10 @@ int bb2(Instance &instance, int UB_cur, Direction dir)
     static int depth = 0;
     // 最適解
     static int min_rel = 0;
+    // 積み替え先を決定するための変数
+    static int LB_temp;
+    static int p;
+    static Dst temp;
     if (depth + instance.config.LB2 == UB_cur - 1)
     {
         int UB_temp = instance.UB2(Upp, Right);
@@ -200,7 +204,7 @@ int bb2(Instance &instance, int UB_cur, Direction dir)
     {
         while ((block1 == 0) || (block2 == 0))
         {
-            Point src = instance.config.pos[instance.config.priority - 1];
+            src = instance.config.pos[instance.config.priority - 1];
             instance.config.retrieve(src);
 
 #if TEST == 0
@@ -216,18 +220,22 @@ int bb2(Instance &instance, int UB_cur, Direction dir)
             block1 = instance.config.count(Upp);
             block2 = instance.config.count(Right);
         }
-        vector<Src> src_vec;
-        Src temp1 = {block1, Upp};
-        Src temp2 = {block2, Right};
-        src_vec.push_back(temp1);
-        src_vec.push_back(temp2);
-        sort(src_vec.begin(), src_vec.end(), block_asc);
+        Src src_vec[2];
+        src_vec[0].block = block1;
+        src_vec[0].dir = Upp;
+        src_vec[1].block = block2;
+        src_vec[1].dir = Right;
+        sort(src_vec, src_vec + 1, block_asc);
         depth++;
-        for (auto element : src_vec)
+        for (int i = 0; i < 2; i++)
         {
+            if (depth + src_vec[i].block - 1 > UB_cur)
+            {
+                break;
+            }
             // ブロッキングブロックを積み替える場合
             // 積み替え元
-            switch (element.dir)
+            switch (src_vec[i].dir)
             {
             case Upp:
                 src.x = instance.config.pos[instance.config.priority - 1].x;
@@ -258,7 +266,6 @@ int bb2(Instance &instance, int UB_cur, Direction dir)
             {
                 if (!instance.config.block[dst.x][TIER - 1])
                 {
-                    int LB_temp = 0;
                     while (!instance.config.block[dst.x][dst.y - 1] && (dst.y > 0))
                         dst.y--;
                     if ((src.x == dst.x) && (src.y + 1 == dst.y))
@@ -266,12 +273,14 @@ int bb2(Instance &instance, int UB_cur, Direction dir)
                         dst.y = TIER - 1;
                         continue;
                     }
-                    int p = instance.config.block[src.x][src.y];
+                    p = instance.config.block[src.x][src.y];
                     instance.config.block[src.x][src.y] = 0;
                     instance.config.block[dst.x][dst.y] = p;
                     instance.config.pos[p - 1] = dst;
-                    LB_temp = instance.LB2(Upp, Right, element.dir);
-                    Dst temp = {dst, LB_temp, instance.config.P_UL[dst.x]};
+                    LB_temp = instance.LB2(Upp, Right, src_vec[i].dir);
+                    temp.dst = dst;
+                    temp.LB = LB_temp;
+                    temp.p = instance.config.P_UL[dst.x];
                     vec_dst.push_back(temp);
                     instance.config.block[dst.x][dst.y] = 0;
                     instance.config.block[src.x][src.y] = p;
@@ -285,7 +294,6 @@ int bb2(Instance &instance, int UB_cur, Direction dir)
             {
                 if (!instance.config.block[STACK - 1][dst.y])
                 {
-                    int LB_temp = 0;
                     while (!instance.config.block[dst.x - 1][dst.y] && (dst.x > 0))
                         dst.x--;
                     if ((src.y == dst.y) && (src.x + 1 == dst.x))
@@ -293,12 +301,14 @@ int bb2(Instance &instance, int UB_cur, Direction dir)
                         dst.x = STACK - 1;
                         continue;
                     }
-                    int p = instance.config.block[src.x][src.y];
+                    p = instance.config.block[src.x][src.y];
                     instance.config.block[src.x][src.y] = 0;
                     instance.config.block[dst.x][dst.y] = p;
                     instance.config.pos[p - 1] = dst;
-                    LB_temp = instance.LB2(Upp, Right, element.dir);
-                    Dst temp = {dst, LB_temp, instance.config.P_UL[dst.x]};
+                    LB_temp = instance.LB2(Upp, Right, src_vec[i].dir);
+                    temp.dst = dst;
+                    temp.LB = LB_temp;
+                    temp.p = instance.config.P_LR[dst.y];
                     vec_dst.push_back(temp);
                     instance.config.block[dst.x][dst.y] = 0;
                     instance.config.block[src.x][src.y] = p;
@@ -308,7 +318,7 @@ int bb2(Instance &instance, int UB_cur, Direction dir)
             }
             // 積み替え先を下界値の小さい順に並べる.下界値が等しい場合，最大優先度の降順に並べる
             sort(vec_dst.begin(), vec_dst.end(), asc_desc);
-            if (element.block == 1)
+            if (src_vec[i].block == 1)
             {
                 Instance instance_temp;
                 for (auto it = vec_dst.begin(); it != vec_dst.end(); it++)
@@ -329,6 +339,10 @@ int bb2(Instance &instance, int UB_cur, Direction dir)
                         return min_rel;
                     }
                     instance.config.relocate(it->dst, src);
+
+#if TEST == 0
+                    instance.config.print();
+#endif
                 }
             }
             else
@@ -345,11 +359,15 @@ int bb2(Instance &instance, int UB_cur, Direction dir)
                     instance.config.print();
 #endif
 
-                    if (bb2(instance, UB_cur, element.dir))
+                    if (bb2(instance, UB_cur, src_vec[i].dir))
                     {
                         return min_rel;
                     }
                     instance.config.relocate(it->dst, src);
+
+#if TEST == 0
+                    instance.config.print();
+#endif
                 }
             }
         }
@@ -357,6 +375,7 @@ int bb2(Instance &instance, int UB_cur, Direction dir)
     else
     {
         int block;
+        depth++;
         if (dir == Upp)
         {
             src.x = instance.config.pos[instance.config.priority - 1].x;
@@ -387,7 +406,6 @@ int bb2(Instance &instance, int UB_cur, Direction dir)
         {
             if (!instance.config.block[dst.x][TIER - 1])
             {
-                int LB_temp = 0;
                 while (!instance.config.block[dst.x][dst.y - 1] && (dst.y > 0))
                     dst.y--;
                 if ((src.x == dst.x) && (src.y + 1 == dst.y))
@@ -395,12 +413,14 @@ int bb2(Instance &instance, int UB_cur, Direction dir)
                     dst.y = TIER - 1;
                     continue;
                 }
-                int p = instance.config.block[src.x][src.y];
+                p = instance.config.block[src.x][src.y];
                 instance.config.block[src.x][src.y] = 0;
                 instance.config.block[dst.x][dst.y] = p;
                 instance.config.pos[p - 1] = dst;
                 LB_temp = instance.LB2(Upp, Right, dir);
-                Dst temp = {dst, LB_temp, instance.config.P_UL[dst.x]};
+                temp.dst = dst;
+                temp.LB = LB_temp;
+                temp.p = instance.config.P_UL[dst.x];
                 vec_dst.push_back(temp);
                 instance.config.block[dst.x][dst.y] = 0;
                 instance.config.block[src.x][src.y] = p;
@@ -414,7 +434,6 @@ int bb2(Instance &instance, int UB_cur, Direction dir)
         {
             if (!instance.config.block[STACK - 1][dst.y])
             {
-                int LB_temp = 0;
                 while (!instance.config.block[dst.x - 1][dst.y] && (dst.x > 0))
                     dst.x--;
                 if ((src.y == dst.y) && (src.x + 1 == dst.x))
@@ -422,12 +441,14 @@ int bb2(Instance &instance, int UB_cur, Direction dir)
                     dst.x = STACK - 1;
                     continue;
                 }
-                int p = instance.config.block[src.x][src.y];
+                p = instance.config.block[src.x][src.y];
                 instance.config.block[src.x][src.y] = 0;
                 instance.config.block[dst.x][dst.y] = p;
                 instance.config.pos[p - 1] = dst;
                 LB_temp = instance.LB2(Upp, Right, dir);
-                Dst temp = {dst, LB_temp, instance.config.P_UL[dst.x]};
+                temp.dst = dst;
+                temp.LB = LB_temp;
+                temp.p = instance.config.P_LR[dst.y];
                 vec_dst.push_back(temp);
                 instance.config.block[dst.x][dst.y] = 0;
                 instance.config.block[src.x][src.y] = p;
@@ -458,6 +479,10 @@ int bb2(Instance &instance, int UB_cur, Direction dir)
                     return min_rel;
                 }
                 instance.config.relocate(it->dst, src);
+
+#if TEST == 0
+                instance.config.print();
+#endif
             }
         }
         else
@@ -479,6 +504,10 @@ int bb2(Instance &instance, int UB_cur, Direction dir)
                     return min_rel;
                 }
                 instance.config.relocate(it->dst, src);
+
+#if TEST == 0
+                instance.config.print();
+#endif
             }
         }
     }
@@ -681,6 +710,7 @@ int bb2a(Instance &instance, int UB_cur, Direction dir)
     else
     {
         int block;
+        depth++;
         if (dir == Upp)
         {
             src.x = instance.config.pos[instance.config.priority - 1].x;
