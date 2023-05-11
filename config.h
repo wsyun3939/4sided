@@ -1,6 +1,6 @@
 #ifndef ___config
 #define ___config
-#include <iostream>
+#include <bits/stdc++.h>
 
 #define TIER 4
 #define STACK 9

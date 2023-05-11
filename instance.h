@@ -1,6 +1,6 @@
 #ifndef ___instance
 #define ___instance
-#include <iostream>
+#include <bits/stdc++.h>
 #include <fstream>
 #include <string>
 #include <vector>
