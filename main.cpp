@@ -30,6 +30,8 @@ int main()
         cout << "LB1=" << instance->config.LB1 << endl;
         instance->config.LB2 = instance->LB2(Upp, Right, Any);
         cout << "LB2=" << instance->config.LB2 << endl;
+        instance->config.LB2a = instance->LB2a(Any);
+        cout << "LB2a=" << instance->config.LB2a << endl;
         instance->config.LB3 = instance->LB3(Upp, Right, Low, Any);
         cout << "LB3=" << instance->config.LB3 << endl;
         instance->config.LB4 = instance->LB4(Upp, Right, Low, Left, Any);
@@ -46,8 +48,14 @@ int main()
         // temp = bb1(*instance, instance->config.LB1);
         // cout << temp << endl;
 
-        temp = bb2a(*instance, instance->config.LB2, Any);
+        temp = bb2(*instance, instance->config.LB2, Any);
         cout << temp << endl;
+
+        // temp = bb2a(*instance, instance->config.LB2a, Any);
+        // cout << temp << endl;
+
+        // temp = bb2a(*instance, instance->config.LB2, Any);
+        // cout << temp << endl;
         if (a % 100 == 1)
         {
             sprintf(filename, "../Benchmark/%d-%d-%d(bb2a).csv", TIER, STACK, nblock);

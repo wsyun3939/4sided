@@ -2,10 +2,10 @@
 #define ___config
 #include <iostream>
 
-#define TIER 6
-#define STACK 8
-#define NBLOCK 42
-#define NUMBER 6201
+#define TIER 4
+#define STACK 9
+#define NBLOCK 32
+#define NUMBER 7801
 #define TEST 1
 #define UB_TEST 1
 
@@ -52,7 +52,7 @@ public:
     int priority;
 
     // 下界値
-    int LB1, LB2, LB3, LB4;
+    int LB1, LB2, LB2a, LB3, LB4;
 
     // 上界値
     int UB1, UB2, UB3, UB4;
