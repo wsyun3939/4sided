@@ -449,6 +449,11 @@ public:
         int UB3 = 0;
         for (int n = config_temp.priority; n <= nblock; n++)
         {
+
+#if UB_TEST == 0
+            config_temp.print();
+#endif
+
             int block1 = config_temp.count(dir1);
             int block2 = config_temp.count(dir2);
             int block3 = config_temp.count(dir3);
@@ -528,11 +533,13 @@ public:
                                         dst.x = i;
                                         dst.y = dst_y;
                                     }
-
-                                    Point src = {config_temp.pos[n - 1].x, j};
-                                    config_temp.relocate(src, dst);
                                 }
                             }
+                            Point src = {config_temp.pos[n - 1].x, j};
+                            config_temp.relocate(src, dst);
+#if UB_TEST == 0
+                            config_temp.print();
+#endif
                         }
                     }
                     break;
@@ -595,13 +602,13 @@ public:
                                         dst.x = i;
                                         dst.y = dst_y;
                                     }
-
-                                    Point src = {config_temp.pos[n - 1].x, j};
-                                    config_temp.relocate(src, dst);
                                 }
-                                Point src = {j, config_temp.pos[n - 1].y};
-                                config_temp.relocate(src, dst);
                             }
+                            Point src = {j, config_temp.pos[n - 1].y};
+                            config_temp.relocate(src, dst);
+#if UB_TEST == 0
+                            config_temp.print();
+#endif
                         }
                     }
                     break;
@@ -664,11 +671,13 @@ public:
                                         dst.x = i;
                                         dst.y = dst_y;
                                     }
-
-                                    Point src = {config_temp.pos[n - 1].x, j};
-                                    config_temp.relocate(src, dst);
                                 }
                             }
+                            Point src = {config_temp.pos[n - 1].x, j};
+                            config_temp.relocate(src, dst);
+#if UB_TEST == 0
+                            config_temp.print();
+#endif
                         }
                     }
                     break;
@@ -770,9 +779,6 @@ public:
                                         dst.x = i;
                                         dst.y = dst_y;
                                     }
-
-                                    Point src = {config_temp.pos[n - 1].x, j};
-                                    config_temp.relocate(src, dst);
                                 }
                             }
                             // 左方向
@@ -791,6 +797,8 @@ public:
                                     }
                                 }
                             }
+                            Point src = {config_temp.pos[n - 1].x, j};
+                            config_temp.relocate(src, dst);
                         }
                     }
                     break;
@@ -857,8 +865,6 @@ public:
                                     Point src = {config_temp.pos[n - 1].x, j};
                                     config_temp.relocate(src, dst);
                                 }
-                                Point src = {j, config_temp.pos[n - 1].y};
-                                config_temp.relocate(src, dst);
                             }
                             // 左方向
                             for (int i = 0; i < TIER; i++)
@@ -876,6 +882,8 @@ public:
                                     }
                                 }
                             }
+                            Point src = {j, config_temp.pos[n - 1].y};
+                            config_temp.relocate(src, dst);
                         }
                     }
                     break;
@@ -938,9 +946,6 @@ public:
                                         dst.x = i;
                                         dst.y = dst_y;
                                     }
-
-                                    Point src = {config_temp.pos[n - 1].x, j};
-                                    config_temp.relocate(src, dst);
                                 }
                             }
                             // 左方向
@@ -959,6 +964,8 @@ public:
                                     }
                                 }
                             }
+                            Point src = {config_temp.pos[n - 1].x, j};
+                            config_temp.relocate(src, dst);
                         }
                     }
                     break;
@@ -1025,8 +1032,6 @@ public:
                                     Point src = {config_temp.pos[n - 1].x, j};
                                     config_temp.relocate(src, dst);
                                 }
-                                Point src = {j, config_temp.pos[n - 1].y};
-                                config_temp.relocate(src, dst);
                             }
                             // 左方向
                             for (int i = 0; i < TIER; i++)
@@ -1044,6 +1049,8 @@ public:
                                     }
                                 }
                             }
+                            Point src = {j, config_temp.pos[n - 1].y};
+                            config_temp.relocate(src, dst);
                         }
                     }
                     break;
