@@ -9,6 +9,8 @@
 #define TEST 1
 #define UB_TEST 1
 
+#define BB 4
+
 using namespace std;
 
 // 二次元座標を表す

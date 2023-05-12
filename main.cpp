@@ -45,15 +45,37 @@ int main()
         cout << "UB3=" << instance->config.UB3 << endl;
         cout << "UB4=" << instance->config.UB4 << endl;
 
-        // temp = bb1(*instance, instance->config.LB1);
-        // cout << temp << endl;
+#if BB == 1
+        temp = bb1(*instance, instance->config.LB1);
+        cout << temp << endl;
+        if (a % 100 == 1)
+        {
+            sprintf(filename, "../Benchmark/%d-%d-%d(bb1).csv", TIER, STACK, nblock);
+            fp_csv = fopen(filename, "w");
+        }
+#endif
 
-        // temp = bb2(*instance, instance->config.LB2, Any);
-        // cout << temp << endl;
+#if BB == 2
+        temp = bb2(*instance, instance->config.LB2, Any);
+        cout << temp << endl;
+        if (a % 100 == 1)
+        {
+            sprintf(filename, "../Benchmark/%d-%d-%d(bb2).csv", TIER, STACK, nblock);
+            fp_csv = fopen(filename, "w");
+        }
+#endif
 
-        // temp = bb2a(*instance, instance->config.LB2a, Any);
-        // cout << temp << endl;
+#if BB == -2
+        temp = bb2a(*instance, instance->config.LB2a, Any);
+        cout << temp << endl;
+        if (a % 100 == 1)
+        {
+            sprintf(filename, "../Benchmark/%d-%d-%d(bb2a).csv", TIER, STACK, nblock);
+            fp_csv = fopen(filename, "w");
+        }
+#endif
 
+#if BB == 3
         temp = bb3(*instance, instance->config.LB3, Any);
         cout << temp << endl;
         if (a % 100 == 1)
@@ -61,6 +83,18 @@ int main()
             sprintf(filename, "../Benchmark/%d-%d-%d(bb3).csv", TIER, STACK, nblock);
             fp_csv = fopen(filename, "w");
         }
+#endif
+
+#if BB == 4
+        temp = bb4(*instance, instance->config.LB4, Any);
+        cout << temp << endl;
+        if (a % 100 == 1)
+        {
+            sprintf(filename, "../Benchmark/%d-%d-%d(bb4).csv", TIER, STACK, nblock);
+            fp_csv = fopen(filename, "w");
+        }
+#endif
+
         fprintf(fp_csv, "%d\n", temp);
         sum += temp;
         delete instance;
