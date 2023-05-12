@@ -112,50 +112,53 @@ int bb1(Instance &instance, int UB_cur)
             dst.y = TIER - 1;
         }
     }
-    // 積み替え先を下界値の小さい順に並べる.下界値が等しい場合，最大優先度の降順に並べる
-    sort(vec_dst.begin(), vec_dst.end(), asc_desc);
-    if (block1 == 1)
+    if (!vec_dst.empty())
     {
-        Instance instance_temp;
-        for (auto it = vec_dst.begin(); it != vec_dst.end(); it++)
+        // 積み替え先を下界値の小さい順に並べる.下界値が等しい場合，最大優先度の降順に並べる
+        sort(vec_dst.begin(), vec_dst.end(), asc_desc);
+        if (block1 == 1)
         {
-            if (it->LB + depth > UB_cur)
+            Instance instance_temp;
+            for (auto it = vec_dst.begin(); it != vec_dst.end(); it++)
             {
-                break;
-            }
-            instance.config.relocate(src, it->dst);
+                if (it->LB + depth > UB_cur)
+                {
+                    break;
+                }
+                instance.config.relocate(src, it->dst);
 
 #if TEST == 0
-            instance.config.print();
+                instance.config.print();
 #endif
 
-            instance_temp = instance;
-            if (bb1(instance_temp, UB_cur))
-            {
-                return min_rel;
+                instance_temp = instance;
+                if (bb1(instance_temp, UB_cur))
+                {
+                    return min_rel;
+                }
+                instance.config.relocate(it->dst, src);
             }
-            instance.config.relocate(it->dst, src);
         }
-    }
-    else
-    {
-        for (auto it = vec_dst.begin(); it != vec_dst.end(); it++)
+        else
         {
-            if (it->LB + depth > UB_cur)
+            for (auto it = vec_dst.begin(); it != vec_dst.end(); it++)
             {
-                break;
-            }
-            instance.config.relocate(src, it->dst);
+                if (it->LB + depth > UB_cur)
+                {
+                    break;
+                }
+                instance.config.relocate(src, it->dst);
 
 #if TEST == 0
-            instance.config.print();
+                instance.config.print();
 #endif
 
-            if (bb1(instance, UB_cur))
-            {
-                return min_rel;
+                if (bb1(instance, UB_cur))
+                {
+                    return min_rel;
+                }
+                instance.config.relocate(it->dst, src);
             }
-            instance.config.relocate(it->dst, src);
         }
     }
     depth--;
@@ -316,6 +319,8 @@ int bb2(Instance &instance, int UB_cur, Direction dir)
                     dst.x = STACK - 1;
                 }
             }
+            if (vec_dst.empty())
+                continue;
             // 積み替え先を下界値の小さい順に並べる.下界値が等しい場合，最大優先度の降順に並べる
             sort(vec_dst.begin(), vec_dst.end(), asc_desc);
             if (src_vec[i].block == 1)
@@ -456,58 +461,61 @@ int bb2(Instance &instance, int UB_cur, Direction dir)
                 dst.x = STACK - 1;
             }
         }
-        // 積み替え先を下界値の小さい順に並べる.下界値が等しい場合，最大優先度の降順に並べる
-        sort(vec_dst.begin(), vec_dst.end(), asc_desc);
-        if (block == 1)
+        if (!vec_dst.empty())
         {
-            Instance instance_temp;
-            for (auto it = vec_dst.begin(); it != vec_dst.end(); it++)
+            // 積み替え先を下界値の小さい順に並べる.下界値が等しい場合，最大優先度の降順に並べる
+            sort(vec_dst.begin(), vec_dst.end(), asc_desc);
+            if (block == 1)
             {
-                if (it->LB + depth > UB_cur)
+                Instance instance_temp;
+                for (auto it = vec_dst.begin(); it != vec_dst.end(); it++)
                 {
-                    break;
-                }
-                instance.config.relocate(src, it->dst);
+                    if (it->LB + depth > UB_cur)
+                    {
+                        break;
+                    }
+                    instance.config.relocate(src, it->dst);
 
 #if TEST == 0
-                instance.config.print();
+                    instance.config.print();
 #endif
 
-                instance_temp = instance;
-                if (bb2(instance_temp, UB_cur, Any))
-                {
-                    return min_rel;
-                }
-                instance.config.relocate(it->dst, src);
+                    instance_temp = instance;
+                    if (bb2(instance_temp, UB_cur, Any))
+                    {
+                        return min_rel;
+                    }
+                    instance.config.relocate(it->dst, src);
 
 #if TEST == 0
-                instance.config.print();
+                    instance.config.print();
 #endif
+                }
             }
-        }
-        else
-        {
-            for (auto it = vec_dst.begin(); it != vec_dst.end(); it++)
+            else
             {
-                if (it->LB + depth > UB_cur)
+                for (auto it = vec_dst.begin(); it != vec_dst.end(); it++)
                 {
-                    break;
-                }
-                instance.config.relocate(src, it->dst);
+                    if (it->LB + depth > UB_cur)
+                    {
+                        break;
+                    }
+                    instance.config.relocate(src, it->dst);
 
 #if TEST == 0
-                instance.config.print();
+                    instance.config.print();
 #endif
 
-                if (bb2(instance, UB_cur, dir))
-                {
-                    return min_rel;
-                }
-                instance.config.relocate(it->dst, src);
+                    if (bb2(instance, UB_cur, dir))
+                    {
+                        return min_rel;
+                    }
+                    instance.config.relocate(it->dst, src);
 
 #if TEST == 0
-                instance.config.print();
+                    instance.config.print();
 #endif
+                }
             }
         }
     }
@@ -661,6 +669,8 @@ int bb2a(Instance &instance, int UB_cur, Direction dir)
                     dst.y = 0;
                 }
             }
+            if (vec_dst.empty())
+                continue;
             // 積み替え先を下界値の小さい順に並べる.下界値が等しい場合，最大優先度の降順に並べる
             sort(vec_dst.begin(), vec_dst.end(), asc_desc);
             if (src_vec[i].block == 1)
@@ -791,50 +801,53 @@ int bb2a(Instance &instance, int UB_cur, Direction dir)
                 dst.y = 0;
             }
         }
-        // 積み替え先を下界値の小さい順に並べる.下界値が等しい場合，最大優先度の降順に並べる
-        sort(vec_dst.begin(), vec_dst.end(), asc_desc);
-        if (block == 1)
+        if (!vec_dst.empty())
         {
-            Instance instance_temp;
-            for (auto it = vec_dst.begin(); it != vec_dst.end(); it++)
+            // 積み替え先を下界値の小さい順に並べる.下界値が等しい場合，最大優先度の降順に並べる
+            sort(vec_dst.begin(), vec_dst.end(), asc_desc);
+            if (block == 1)
             {
-                if (it->LB + depth > UB_cur)
+                Instance instance_temp;
+                for (auto it = vec_dst.begin(); it != vec_dst.end(); it++)
                 {
-                    break;
-                }
-                instance.config.relocate(src, it->dst);
+                    if (it->LB + depth > UB_cur)
+                    {
+                        break;
+                    }
+                    instance.config.relocate(src, it->dst);
 
 #if TEST == 0
-                instance.config.print();
+                    instance.config.print();
 #endif
 
-                instance_temp = instance;
-                if (bb2a(instance_temp, UB_cur, Any))
-                {
-                    return min_rel;
+                    instance_temp = instance;
+                    if (bb2a(instance_temp, UB_cur, Any))
+                    {
+                        return min_rel;
+                    }
+                    instance.config.relocate(it->dst, src);
                 }
-                instance.config.relocate(it->dst, src);
             }
-        }
-        else
-        {
-            for (auto it = vec_dst.begin(); it != vec_dst.end(); it++)
+            else
             {
-                if (it->LB + depth > UB_cur)
+                for (auto it = vec_dst.begin(); it != vec_dst.end(); it++)
                 {
-                    break;
-                }
-                instance.config.relocate(src, it->dst);
+                    if (it->LB + depth > UB_cur)
+                    {
+                        break;
+                    }
+                    instance.config.relocate(src, it->dst);
 
 #if TEST == 0
-                instance.config.print();
+                    instance.config.print();
 #endif
 
-                if (bb2a(instance, UB_cur, dir))
-                {
-                    return min_rel;
+                    if (bb2a(instance, UB_cur, dir))
+                    {
+                        return min_rel;
+                    }
+                    instance.config.relocate(it->dst, src);
                 }
-                instance.config.relocate(it->dst, src);
             }
         }
     }
@@ -1037,6 +1050,8 @@ int bb3(Instance &instance, int UB_cur, Direction dir)
                     dst.y = 0;
                 }
             }
+            if (vec_dst.empty())
+                continue;
             // 積み替え先を下界値の小さい順に並べる.下界値が等しい場合，最大優先度の降順に並べる
             sort(vec_dst.begin(), vec_dst.end(), asc_desc);
             if (src_vec[i].block == 1)
@@ -1216,58 +1231,61 @@ int bb3(Instance &instance, int UB_cur, Direction dir)
                 dst.y = 0;
             }
         }
-        // 積み替え先を下界値の小さい順に並べる.下界値が等しい場合，最大優先度の降順に並べる
-        sort(vec_dst.begin(), vec_dst.end(), asc_desc);
-        if (block == 1)
+        if (!vec_dst.empty())
         {
-            Instance instance_temp;
-            for (auto it = vec_dst.begin(); it != vec_dst.end(); it++)
+            // 積み替え先を下界値の小さい順に並べる.下界値が等しい場合，最大優先度の降順に並べる
+            sort(vec_dst.begin(), vec_dst.end(), asc_desc);
+            if (block == 1)
             {
-                if (it->LB + depth > UB_cur)
+                Instance instance_temp;
+                for (auto it = vec_dst.begin(); it != vec_dst.end(); it++)
                 {
-                    break;
-                }
-                instance.config.relocate(src, it->dst);
+                    if (it->LB + depth > UB_cur)
+                    {
+                        break;
+                    }
+                    instance.config.relocate(src, it->dst);
 
 #if TEST == 0
-                instance.config.print();
+                    instance.config.print();
 #endif
 
-                instance_temp = instance;
-                if (bb3(instance_temp, UB_cur, Any))
-                {
-                    return min_rel;
-                }
-                instance.config.relocate(it->dst, src);
+                    instance_temp = instance;
+                    if (bb3(instance_temp, UB_cur, Any))
+                    {
+                        return min_rel;
+                    }
+                    instance.config.relocate(it->dst, src);
 
 #if TEST == 0
-                instance.config.print();
+                    instance.config.print();
 #endif
+                }
             }
-        }
-        else
-        {
-            for (auto it = vec_dst.begin(); it != vec_dst.end(); it++)
+            else
             {
-                if (it->LB + depth > UB_cur)
+                for (auto it = vec_dst.begin(); it != vec_dst.end(); it++)
                 {
-                    break;
-                }
-                instance.config.relocate(src, it->dst);
+                    if (it->LB + depth > UB_cur)
+                    {
+                        break;
+                    }
+                    instance.config.relocate(src, it->dst);
 
 #if TEST == 0
-                instance.config.print();
+                    instance.config.print();
 #endif
 
-                if (bb3(instance, UB_cur, dir))
-                {
-                    return min_rel;
-                }
-                instance.config.relocate(it->dst, src);
+                    if (bb3(instance, UB_cur, dir))
+                    {
+                        return min_rel;
+                    }
+                    instance.config.relocate(it->dst, src);
 
 #if TEST == 0
-                instance.config.print();
+                    instance.config.print();
 #endif
+                }
             }
         }
     }
@@ -1511,6 +1529,10 @@ int bb4(Instance &instance, int UB_cur, Direction dir)
                     dst.x = 0;
                 }
             }
+            if (vec_dst.empty())
+            {
+                continue;
+            }
             // 積み替え先を下界値の小さい順に並べる.下界値が等しい場合，最大優先度の降順に並べる
             sort(vec_dst.begin(), vec_dst.end(), asc_desc);
             if (src_vec[i].block == 1)
@@ -1701,6 +1723,7 @@ int bb4(Instance &instance, int UB_cur, Direction dir)
                 dst.y = 0;
             }
         }
+        dst.x = 0;
         // 左側からの積み替え
         for (dst.y = 0; dst.y < TIER; dst.y++)
         {
@@ -1728,58 +1751,61 @@ int bb4(Instance &instance, int UB_cur, Direction dir)
                 dst.x = 0;
             }
         }
-        // 積み替え先を下界値の小さい順に並べる.下界値が等しい場合，最大優先度の降順に並べる
-        sort(vec_dst.begin(), vec_dst.end(), asc_desc);
-        if (block == 1)
+        if (!vec_dst.empty())
         {
-            Instance instance_temp;
-            for (auto it = vec_dst.begin(); it != vec_dst.end(); it++)
+            // 積み替え先を下界値の小さい順に並べる.下界値が等しい場合，最大優先度の降順に並べる
+            sort(vec_dst.begin(), vec_dst.end(), asc_desc);
+            if (block == 1)
             {
-                if (it->LB + depth > UB_cur)
+                Instance instance_temp;
+                for (auto it = vec_dst.begin(); it != vec_dst.end(); it++)
                 {
-                    break;
-                }
-                instance.config.relocate(src, it->dst);
+                    if (it->LB + depth > UB_cur)
+                    {
+                        break;
+                    }
+                    instance.config.relocate(src, it->dst);
 
 #if TEST == 0
-                instance.config.print();
+                    instance.config.print();
 #endif
 
-                instance_temp = instance;
-                if (bb4(instance_temp, UB_cur, Any))
-                {
-                    return min_rel;
-                }
-                instance.config.relocate(it->dst, src);
+                    instance_temp = instance;
+                    if (bb4(instance_temp, UB_cur, Any))
+                    {
+                        return min_rel;
+                    }
+                    instance.config.relocate(it->dst, src);
 
 #if TEST == 0
-                instance.config.print();
+                    instance.config.print();
 #endif
+                }
             }
-        }
-        else
-        {
-            for (auto it = vec_dst.begin(); it != vec_dst.end(); it++)
+            else
             {
-                if (it->LB + depth > UB_cur)
+                for (auto it = vec_dst.begin(); it != vec_dst.end(); it++)
                 {
-                    break;
-                }
-                instance.config.relocate(src, it->dst);
+                    if (it->LB + depth > UB_cur)
+                    {
+                        break;
+                    }
+                    instance.config.relocate(src, it->dst);
 
 #if TEST == 0
-                instance.config.print();
+                    instance.config.print();
 #endif
 
-                if (bb4(instance, UB_cur, dir))
-                {
-                    return min_rel;
-                }
-                instance.config.relocate(it->dst, src);
+                    if (bb4(instance, UB_cur, dir))
+                    {
+                        return min_rel;
+                    }
+                    instance.config.relocate(it->dst, src);
 
 #if TEST == 0
-                instance.config.print();
+                    instance.config.print();
 #endif
+                }
             }
         }
     }
