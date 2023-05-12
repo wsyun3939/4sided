@@ -48,17 +48,17 @@ int main()
         // temp = bb1(*instance, instance->config.LB1);
         // cout << temp << endl;
 
-        temp = bb2(*instance, instance->config.LB2, Any);
-        cout << temp << endl;
+        // temp = bb2(*instance, instance->config.LB2, Any);
+        // cout << temp << endl;
 
         // temp = bb2a(*instance, instance->config.LB2a, Any);
         // cout << temp << endl;
 
-        // temp = bb2a(*instance, instance->config.LB2, Any);
-        // cout << temp << endl;
+        temp = bb3(*instance, instance->config.LB3, Any);
+        cout << temp << endl;
         if (a % 100 == 1)
         {
-            sprintf(filename, "../Benchmark/%d-%d-%d(bb2a).csv", TIER, STACK, nblock);
+            sprintf(filename, "../Benchmark/%d-%d-%d(bb3).csv", TIER, STACK, nblock);
             fp_csv = fopen(filename, "w");
         }
         fprintf(fp_csv, "%d\n", temp);

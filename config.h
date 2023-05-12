@@ -2,10 +2,10 @@
 #define ___config
 #include <bits/stdc++.h>
 
-#define TIER 4
-#define STACK 9
-#define NBLOCK 32
-#define NUMBER 7801
+#define TIER 3
+#define STACK 10
+#define NBLOCK 27
+#define NUMBER 10001
 #define TEST 1
 #define UB_TEST 1
 
