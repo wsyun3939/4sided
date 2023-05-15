@@ -205,7 +205,7 @@ int bb2(Instance &instance, int UB_cur, Direction dir, clock_t start)
     static int p;
     static Dst temp;
     static int ans;
-    if (((double)(clock() - start) / CLOCKS_PER_SEC) > 1)
+    if (((double)(clock() - start) / CLOCKS_PER_SEC) > 1800)
     {
         depth = 0;
         return -1;
