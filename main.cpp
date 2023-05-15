@@ -2,6 +2,7 @@
 #include <fstream>
 #include <sstream>
 #include <vector>
+#include <time.h>
 #include "instance.h"
 #include "bb.cpp"
 
@@ -11,6 +12,12 @@ using namespace std;
 
 int main()
 {
+    // 計算時間を測る
+    clock_t start, calc_time;
+    clock_t max = 0;
+    clock_t sol_lapse = 0;
+    // 30分以内に解けなかった例題数
+    int timeup = 0;
     // 積み替え回数の総和
     int sum = 0;
     // 最適解と下界値の差
@@ -20,6 +27,7 @@ int main()
     FILE *fp_csv = NULL;
     for (int a = NUMBER; a < NUMBER + 100 * TIER; a++)
     {
+        start = clock();
         Instance *instance = new Instance();
         char filename[BUFFER];
         snprintf(filename, BUFFER, "../Benchmark/%d-%d-%d/%05d.txt", TIER, STACK, nblock, a);
@@ -46,7 +54,7 @@ int main()
         cout << "UB4=" << instance->config.UB4 << endl;
 
 #if BB == 1
-        temp = bb1(*instance, instance->config.LB1);
+        temp = bb1(*instance, instance->config.LB1, start);
         cout << temp << endl;
         if (a % 100 == 1)
         {
@@ -56,7 +64,7 @@ int main()
 #endif
 
 #if BB == 2
-        temp = bb2(*instance, instance->config.LB2, Any);
+        temp = bb2(*instance, instance->config.LB2, Any, start);
         cout << temp << endl;
         if (a % 100 == 1)
         {
@@ -66,7 +74,7 @@ int main()
 #endif
 
 #if BB == -2
-        temp = bb2a(*instance, instance->config.LB2a, Any);
+        temp = bb2a(*instance, instance->config.LB2a, Any, start);
         cout << temp << endl;
         if (a % 100 == 1)
         {
@@ -76,7 +84,7 @@ int main()
 #endif
 
 #if BB == 3
-        temp = bb3(*instance, instance->config.LB3, Any);
+        temp = bb3(*instance, instance->config.LB3, Any, start);
         cout << temp << endl;
         if (a % 100 == 1)
         {
@@ -86,7 +94,7 @@ int main()
 #endif
 
 #if BB == 4
-        temp = bb4(*instance, instance->config.LB4, Any);
+        temp = bb4(*instance, instance->config.LB4, Any, start);
         cout << temp << endl;
         if (a % 100 == 1)
         {
@@ -95,8 +103,21 @@ int main()
         }
 #endif
 
+        if (temp == -1)
+        {
+            timeup++;
+        }
+        else
+        {
+            calc_time = clock() - start;
+            sol_lapse += calc_time;
+            if (max < calc_time)
+            {
+                max = calc_time;
+            }
+            sum += temp;
+        }
         fprintf(fp_csv, "%d\n", temp);
-        sum += temp;
         delete instance;
         if (a % 100 == 0)
         {

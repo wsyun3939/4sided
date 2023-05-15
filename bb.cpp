@@ -43,12 +43,17 @@ bool asc_desc(Dst &left, Dst &right)
 }
 
 // 一方向(上)からの積み替え・取り出し
-int bb1(Instance &instance, int UB_cur)
+int bb1(Instance &instance, int UB_cur, clock_t start)
 {
     // 節点の深さ
     static int depth = 0;
     // 最適解
     static int min_rel = 0;
+    if (((double)(clock() - start) / CLOCKS_PER_SEC) > 1800)
+    {
+        depth = 0;
+        return -1;
+    }
     if (depth + instance.config.LB1 == UB_cur - 1)
     {
         int UB_temp = instance.UB1();
@@ -132,7 +137,7 @@ int bb1(Instance &instance, int UB_cur)
 #endif
 
                 instance_temp = instance;
-                if (bb1(instance_temp, UB_cur))
+                if (bb1(instance_temp, UB_cur, start))
                 {
                     return min_rel;
                 }
@@ -153,7 +158,7 @@ int bb1(Instance &instance, int UB_cur)
                 instance.config.print();
 #endif
 
-                if (bb1(instance, UB_cur))
+                if (bb1(instance, UB_cur, start))
                 {
                     return min_rel;
                 }
@@ -165,7 +170,7 @@ int bb1(Instance &instance, int UB_cur)
     if (depth == 0)
     {
         UB_cur++;
-        if (bb1(instance, UB_cur))
+        if (bb1(instance, UB_cur, start))
         {
             return min_rel;
         }
@@ -177,7 +182,7 @@ int bb1(Instance &instance, int UB_cur)
 }
 
 // 二方向(上右)からの積み替え・取り出し
-int bb2(Instance &instance, int UB_cur, Direction dir)
+int bb2(Instance &instance, int UB_cur, Direction dir, clock_t start)
 {
     // 節点の深さ
     static int depth = 0;
@@ -187,6 +192,11 @@ int bb2(Instance &instance, int UB_cur, Direction dir)
     static int LB_temp;
     static int p;
     static Dst temp;
+    if (((double)(clock() - start) / CLOCKS_PER_SEC) > 1800)
+    {
+        depth = 0;
+        return -1;
+    }
     if (depth + instance.config.LB2 == UB_cur - 1)
     {
         int UB_temp = instance.UB2(Upp, Right);
@@ -339,7 +349,7 @@ int bb2(Instance &instance, int UB_cur, Direction dir)
 #endif
 
                     instance_temp = instance;
-                    if (bb2(instance_temp, UB_cur, Any))
+                    if (bb2(instance_temp, UB_cur, Any, start))
                     {
                         return min_rel;
                     }
@@ -364,7 +374,7 @@ int bb2(Instance &instance, int UB_cur, Direction dir)
                     instance.config.print();
 #endif
 
-                    if (bb2(instance, UB_cur, src_vec[i].dir))
+                    if (bb2(instance, UB_cur, src_vec[i].dir, start))
                     {
                         return min_rel;
                     }
@@ -481,7 +491,7 @@ int bb2(Instance &instance, int UB_cur, Direction dir)
 #endif
 
                     instance_temp = instance;
-                    if (bb2(instance_temp, UB_cur, Any))
+                    if (bb2(instance_temp, UB_cur, Any, start))
                     {
                         return min_rel;
                     }
@@ -506,7 +516,7 @@ int bb2(Instance &instance, int UB_cur, Direction dir)
                     instance.config.print();
 #endif
 
-                    if (bb2(instance, UB_cur, dir))
+                    if (bb2(instance, UB_cur, dir, start))
                     {
                         return min_rel;
                     }
@@ -523,7 +533,7 @@ int bb2(Instance &instance, int UB_cur, Direction dir)
     if (depth == 0)
     {
         UB_cur++;
-        if (bb2(instance, UB_cur, Any))
+        if (bb2(instance, UB_cur, Any, start))
         {
             return min_rel;
         }
@@ -535,7 +545,7 @@ int bb2(Instance &instance, int UB_cur, Direction dir)
 }
 
 // 二方向(上下)からの積み替え・取り出し
-int bb2a(Instance &instance, int UB_cur, Direction dir)
+int bb2a(Instance &instance, int UB_cur, Direction dir, clock_t start)
 {
     // 節点の深さ
     static int depth = 0;
@@ -545,6 +555,11 @@ int bb2a(Instance &instance, int UB_cur, Direction dir)
     static int LB_temp;
     static int p;
     static Dst temp;
+    if (((double)(clock() - start) / CLOCKS_PER_SEC) > 1800)
+    {
+        depth = 0;
+        return -1;
+    }
     if (depth + instance.config.LB2a == UB_cur - 1)
     {
         int UB_temp = instance.UB2(Upp, Low);
@@ -689,7 +704,7 @@ int bb2a(Instance &instance, int UB_cur, Direction dir)
 #endif
 
                     instance_temp = instance;
-                    if (bb2a(instance_temp, UB_cur, Any))
+                    if (bb2a(instance_temp, UB_cur, Any, start))
                     {
                         return min_rel;
                     }
@@ -710,7 +725,7 @@ int bb2a(Instance &instance, int UB_cur, Direction dir)
                     instance.config.print();
 #endif
 
-                    if (bb2a(instance, UB_cur, src_vec[i].dir))
+                    if (bb2a(instance, UB_cur, src_vec[i].dir, start))
                     {
                         return min_rel;
                     }
@@ -821,7 +836,7 @@ int bb2a(Instance &instance, int UB_cur, Direction dir)
 #endif
 
                     instance_temp = instance;
-                    if (bb2a(instance_temp, UB_cur, Any))
+                    if (bb2a(instance_temp, UB_cur, Any, start))
                     {
                         return min_rel;
                     }
@@ -842,7 +857,7 @@ int bb2a(Instance &instance, int UB_cur, Direction dir)
                     instance.config.print();
 #endif
 
-                    if (bb2a(instance, UB_cur, dir))
+                    if (bb2a(instance, UB_cur, dir, start))
                     {
                         return min_rel;
                     }
@@ -855,7 +870,7 @@ int bb2a(Instance &instance, int UB_cur, Direction dir)
     if (depth == 0)
     {
         UB_cur++;
-        if (bb2a(instance, UB_cur, Any))
+        if (bb2a(instance, UB_cur, Any, start))
         {
             return min_rel;
         }
@@ -867,7 +882,7 @@ int bb2a(Instance &instance, int UB_cur, Direction dir)
 }
 
 // 三方向(上右下)からの積み替え・取り出し
-int bb3(Instance &instance, int UB_cur, Direction dir)
+int bb3(Instance &instance, int UB_cur, Direction dir, clock_t start)
 {
     // 節点の深さ
     static int depth = 0;
@@ -877,6 +892,11 @@ int bb3(Instance &instance, int UB_cur, Direction dir)
     static int LB_temp;
     static int p;
     static Dst temp;
+    if (((double)(clock() - start) / CLOCKS_PER_SEC) > 1800)
+    {
+        depth = 0;
+        return -1;
+    }
     if (depth + instance.config.LB3 == UB_cur - 1)
     {
         int UB_temp = instance.UB3(Upp, Right, Low);
@@ -1070,7 +1090,7 @@ int bb3(Instance &instance, int UB_cur, Direction dir)
 #endif
 
                     instance_temp = instance;
-                    if (bb3(instance_temp, UB_cur, Any))
+                    if (bb3(instance_temp, UB_cur, Any, start))
                     {
                         return min_rel;
                     }
@@ -1095,7 +1115,7 @@ int bb3(Instance &instance, int UB_cur, Direction dir)
                     instance.config.print();
 #endif
 
-                    if (bb3(instance, UB_cur, src_vec[i].dir))
+                    if (bb3(instance, UB_cur, src_vec[i].dir, start))
                     {
                         return min_rel;
                     }
@@ -1251,7 +1271,7 @@ int bb3(Instance &instance, int UB_cur, Direction dir)
 #endif
 
                     instance_temp = instance;
-                    if (bb3(instance_temp, UB_cur, Any))
+                    if (bb3(instance_temp, UB_cur, Any, start))
                     {
                         return min_rel;
                     }
@@ -1276,7 +1296,7 @@ int bb3(Instance &instance, int UB_cur, Direction dir)
                     instance.config.print();
 #endif
 
-                    if (bb3(instance, UB_cur, dir))
+                    if (bb3(instance, UB_cur, dir, start))
                     {
                         return min_rel;
                     }
@@ -1293,7 +1313,7 @@ int bb3(Instance &instance, int UB_cur, Direction dir)
     if (depth == 0)
     {
         UB_cur++;
-        if (bb3(instance, UB_cur, Any))
+        if (bb3(instance, UB_cur, Any, start))
         {
             return min_rel;
         }
@@ -1305,7 +1325,7 @@ int bb3(Instance &instance, int UB_cur, Direction dir)
 }
 
 // 四方向(上右下左)からの積み替え・取り出し
-int bb4(Instance &instance, int UB_cur, Direction dir)
+int bb4(Instance &instance, int UB_cur, Direction dir, clock_t start)
 {
     // 節点の深さ
     static int depth = 0;
@@ -1315,6 +1335,11 @@ int bb4(Instance &instance, int UB_cur, Direction dir)
     static int LB_temp;
     static int p;
     static Dst temp;
+    if (((double)(clock() - start) / CLOCKS_PER_SEC) > 1800)
+    {
+        depth = 0;
+        return -1;
+    }
     if (depth + instance.config.LB4 == UB_cur - 1)
     {
         int UB_temp = instance.UB4(Upp, Right, Low, Left);
@@ -1551,7 +1576,7 @@ int bb4(Instance &instance, int UB_cur, Direction dir)
 #endif
 
                     instance_temp = instance;
-                    if (bb4(instance_temp, UB_cur, Any))
+                    if (bb4(instance_temp, UB_cur, Any, start))
                     {
                         return min_rel;
                     }
@@ -1576,7 +1601,7 @@ int bb4(Instance &instance, int UB_cur, Direction dir)
                     instance.config.print();
 #endif
 
-                    if (bb4(instance, UB_cur, src_vec[i].dir))
+                    if (bb4(instance, UB_cur, src_vec[i].dir, start))
                     {
                         return min_rel;
                     }
@@ -1771,7 +1796,7 @@ int bb4(Instance &instance, int UB_cur, Direction dir)
 #endif
 
                     instance_temp = instance;
-                    if (bb4(instance_temp, UB_cur, Any))
+                    if (bb4(instance_temp, UB_cur, Any, start))
                     {
                         return min_rel;
                     }
@@ -1796,7 +1821,7 @@ int bb4(Instance &instance, int UB_cur, Direction dir)
                     instance.config.print();
 #endif
 
-                    if (bb4(instance, UB_cur, dir))
+                    if (bb4(instance, UB_cur, dir, start))
                     {
                         return min_rel;
                     }
@@ -1813,7 +1838,7 @@ int bb4(Instance &instance, int UB_cur, Direction dir)
     if (depth == 0)
     {
         UB_cur++;
-        if (bb4(instance, UB_cur, Any))
+        if (bb4(instance, UB_cur, Any, start))
         {
             return min_rel;
         }
