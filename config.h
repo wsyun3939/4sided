@@ -9,7 +9,7 @@
 #define TEST 1
 #define UB_TEST 1
 
-#define BB 4
+#define BB 2
 
 using namespace std;
 
@@ -68,9 +68,9 @@ public:
     Config()
     {
         // メンバ配列 config を 0 で初期化する
-        for (int i = 0; i < TIER; i++)
+        for (int i = 0; i < STACK; i++)
         {
-            for (int j = 0; j < STACK; j++)
+            for (int j = 0; j < TIER; j++)
             {
                 block[i][j] = 0;
             }
@@ -90,7 +90,7 @@ public:
         priority = 1;
 
         // 下界値を０で初期化
-        LB1 = LB2 = LB3 = LB4 = 0;
+        LB1 = LB2 = LB2a = LB3 = LB4 = 0;
 
         // 上界値を0で初期化
         UB1 = UB2 = UB3 = UB4 = 0;
