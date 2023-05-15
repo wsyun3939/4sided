@@ -49,6 +49,7 @@ int bb1(Instance &instance, int UB_cur, clock_t start)
     static int depth = 0;
     // 最適解
     static int min_rel = 0;
+    static int ans;
     if (((double)(clock() - start) / CLOCKS_PER_SEC) > 1800)
     {
         depth = 0;
@@ -137,9 +138,14 @@ int bb1(Instance &instance, int UB_cur, clock_t start)
 #endif
 
                 instance_temp = instance;
-                if (bb1(instance_temp, UB_cur, start))
+                ans = bb1(instance_temp, UB_cur, start);
+                if (ans != -1 && ans != 0)
                 {
                     return min_rel;
+                }
+                else if (ans == -1)
+                {
+                    return -1;
                 }
                 instance.config.relocate(it->dst, src);
             }
@@ -158,9 +164,14 @@ int bb1(Instance &instance, int UB_cur, clock_t start)
                 instance.config.print();
 #endif
 
-                if (bb1(instance, UB_cur, start))
+                ans = bb1(instance, UB_cur, start);
+                if (ans != -1 && ans != 0)
                 {
                     return min_rel;
+                }
+                else if (ans == -1)
+                {
+                    return -1;
                 }
                 instance.config.relocate(it->dst, src);
             }
@@ -170,11 +181,12 @@ int bb1(Instance &instance, int UB_cur, clock_t start)
     if (depth == 0)
     {
         UB_cur++;
-        if (bb1(instance, UB_cur, start))
+        ans = bb1(instance, UB_cur, start);
+        if (ans != -1 && ans != 0)
         {
             return min_rel;
         }
-        else
+        else if (ans == -1)
             return -1;
     }
     else
@@ -192,7 +204,8 @@ int bb2(Instance &instance, int UB_cur, Direction dir, clock_t start)
     static int LB_temp;
     static int p;
     static Dst temp;
-    if (((double)(clock() - start) / CLOCKS_PER_SEC) > 1800)
+    static int ans;
+    if (((double)(clock() - start) / CLOCKS_PER_SEC) > 1)
     {
         depth = 0;
         return -1;
@@ -349,9 +362,14 @@ int bb2(Instance &instance, int UB_cur, Direction dir, clock_t start)
 #endif
 
                     instance_temp = instance;
-                    if (bb2(instance_temp, UB_cur, Any, start))
+                    ans = bb2(instance_temp, UB_cur, Any, start);
+                    if (ans != -1 && ans != 0)
                     {
                         return min_rel;
+                    }
+                    else if (ans == -1)
+                    {
+                        return -1;
                     }
                     instance.config.relocate(it->dst, src);
 
@@ -374,9 +392,14 @@ int bb2(Instance &instance, int UB_cur, Direction dir, clock_t start)
                     instance.config.print();
 #endif
 
-                    if (bb2(instance, UB_cur, src_vec[i].dir, start))
+                    ans = bb2(instance, UB_cur, src_vec[i].dir, start);
+                    if (ans != -1 && ans != 0)
                     {
                         return min_rel;
+                    }
+                    else if (ans == -1)
+                    {
+                        return -1;
                     }
                     instance.config.relocate(it->dst, src);
 
@@ -491,9 +514,14 @@ int bb2(Instance &instance, int UB_cur, Direction dir, clock_t start)
 #endif
 
                     instance_temp = instance;
-                    if (bb2(instance_temp, UB_cur, Any, start))
+                    ans = bb2(instance_temp, UB_cur, Any, start);
+                    if (ans != -1 && ans != 0)
                     {
                         return min_rel;
+                    }
+                    else if (ans == -1)
+                    {
+                        return -1;
                     }
                     instance.config.relocate(it->dst, src);
 
@@ -516,9 +544,14 @@ int bb2(Instance &instance, int UB_cur, Direction dir, clock_t start)
                     instance.config.print();
 #endif
 
-                    if (bb2(instance, UB_cur, dir, start))
+                    ans = bb2(instance, UB_cur, dir, start);
+                    if (ans != -1 && ans != 0)
                     {
                         return min_rel;
+                    }
+                    else if (ans == -1)
+                    {
+                        return -1;
                     }
                     instance.config.relocate(it->dst, src);
 
@@ -533,11 +566,12 @@ int bb2(Instance &instance, int UB_cur, Direction dir, clock_t start)
     if (depth == 0)
     {
         UB_cur++;
-        if (bb2(instance, UB_cur, Any, start))
+        ans = bb2(instance, UB_cur, Any, start);
+        if (ans != -1 && ans != 0)
         {
             return min_rel;
         }
-        else
+        else if (ans == -1)
             return -1;
     }
     else
@@ -555,6 +589,7 @@ int bb2a(Instance &instance, int UB_cur, Direction dir, clock_t start)
     static int LB_temp;
     static int p;
     static Dst temp;
+    static int ans;
     if (((double)(clock() - start) / CLOCKS_PER_SEC) > 1800)
     {
         depth = 0;
@@ -704,9 +739,14 @@ int bb2a(Instance &instance, int UB_cur, Direction dir, clock_t start)
 #endif
 
                     instance_temp = instance;
-                    if (bb2a(instance_temp, UB_cur, Any, start))
+                    ans = bb2a(instance_temp, UB_cur, Any, start);
+                    if (ans != -1 && ans != 0)
                     {
                         return min_rel;
+                    }
+                    else if (ans == -1)
+                    {
+                        return -1;
                     }
                     instance.config.relocate(it->dst, src);
                 }
@@ -725,9 +765,14 @@ int bb2a(Instance &instance, int UB_cur, Direction dir, clock_t start)
                     instance.config.print();
 #endif
 
-                    if (bb2a(instance, UB_cur, src_vec[i].dir, start))
+                    ans = bb2a(instance, UB_cur, src_vec[i].dir, start);
+                    if (ans != -1 && ans != 0)
                     {
                         return min_rel;
+                    }
+                    else if (ans == -1)
+                    {
+                        return -1;
                     }
                     instance.config.relocate(it->dst, src);
                 }
@@ -836,9 +881,14 @@ int bb2a(Instance &instance, int UB_cur, Direction dir, clock_t start)
 #endif
 
                     instance_temp = instance;
-                    if (bb2a(instance_temp, UB_cur, Any, start))
+                    ans = bb2a(instance_temp, UB_cur, Any, start);
+                    if (ans != -1 && ans != 0)
                     {
                         return min_rel;
+                    }
+                    else if (ans == -1)
+                    {
+                        return -1;
                     }
                     instance.config.relocate(it->dst, src);
                 }
@@ -857,9 +907,14 @@ int bb2a(Instance &instance, int UB_cur, Direction dir, clock_t start)
                     instance.config.print();
 #endif
 
-                    if (bb2a(instance, UB_cur, dir, start))
+                    ans = bb2a(instance, UB_cur, dir, start);
+                    if (ans != -1 && ans != 0)
                     {
                         return min_rel;
+                    }
+                    else if (ans == -1)
+                    {
+                        return -1;
                     }
                     instance.config.relocate(it->dst, src);
                 }
@@ -870,11 +925,12 @@ int bb2a(Instance &instance, int UB_cur, Direction dir, clock_t start)
     if (depth == 0)
     {
         UB_cur++;
-        if (bb2a(instance, UB_cur, Any, start))
+        ans = bb2a(instance, UB_cur, Any, start);
+        if (ans != -1 && ans != 0)
         {
             return min_rel;
         }
-        else
+        else if (ans == -1)
             return -1;
     }
     else
@@ -892,6 +948,7 @@ int bb3(Instance &instance, int UB_cur, Direction dir, clock_t start)
     static int LB_temp;
     static int p;
     static Dst temp;
+    static int ans;
     if (((double)(clock() - start) / CLOCKS_PER_SEC) > 1800)
     {
         depth = 0;
@@ -1090,9 +1147,14 @@ int bb3(Instance &instance, int UB_cur, Direction dir, clock_t start)
 #endif
 
                     instance_temp = instance;
-                    if (bb3(instance_temp, UB_cur, Any, start))
+                    ans = bb3(instance_temp, UB_cur, Any, start);
+                    if (ans != -1 && ans != 0)
                     {
                         return min_rel;
+                    }
+                    else if (ans == -1)
+                    {
+                        return -1;
                     }
                     instance.config.relocate(it->dst, src);
 
@@ -1115,9 +1177,14 @@ int bb3(Instance &instance, int UB_cur, Direction dir, clock_t start)
                     instance.config.print();
 #endif
 
-                    if (bb3(instance, UB_cur, src_vec[i].dir, start))
+                    ans = bb3(instance, UB_cur, src_vec[i].dir, start);
+                    if (ans != -1 && ans != 0)
                     {
                         return min_rel;
+                    }
+                    else if (ans == -1)
+                    {
+                        return -1;
                     }
                     instance.config.relocate(it->dst, src);
 
@@ -1271,9 +1338,14 @@ int bb3(Instance &instance, int UB_cur, Direction dir, clock_t start)
 #endif
 
                     instance_temp = instance;
-                    if (bb3(instance_temp, UB_cur, Any, start))
+                    ans = bb3(instance_temp, UB_cur, Any, start);
+                    if (ans != -1 && ans != 0)
                     {
                         return min_rel;
+                    }
+                    else if (ans == -1)
+                    {
+                        return -1;
                     }
                     instance.config.relocate(it->dst, src);
 
@@ -1296,9 +1368,14 @@ int bb3(Instance &instance, int UB_cur, Direction dir, clock_t start)
                     instance.config.print();
 #endif
 
-                    if (bb3(instance, UB_cur, dir, start))
+                    ans = bb3(instance, UB_cur, dir, start);
+                    if (ans != -1 && ans != 0)
                     {
                         return min_rel;
+                    }
+                    else if (ans == -1)
+                    {
+                        return -1;
                     }
                     instance.config.relocate(it->dst, src);
 
@@ -1313,11 +1390,12 @@ int bb3(Instance &instance, int UB_cur, Direction dir, clock_t start)
     if (depth == 0)
     {
         UB_cur++;
-        if (bb3(instance, UB_cur, Any, start))
+        ans = bb3(instance, UB_cur, Any, start);
+        if (ans != -1 && ans != 0)
         {
             return min_rel;
         }
-        else
+        else if (ans == -1)
             return -1;
     }
     else
@@ -1335,6 +1413,7 @@ int bb4(Instance &instance, int UB_cur, Direction dir, clock_t start)
     static int LB_temp;
     static int p;
     static Dst temp;
+    static int ans;
     if (((double)(clock() - start) / CLOCKS_PER_SEC) > 1800)
     {
         depth = 0;
@@ -1576,9 +1655,14 @@ int bb4(Instance &instance, int UB_cur, Direction dir, clock_t start)
 #endif
 
                     instance_temp = instance;
-                    if (bb4(instance_temp, UB_cur, Any, start))
+                    ans = bb4(instance_temp, UB_cur, Any, start);
+                    if (ans != -1 && ans != 0)
                     {
                         return min_rel;
+                    }
+                    else if (ans == -1)
+                    {
+                        return -1;
                     }
                     instance.config.relocate(it->dst, src);
 
@@ -1601,10 +1685,16 @@ int bb4(Instance &instance, int UB_cur, Direction dir, clock_t start)
                     instance.config.print();
 #endif
 
-                    if (bb4(instance, UB_cur, src_vec[i].dir, start))
+                    ans = bb4(instance, UB_cur, src_vec[i].dir, start);
+                    if (ans != -1 && ans != 0)
                     {
                         return min_rel;
                     }
+                    else if (ans == -1)
+                    {
+                        return -1;
+                    }
+
                     instance.config.relocate(it->dst, src);
 
 #if TEST == 0
@@ -1796,9 +1886,14 @@ int bb4(Instance &instance, int UB_cur, Direction dir, clock_t start)
 #endif
 
                     instance_temp = instance;
-                    if (bb4(instance_temp, UB_cur, Any, start))
+                    ans = bb4(instance_temp, UB_cur, Any, start);
+                    if (ans != -1 && ans != 0)
                     {
                         return min_rel;
+                    }
+                    else if (ans == -1)
+                    {
+                        return -1;
                     }
                     instance.config.relocate(it->dst, src);
 
@@ -1821,9 +1916,14 @@ int bb4(Instance &instance, int UB_cur, Direction dir, clock_t start)
                     instance.config.print();
 #endif
 
-                    if (bb4(instance, UB_cur, dir, start))
+                    ans = bb4(instance, UB_cur, dir, start);
+                    if (ans != -1 && ans != 0)
                     {
                         return min_rel;
+                    }
+                    else if (ans == -1)
+                    {
+                        return -1;
                     }
                     instance.config.relocate(it->dst, src);
 
@@ -1838,11 +1938,12 @@ int bb4(Instance &instance, int UB_cur, Direction dir, clock_t start)
     if (depth == 0)
     {
         UB_cur++;
-        if (bb4(instance, UB_cur, Any, start))
+        ans = bb4(instance, UB_cur, Any, start);
+        if (ans != -1 && ans != 0)
         {
             return min_rel;
         }
-        else
+        else if (ans == -1)
             return -1;
     }
     else

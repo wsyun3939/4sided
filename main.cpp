@@ -126,5 +126,6 @@ int main()
         }
     }
     cout << "平均積み替え変え回数：" << (double)sum / (100 * TIER) << endl;
+    cout << "infeasible:" << timeup << endl;
     return 0;
 }
