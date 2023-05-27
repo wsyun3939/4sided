@@ -64,7 +64,7 @@ int main()
 #endif
 
 #if BB == 2
-        temp = bb2(*instance, instance->config.LB2, Any, start);
+        temp = bb2(*instance, instance->config.LB2, start);
         cout << temp << endl;
         if (a % 100 == 1)
         {
