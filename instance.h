@@ -1061,5 +1061,16 @@ public:
         }
         return UB4;
     }
+
+    // ブロック配置が正しいかを判定する
+    bool isCorrect()
+    {
+        for (int i = config.priority; i <= nblock; i++)
+        {
+            if (config.block[config.pos[i - 1].x][config.pos[i - 1].y] != i)
+                return false;
+        }
+        return true;
+    }
 };
 #endif

@@ -227,7 +227,7 @@ int bb1(Instance &instance, int UB_cur, clock_t start)
 }
 
 // 二方向(上右)からの積み替え・取り出し
-int bb2(Instance &instance, int UB_cur, clock_t start)
+int bb2(Instance &instance, int LB, int UB_cur, clock_t start)
 {
     // 節点の深さ
     static int depth = 0;
@@ -237,12 +237,25 @@ int bb2(Instance &instance, int UB_cur, clock_t start)
     static int LB_temp;
     static Dst temp;
     static int ans;
+    static int k = 0;
+    k++;
+    // cout << k << endl;
+    if (k == 536800)
+    {
+        cout << "debug" << endl;
+        instance.config.print();
+    }
+    if (!instance.isCorrect())
+    {
+        cout << "error" << endl;
+        instance.config.print();
+    }
     if (((double)(clock() - start) / CLOCKS_PER_SEC) > 1800)
     {
         depth = 0;
         return -1;
     }
-    if (depth + instance.config.LB2 == UB_cur - 1)
+    if (depth + LB == UB_cur - 1)
     {
         int UB_temp = instance.UB2(Upp, Right);
         if (instance.config.UB2 > UB_temp + depth)
@@ -266,6 +279,10 @@ int bb2(Instance &instance, int UB_cur, clock_t start)
 #if TEST == 0
         instance.config.print();
 #endif
+        if (k == 536800)
+        {
+            instance.config.print();
+        }
 
         if (instance.config.priority == instance.nblock + 1)
         {
@@ -383,7 +400,12 @@ int bb2(Instance &instance, int UB_cur, clock_t start)
             continue;
         // 積み替え先を下界値の小さい順に並べる.下界値が等しい場合，最大優先度の降順に並べる
         sort(vec_dst.begin(), vec_dst.end(), dst_desc);
-        if ((instance.config.pos[instance.config.priority - 1].x == instance.config.pos[src->p_block - 1].x && instance.config.pos[instance.config.priority - 1].y + 1 == instance.config.pos[src->p_block - 1].y) || (instance.config.pos[instance.config.priority - 1].y == instance.config.pos[src->p_block - 1].y || instance.config.pos[instance.config.priority - 1].x + 1 == instance.config.pos[src->p_block - 1].x))
+        // 積み替え元ブロックを取り出す
+        instance.config.block[src->src.x][src->src.y] = 0;
+        block1 = instance.config.count(Upp);
+        block2 = instance.config.count(Right);
+        instance.config.block[src->src.x][src->src.y] = src->p_block;
+        if (block1 == 0 || block2 == 0)
         {
             Instance instance_temp;
             for (auto it = vec_dst.begin(); it != vec_dst.end(); it++)
@@ -395,11 +417,17 @@ int bb2(Instance &instance, int UB_cur, clock_t start)
                 instance.config.relocate(src->src, it->dst);
 
 #if TEST == 0
+                cout << "depth:" << depth << endl;
                 instance.config.print();
 #endif
+                if (k == 536800)
+                {
+                    cout << "debug" << endl;
+                    instance.config.print();
+                }
 
                 instance_temp = instance;
-                ans = bb2(instance_temp, UB_cur, start);
+                ans = bb2(instance_temp, it->LB, UB_cur, start);
                 if (ans != -1 && ans != 0)
                 {
                     return min_rel;
@@ -413,6 +441,11 @@ int bb2(Instance &instance, int UB_cur, clock_t start)
 #if TEST == 0
                 instance.config.print();
 #endif
+                if (k == 536800)
+                {
+                    cout << "debug" << endl;
+                    instance.config.print();
+                }
             }
         }
         else
@@ -426,10 +459,16 @@ int bb2(Instance &instance, int UB_cur, clock_t start)
                 instance.config.relocate(src->src, it->dst);
 
 #if TEST == 0
+                cout << "depth:" << depth << endl;
                 instance.config.print();
 #endif
+                if (k == 536800)
+                {
+                    cout << "debug" << endl;
+                    instance.config.print();
+                }
 
-                ans = bb2(instance, UB_cur, start);
+                ans = bb2(instance, it->LB, UB_cur, start);
                 if (ans != -1 && ans != 0)
                 {
                     return min_rel;
@@ -438,11 +477,22 @@ int bb2(Instance &instance, int UB_cur, clock_t start)
                 {
                     return -1;
                 }
+                if (k == 536800)
+                {
+                    cout << "debug" << endl;
+                    cout << src->p_block << endl;
+                    instance.config.print();
+                }
                 instance.config.relocate(it->dst, src->src);
 
 #if TEST == 0
                 instance.config.print();
 #endif
+                if (k == 536800)
+                {
+                    cout << "debug" << endl;
+                    instance.config.print();
+                }
             }
         }
     }
@@ -450,7 +500,7 @@ int bb2(Instance &instance, int UB_cur, clock_t start)
     if (depth == 0)
     {
         UB_cur++;
-        ans = bb2(instance, UB_cur, start);
+        ans = bb2(instance, LB, UB_cur, start);
         if (ans != -1 && ans != 0)
         {
             return min_rel;
