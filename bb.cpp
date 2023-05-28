@@ -237,19 +237,11 @@ int bb2(Instance &instance, int LB, int UB_cur, clock_t start)
     static int LB_temp;
     static Dst temp;
     static int ans;
-    static int k = 0;
-    k++;
-    // cout << k << endl;
-    if (k == 536800)
-    {
-        cout << "debug" << endl;
-        instance.config.print();
-    }
-    if (!instance.isCorrect())
-    {
-        cout << "error" << endl;
-        instance.config.print();
-    }
+    // if (!instance.isCorrect())
+    // {
+    //     cout << "error" << endl;
+    //     instance.config.print();
+    // }
     if (((double)(clock() - start) / CLOCKS_PER_SEC) > 1800)
     {
         depth = 0;
@@ -279,10 +271,6 @@ int bb2(Instance &instance, int LB, int UB_cur, clock_t start)
 #if TEST == 0
         instance.config.print();
 #endif
-        if (k == 536800)
-        {
-            instance.config.print();
-        }
 
         if (instance.config.priority == instance.nblock + 1)
         {
@@ -420,11 +408,6 @@ int bb2(Instance &instance, int LB, int UB_cur, clock_t start)
                 cout << "depth:" << depth << endl;
                 instance.config.print();
 #endif
-                if (k == 536800)
-                {
-                    cout << "debug" << endl;
-                    instance.config.print();
-                }
 
                 instance_temp = instance;
                 ans = bb2(instance_temp, it->LB, UB_cur, start);
@@ -441,11 +424,6 @@ int bb2(Instance &instance, int LB, int UB_cur, clock_t start)
 #if TEST == 0
                 instance.config.print();
 #endif
-                if (k == 536800)
-                {
-                    cout << "debug" << endl;
-                    instance.config.print();
-                }
             }
         }
         else
@@ -462,11 +440,6 @@ int bb2(Instance &instance, int LB, int UB_cur, clock_t start)
                 cout << "depth:" << depth << endl;
                 instance.config.print();
 #endif
-                if (k == 536800)
-                {
-                    cout << "debug" << endl;
-                    instance.config.print();
-                }
 
                 ans = bb2(instance, it->LB, UB_cur, start);
                 if (ans != -1 && ans != 0)
@@ -477,22 +450,11 @@ int bb2(Instance &instance, int LB, int UB_cur, clock_t start)
                 {
                     return -1;
                 }
-                if (k == 536800)
-                {
-                    cout << "debug" << endl;
-                    cout << src->p_block << endl;
-                    instance.config.print();
-                }
                 instance.config.relocate(it->dst, src->src);
 
 #if TEST == 0
                 instance.config.print();
 #endif
-                if (k == 536800)
-                {
-                    cout << "debug" << endl;
-                    instance.config.print();
-                }
             }
         }
     }
