@@ -237,6 +237,62 @@ public:
         return sum;
     }
 
+    // ブロッキングブロックの個数を数える
+    int count_blocking(Direction dir, int idx)
+    {
+        int sum = 0;
+        switch (dir)
+        {
+        case (Left):
+            for (int i = 0; i < STACK; i++)
+            {
+                if (block[i][idx] == P_LR[idx])
+                {
+                    return sum;
+                }
+                else if (block[i][idx])
+                    sum++;
+            }
+            break;
+        case (Right):
+            for (int i = STACK - 1; i >= 0; i--)
+            {
+                if (block[i][idx] == P_LR[idx])
+                {
+                    return sum;
+                }
+                else if (block[i][idx])
+                    sum++;
+            }
+            break;
+        case (Low):
+            for (int j = 0; j < TIER; j++)
+            {
+                if (block[idx][j] == P_UL[idx])
+                {
+                    return sum;
+                }
+                else if (block[idx][j])
+                    sum++;
+            }
+            break;
+        case (Upp):
+            for (int j = TIER - 1; j >= 0; j--)
+            {
+                if (block[idx][j] == P_UL[idx])
+                {
+                    return sum;
+                }
+                else if (block[idx][j])
+                    sum++;
+            }
+            break;
+        default:
+            break;
+        }
+        return sum;
+    }
+
     // ブロッキングブロックを削除
     void delete_block(Direction dir)
     {
