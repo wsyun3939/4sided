@@ -74,7 +74,7 @@ int main()
 #endif
 
 #if BB == -2
-        temp = bb2a(*instance, instance->config.LB2a, Any, start);
+        temp = bb2a(*instance, instance->config.LB2a, instance->config.LB2a, start);
         cout << temp << endl;
         if (a % 100 == 1)
         {
@@ -84,7 +84,7 @@ int main()
 #endif
 
 #if BB == 3
-        temp = bb3(*instance, instance->config.LB3, Any, start);
+        temp = bb3(*instance, instance->config.LB3, instance->config.LB3, start);
         cout << temp << endl;
         if (a % 100 == 1)
         {
@@ -94,7 +94,7 @@ int main()
 #endif
 
 #if BB == 4
-        temp = bb4(*instance, instance->config.LB4, Any, start);
+        temp = bb4(*instance, instance->config.LB4, instance->config.LB4, start);
         cout << temp << endl;
         if (a % 100 == 1)
         {
