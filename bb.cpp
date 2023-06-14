@@ -133,6 +133,7 @@ int bb1(Instance &instance, int UB_cur, clock_t start)
     {
         vector<Dst> vec_dst;
         Point dst = {0, TIER - 1};
+        instance.config.block[src->src.x][src->src.y] = 0;
         // 積み替え先スタックを決定
         for (dst.x = 0; dst.x < STACK; dst.x++)
         {
@@ -141,18 +142,17 @@ int bb1(Instance &instance, int UB_cur, clock_t start)
                 int LB_temp = 0;
                 while (!instance.config.block[dst.x][dst.y - 1] && (dst.y > 0))
                     dst.y--;
-                instance.config.block[src->src.x][src->src.y] = 0;
                 instance.config.block[dst.x][dst.y] = src->p_block;
                 instance.config.pos[src->p_block - 1] = dst;
                 LB_temp = instance.LB1();
                 Dst temp = {dst, LB_temp, instance.config.P_UL[dst.x]};
                 vec_dst.push_back(temp);
                 instance.config.block[dst.x][dst.y] = 0;
-                instance.config.block[src->src.x][src->src.y] = src->p_block;
-                instance.config.pos[src->p_block - 1] = src->src;
                 dst.y = TIER - 1;
             }
         }
+        instance.config.block[src->src.x][src->src.y] = src->p_block;
+        instance.config.pos[src->p_block - 1] = src->src;
         if (!vec_dst.empty())
         {
             // 積み替え先を下界値の小さい順に並べる.下界値が等しい場合，最大優先度の降順に並べる
@@ -323,6 +323,7 @@ int bb2(Instance &instance, int LB, int UB_cur, clock_t start)
         // 積み替え先ブロックを決定
         vector<Dst> vec_dst;
         Point dst = {0, TIER - 1};
+        instance.config.block[src->src.x][src->src.y] = 0;
         // 積み替え先スタックを決定
         // 上側からの積み替え
         for (dst.x = 0; dst.x < STACK; dst.x++)
@@ -331,12 +332,11 @@ int bb2(Instance &instance, int LB, int UB_cur, clock_t start)
             {
                 while (!instance.config.block[dst.x][dst.y - 1] && (dst.y > 0))
                     dst.y--;
-                if ((src->src.x == dst.x) && (src->src.y + 1 == dst.y))
+                if ((src->src.x == dst.x) && (src->src.y == dst.y))
                 {
                     dst.y = TIER - 1;
                     continue;
                 }
-                instance.config.block[src->src.x][src->src.y] = 0;
                 instance.config.block[dst.x][dst.y] = src->p_block;
                 instance.config.pos[src->p_block - 1] = dst;
                 LB_temp = instance.LB2(Upp, Right, Any);
@@ -345,8 +345,6 @@ int bb2(Instance &instance, int LB, int UB_cur, clock_t start)
                 temp.p = instance.config.P_UL[dst.x];
                 vec_dst.push_back(temp);
                 instance.config.block[dst.x][dst.y] = 0;
-                instance.config.block[src->src.x][src->src.y] = src->p_block;
-                instance.config.pos[src->p_block - 1] = src->src;
                 dst.y = TIER - 1;
             }
         }
@@ -358,12 +356,11 @@ int bb2(Instance &instance, int LB, int UB_cur, clock_t start)
             {
                 while (!instance.config.block[dst.x - 1][dst.y] && (dst.x > 0))
                     dst.x--;
-                if ((src->src.y == dst.y) && (src->src.x + 1 == dst.x))
+                if ((src->src.y == dst.y) && (src->src.x == dst.x))
                 {
                     dst.x = STACK - 1;
                     continue;
                 }
-                instance.config.block[src->src.x][src->src.y] = 0;
                 instance.config.block[dst.x][dst.y] = src->p_block;
                 instance.config.pos[src->p_block - 1] = dst;
                 LB_temp = instance.LB2(Upp, Right, Any);
@@ -372,11 +369,11 @@ int bb2(Instance &instance, int LB, int UB_cur, clock_t start)
                 temp.p = instance.config.P_LR[dst.y];
                 vec_dst.push_back(temp);
                 instance.config.block[dst.x][dst.y] = 0;
-                instance.config.block[src->src.x][src->src.y] = src->p_block;
-                instance.config.pos[src->p_block - 1] = src->src;
                 dst.x = STACK - 1;
             }
         }
+        instance.config.block[src->src.x][src->src.y] = src->p_block;
+        instance.config.pos[src->p_block - 1] = src->src;
         if (vec_dst.empty())
             continue;
         // 積み替え先を下界値の小さい順に並べる.下界値が等しい場合，最大優先度の降順に並べる
@@ -555,6 +552,7 @@ int bb2a(Instance &instance, int LB, int UB_cur, clock_t start)
     {
         vector<Dst> vec_dst;
         Point dst = {0, TIER - 1};
+        instance.config.block[src->src.x][src->src.y] = 0;
         // 積み替え先スタックを決定
         // 上側からの積み替え
         for (dst.x = 0; dst.x < STACK; dst.x++)
@@ -563,20 +561,17 @@ int bb2a(Instance &instance, int LB, int UB_cur, clock_t start)
             {
                 while (!instance.config.block[dst.x][dst.y - 1] && (dst.y > 0))
                     dst.y--;
-                if ((src->src.x == dst.x) && (src->src.y + 1 == dst.y))
+                if ((src->src.x == dst.x) && (src->src.y == dst.y))
                 {
                     dst.y = TIER - 1;
                     continue;
                 }
-                instance.config.block[src->src.x][src->src.y] = 0;
                 instance.config.block[dst.x][dst.y] = src->p_block;
                 instance.config.pos[src->p_block - 1] = dst;
                 LB_temp = instance.LB2a(Any);
                 Dst temp = {dst, LB_temp, instance.config.P_UL[dst.x]};
                 vec_dst.push_back(temp);
                 instance.config.block[dst.x][dst.y] = 0;
-                instance.config.block[src->src.x][src->src.y] = src->p_block;
-                instance.config.pos[src->p_block - 1] = src->src;
                 dst.y = TIER - 1;
             }
         }
@@ -588,23 +583,22 @@ int bb2a(Instance &instance, int LB, int UB_cur, clock_t start)
             {
                 while (!instance.config.block[dst.x][dst.y + 1] && (dst.y < TIER - 1))
                     dst.y++;
-                if ((src->src.x == dst.x) && (src->src.y - 1 == dst.y))
+                if ((src->src.x == dst.x) && (src->src.y == dst.y))
                 {
                     dst.y = 0;
                     continue;
                 }
-                instance.config.block[src->src.x][src->src.y] = 0;
                 instance.config.block[dst.x][dst.y] = src->p_block;
                 instance.config.pos[src->p_block - 1] = dst;
                 LB_temp = instance.LB2a(Any);
                 Dst temp = {dst, LB_temp, instance.config.P_UL[dst.x]};
                 vec_dst.push_back(temp);
                 instance.config.block[dst.x][dst.y] = 0;
-                instance.config.block[src->src.x][src->src.y] = src->p_block;
-                instance.config.pos[src->p_block - 1] = src->src;
                 dst.y = 0;
             }
         }
+        instance.config.block[src->src.x][src->src.y] = src->p_block;
+        instance.config.pos[src->p_block - 1] = src->src;
         if (vec_dst.empty())
             continue;
         // 積み替え先を下界値の小さい順に並べる.下界値が等しい場合，最大優先度の降順に並べる
@@ -790,6 +784,7 @@ int bb3(Instance &instance, int LB, int UB_cur, clock_t start)
     {
         vector<Dst> vec_dst;
         Point dst = {0, TIER - 1};
+        instance.config.block[src->src.x][src->src.y] = 0;
         // 積み替え先スタックを決定
         // 上側からの積み替え
         for (dst.x = 0; dst.x < STACK; dst.x++)
@@ -798,12 +793,11 @@ int bb3(Instance &instance, int LB, int UB_cur, clock_t start)
             {
                 while (!instance.config.block[dst.x][dst.y - 1] && (dst.y > 0))
                     dst.y--;
-                if ((src->src.x == dst.x) && (src->src.y + 1 == dst.y))
+                if ((src->src.x == dst.x) && (src->src.y == dst.y))
                 {
                     dst.y = TIER - 1;
                     continue;
                 }
-                instance.config.block[src->src.x][src->src.y] = 0;
                 instance.config.block[dst.x][dst.y] = src->p_block;
                 instance.config.pos[src->p_block - 1] = dst;
                 LB_temp = instance.LB3(Upp, Right, Low, Any);
@@ -812,8 +806,6 @@ int bb3(Instance &instance, int LB, int UB_cur, clock_t start)
                 temp.p = instance.config.P_UL[dst.x];
                 vec_dst.push_back(temp);
                 instance.config.block[dst.x][dst.y] = 0;
-                instance.config.block[src->src.x][src->src.y] = src->p_block;
-                instance.config.pos[src->p_block - 1] = src->src;
                 dst.y = TIER - 1;
             }
         }
@@ -825,12 +817,11 @@ int bb3(Instance &instance, int LB, int UB_cur, clock_t start)
             {
                 while (!instance.config.block[dst.x - 1][dst.y] && (dst.x > 0))
                     dst.x--;
-                if ((src->src.y == dst.y) && (src->src.x + 1 == dst.x))
+                if ((src->src.y == dst.y) && (src->src.x == dst.x))
                 {
                     dst.x = STACK - 1;
                     continue;
                 }
-                instance.config.block[src->src.x][src->src.y] = 0;
                 instance.config.block[dst.x][dst.y] = src->p_block;
                 instance.config.pos[src->p_block - 1] = dst;
                 LB_temp = instance.LB3(Upp, Right, Low, Any);
@@ -839,8 +830,6 @@ int bb3(Instance &instance, int LB, int UB_cur, clock_t start)
                 temp.p = instance.config.P_LR[dst.y];
                 vec_dst.push_back(temp);
                 instance.config.block[dst.x][dst.y] = 0;
-                instance.config.block[src->src.x][src->src.y] = src->p_block;
-                instance.config.pos[src->p_block - 1] = src->src;
                 dst.x = STACK - 1;
             }
         }
@@ -852,12 +841,11 @@ int bb3(Instance &instance, int LB, int UB_cur, clock_t start)
             {
                 while (!instance.config.block[dst.x][dst.y + 1] && (dst.y < TIER - 1))
                     dst.y++;
-                if ((src->src.x == dst.x) && (src->src.y - 1 == dst.y))
+                if ((src->src.x == dst.x) && (src->src.y == dst.y))
                 {
                     dst.y = 0;
                     continue;
                 }
-                instance.config.block[src->src.x][src->src.y] = 0;
                 instance.config.block[dst.x][dst.y] = src->p_block;
                 instance.config.pos[src->p_block - 1] = dst;
                 LB_temp = instance.LB3(Upp, Right, Low, Any);
@@ -866,11 +854,11 @@ int bb3(Instance &instance, int LB, int UB_cur, clock_t start)
                 temp.p = instance.config.P_UL[dst.x];
                 vec_dst.push_back(temp);
                 instance.config.block[dst.x][dst.y] = 0;
-                instance.config.block[src->src.x][src->src.y] = src->p_block;
-                instance.config.pos[src->p_block - 1] = src->src;
                 dst.y = 0;
             }
         }
+        instance.config.block[src->src.x][src->src.y] = src->p_block;
+        instance.config.pos[src->p_block - 1] = src->src;
         if (vec_dst.empty())
             continue;
         // 積み替え先を下界値の小さい順に並べる.下界値が等しい場合，最大優先度の降順に並べる
@@ -1082,6 +1070,7 @@ int bb4(Instance &instance, int LB, int UB_cur, clock_t start)
     {
         vector<Dst> vec_dst;
         Point dst = {0, TIER - 1};
+        instance.config.block[src->src.x][src->src.y] = 0;
         // 積み替え先スタックを決定
         // 上側からの積み替え
         for (dst.x = 0; dst.x < STACK; dst.x++)
@@ -1090,12 +1079,11 @@ int bb4(Instance &instance, int LB, int UB_cur, clock_t start)
             {
                 while (!instance.config.block[dst.x][dst.y - 1] && (dst.y > 0))
                     dst.y--;
-                if ((src->src.x == dst.x) && (src->src.y + 1 == dst.y))
+                if ((src->src.x == dst.x) && (src->src.y == dst.y))
                 {
                     dst.y = TIER - 1;
                     continue;
                 }
-                instance.config.block[src->src.x][src->src.y] = 0;
                 instance.config.block[dst.x][dst.y] = src->p_block;
                 instance.config.pos[src->p_block - 1] = dst;
                 LB_temp = instance.LB4(Upp, Right, Low, Left, Any);
@@ -1104,8 +1092,6 @@ int bb4(Instance &instance, int LB, int UB_cur, clock_t start)
                 temp.p = instance.config.P_UL[dst.x];
                 vec_dst.push_back(temp);
                 instance.config.block[dst.x][dst.y] = 0;
-                instance.config.block[src->src.x][src->src.y] = src->p_block;
-                instance.config.pos[src->p_block - 1] = src->src;
                 dst.y = TIER - 1;
             }
         }
@@ -1117,12 +1103,11 @@ int bb4(Instance &instance, int LB, int UB_cur, clock_t start)
             {
                 while (!instance.config.block[dst.x - 1][dst.y] && (dst.x > 0))
                     dst.x--;
-                if ((src->src.y == dst.y) && (src->src.x + 1 == dst.x))
+                if ((src->src.y == dst.y) && (src->src.x == dst.x))
                 {
                     dst.x = STACK - 1;
                     continue;
                 }
-                instance.config.block[src->src.x][src->src.y] = 0;
                 instance.config.block[dst.x][dst.y] = src->p_block;
                 instance.config.pos[src->p_block - 1] = dst;
                 LB_temp = instance.LB4(Upp, Right, Low, Left, Any);
@@ -1131,8 +1116,6 @@ int bb4(Instance &instance, int LB, int UB_cur, clock_t start)
                 temp.p = instance.config.P_LR[dst.y];
                 vec_dst.push_back(temp);
                 instance.config.block[dst.x][dst.y] = 0;
-                instance.config.block[src->src.x][src->src.y] = src->p_block;
-                instance.config.pos[src->p_block - 1] = src->src;
                 dst.x = STACK - 1;
             }
         }
@@ -1144,12 +1127,11 @@ int bb4(Instance &instance, int LB, int UB_cur, clock_t start)
             {
                 while (!instance.config.block[dst.x][dst.y + 1] && (dst.y < TIER - 1))
                     dst.y++;
-                if ((src->src.x == dst.x) && (src->src.y - 1 == dst.y))
+                if ((src->src.x == dst.x) && (src->src.y == dst.y))
                 {
                     dst.y = 0;
                     continue;
                 }
-                instance.config.block[src->src.x][src->src.y] = 0;
                 instance.config.block[dst.x][dst.y] = src->p_block;
                 instance.config.pos[src->p_block - 1] = dst;
                 LB_temp = instance.LB4(Upp, Right, Low, Left, Any);
@@ -1158,8 +1140,6 @@ int bb4(Instance &instance, int LB, int UB_cur, clock_t start)
                 temp.p = instance.config.P_UL[dst.x];
                 vec_dst.push_back(temp);
                 instance.config.block[dst.x][dst.y] = 0;
-                instance.config.block[src->src.x][src->src.y] = src->p_block;
-                instance.config.pos[src->p_block - 1] = src->src;
                 dst.y = 0;
             }
         }
@@ -1171,12 +1151,11 @@ int bb4(Instance &instance, int LB, int UB_cur, clock_t start)
             {
                 while (!instance.config.block[dst.x + 1][dst.y] && (dst.x < STACK - 1))
                     dst.x++;
-                if ((src->src.y == dst.y) && (src->src.x - 1 == dst.x))
+                if ((src->src.y == dst.y) && (src->src.x == dst.x))
                 {
                     dst.x = 0;
                     continue;
                 }
-                instance.config.block[src->src.x][src->src.y] = 0;
                 instance.config.block[dst.x][dst.y] = src->p_block;
                 instance.config.pos[src->p_block - 1] = dst;
                 LB_temp = instance.LB4(Upp, Right, Low, Left, Any);
@@ -1185,11 +1164,11 @@ int bb4(Instance &instance, int LB, int UB_cur, clock_t start)
                 temp.p = instance.config.P_LR[dst.y];
                 vec_dst.push_back(temp);
                 instance.config.block[dst.x][dst.y] = 0;
-                instance.config.block[src->src.x][src->src.y] = src->p_block;
-                instance.config.pos[src->p_block - 1] = src->src;
                 dst.x = 0;
             }
         }
+        instance.config.block[src->src.x][src->src.y] = src->p_block;
+        instance.config.pos[src->p_block - 1] = src->src;
         if (vec_dst.empty())
         {
             continue;
