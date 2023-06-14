@@ -286,12 +286,12 @@ int bb2(Instance &instance, int UB_cur, Direction dir, clock_t start)
             }
             vector<Dst> vec_dst;
             Point dst = {0, TIER - 1};
+            p = instance.config.block[src.x][src.y];
+            instance.config.block[src.x][src.y] = 0;
             // 積み替え先スタックを決定
             // 上側からの積み替え
             for (dst.x = 0; dst.x < STACK; dst.x++)
             {
-                p = instance.config.block[src.x][src.y];
-                instance.config.block[src.x][src.y] = 0;
                 if (!instance.config.block[dst.x][TIER - 1])
                 {
                     while (!instance.config.block[dst.x][dst.y - 1] && (dst.y > 0))
@@ -434,12 +434,12 @@ int bb2(Instance &instance, int UB_cur, Direction dir, clock_t start)
         }
         vector<Dst> vec_dst;
         Point dst = {0, TIER - 1};
+        p = instance.config.block[src.x][src.y];
+        instance.config.block[src.x][src.y] = 0;
         // 積み替え先スタックを決定
         // 上側からの積み替え
         for (dst.x = 0; dst.x < STACK; dst.x++)
         {
-            p = instance.config.block[src.x][src.y];
-            instance.config.block[src.x][src.y] = 0;
             if (!instance.config.block[dst.x][TIER - 1])
             {
                 while (!instance.config.block[dst.x][dst.y - 1] && (dst.y > 0))
@@ -659,12 +659,12 @@ int bb2a(Instance &instance, int UB_cur, Direction dir, clock_t start)
             }
             vector<Dst> vec_dst;
             Point dst = {0, TIER - 1};
+            p = instance.config.block[src.x][src.y];
+            instance.config.block[src.x][src.y] = 0;
             // 積み替え先スタックを決定
             // 上側からの積み替え
             for (dst.x = 0; dst.x < STACK; dst.x++)
             {
-                p = instance.config.block[src.x][src.y];
-                instance.config.block[src.x][src.y] = 0;
                 if (!instance.config.block[dst.x][TIER - 1])
                 {
                     while (!instance.config.block[dst.x][dst.y - 1] && (dst.y > 0))
@@ -795,12 +795,12 @@ int bb2a(Instance &instance, int UB_cur, Direction dir, clock_t start)
         }
         vector<Dst> vec_dst;
         Point dst = {0, TIER - 1};
+        p = instance.config.block[src.x][src.y];
+        instance.config.block[src.x][src.y] = 0;
         // 積み替え先スタックを決定
         // 上側からの積み替え
         for (dst.x = 0; dst.x < STACK; dst.x++)
         {
-            p = instance.config.block[src.x][src.y];
-            instance.config.block[src.x][src.y] = 0;
             if (!instance.config.block[dst.x][TIER - 1])
             {
                 int LB_temp = 0;
@@ -1027,12 +1027,12 @@ int bb3(Instance &instance, int UB_cur, Direction dir, clock_t start)
             }
             vector<Dst> vec_dst;
             Point dst = {0, TIER - 1};
+            p = instance.config.block[src.x][src.y];
+            instance.config.block[src.x][src.y] = 0;
             // 積み替え先スタックを決定
             // 上側からの積み替え
             for (dst.x = 0; dst.x < STACK; dst.x++)
             {
-                p = instance.config.block[src.x][src.y];
-                instance.config.block[src.x][src.y] = 0;
                 if (!instance.config.block[dst.x][TIER - 1])
                 {
                     while (!instance.config.block[dst.x][dst.y - 1] && (dst.y > 0))
@@ -1210,12 +1210,12 @@ int bb3(Instance &instance, int UB_cur, Direction dir, clock_t start)
         }
         vector<Dst> vec_dst;
         Point dst = {0, TIER - 1};
+        p = instance.config.block[src.x][src.y];
+        instance.config.block[src.x][src.y] = 0;
         // 積み替え先スタックを決定
         // 上側からの積み替え
         for (dst.x = 0; dst.x < STACK; dst.x++)
         {
-            p = instance.config.block[src.x][src.y];
-            instance.config.block[src.x][src.y] = 0;
             if (!instance.config.block[dst.x][TIER - 1])
             {
                 while (!instance.config.block[dst.x][dst.y - 1] && (dst.y > 0))
@@ -1490,12 +1490,12 @@ int bb4(Instance &instance, int UB_cur, Direction dir, clock_t start)
             }
             vector<Dst> vec_dst;
             Point dst = {0, TIER - 1};
+            p = instance.config.block[src.x][src.y];
+            instance.config.block[src.x][src.y] = 0;
             // 積み替え先スタックを決定
             // 上側からの積み替え
             for (dst.x = 0; dst.x < STACK; dst.x++)
             {
-                p = instance.config.block[src.x][src.y];
-                instance.config.block[src.x][src.y] = 0;
                 if (!instance.config.block[dst.x][TIER - 1])
                 {
                     while (!instance.config.block[dst.x][dst.y - 1] && (dst.y > 0))
@@ -1711,12 +1711,12 @@ int bb4(Instance &instance, int UB_cur, Direction dir, clock_t start)
         }
         vector<Dst> vec_dst;
         Point dst = {0, TIER - 1};
+        p = instance.config.block[src.x][src.y];
+        instance.config.block[src.x][src.y] = 0;
         // 積み替え先スタックを決定
         // 上側からの積み替え
         for (dst.x = 0; dst.x < STACK; dst.x++)
         {
-            p = instance.config.block[src.x][src.y];
-            instance.config.block[src.x][src.y] = 0;
             if (!instance.config.block[dst.x][TIER - 1])
             {
                 while (!instance.config.block[dst.x][dst.y - 1] && (dst.y > 0))
