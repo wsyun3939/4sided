@@ -143,7 +143,7 @@ public:
             config_temp.priority++;
             LB2 += (block1 < block2) ? block1 : block2;
         }
-        return config.LB2;
+        return LB2;
     }
 
     // 上下からの積み替えを考慮した場合
@@ -190,7 +190,7 @@ public:
                 config_temp.priority++;
             }
         }
-        return config.LB2;
+        return LB2;
     }
 
     int LB3(Direction dir1, Direction dir2, Direction dir3, Direction rel)
