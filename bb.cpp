@@ -75,6 +75,7 @@ int bb1(Instance &instance, int UB_cur, clock_t start)
         instance.config.retrieve(src);
 
 #if TEST == 0
+        printf("Number Retrieval:%d\n", instance.config.priority - 1);
         instance.config.print();
 #endif
 
@@ -95,6 +96,11 @@ int bb1(Instance &instance, int UB_cur, clock_t start)
         src.y--;
     }
     depth++;
+
+#if TEST == 0
+    printf("depth = %d\n", depth);
+#endif
+
     vector<Dst> vec_dst;
     Point dst = {0, TIER - 1};
     // 積み替え先スタックを決定
@@ -181,6 +187,11 @@ int bb1(Instance &instance, int UB_cur, clock_t start)
     if (depth == 0)
     {
         UB_cur++;
+
+#if TEST == 0
+        printf("UB_cur++\n");
+#endif
+
         ans = bb1(instance, UB_cur, start);
         if (ans != -1 && ans != 0)
         {
@@ -234,6 +245,7 @@ int bb2(Instance &instance, int UB_cur, Direction dir, clock_t start)
             instance.config.retrieve(src);
 
 #if TEST == 0
+            printf("Number Retrieval:%d\n", instance.config.priority - 1);
             instance.config.print();
 #endif
 
@@ -246,13 +258,21 @@ int bb2(Instance &instance, int UB_cur, Direction dir, clock_t start)
             block1 = instance.config.count(Upp);
             block2 = instance.config.count(Right);
         }
-        Src src_vec[2];
-        src_vec[0].block = block1;
-        src_vec[0].dir = Upp;
-        src_vec[1].block = block2;
-        src_vec[1].dir = Right;
-        sort(src_vec, src_vec + 1, block_asc);
+        vector<Src> src_vec;
+        Src src_temp;
+        src_temp.block = block1;
+        src_temp.dir = Upp;
+        src_vec.push_back(src_temp);
+        src_temp.block = block2;
+        src_temp.dir = Right;
+        src_vec.push_back(src_temp);
+        sort(src_vec.begin(), src_vec.end(), block_asc);
         depth++;
+
+#if TEST == 0
+        printf("depth = %d\n", depth);
+#endif
+
         for (int i = 0; i < 2; i++)
         {
             if (depth + src_vec[i].block - 1 > UB_cur)
@@ -410,6 +430,11 @@ int bb2(Instance &instance, int UB_cur, Direction dir, clock_t start)
     {
         int block;
         depth++;
+
+#if TEST == 0
+        printf("depth = %d\n", depth);
+#endif
+
         if (dir == Upp)
         {
             src.x = instance.config.pos[instance.config.priority - 1].x;
@@ -558,6 +583,11 @@ int bb2(Instance &instance, int UB_cur, Direction dir, clock_t start)
     if (depth == 0)
     {
         UB_cur++;
+
+#if TEST == 0
+        printf("UB_cur++\n");
+#endif
+
         ans = bb2(instance, UB_cur, Any, start);
         if (ans != -1 && ans != 0)
         {
@@ -611,6 +641,7 @@ int bb2a(Instance &instance, int UB_cur, Direction dir, clock_t start)
             instance.config.retrieve(src);
 
 #if TEST == 0
+            printf("Number Retrieval:%d\n", instance.config.priority - 1);
             instance.config.print();
 #endif
 
@@ -623,13 +654,21 @@ int bb2a(Instance &instance, int UB_cur, Direction dir, clock_t start)
             block1 = instance.config.count(Upp);
             block2 = instance.config.count(Low);
         }
-        Src src_vec[2];
-        src_vec[0].block = block1;
-        src_vec[0].dir = Upp;
-        src_vec[1].block = block2;
-        src_vec[1].dir = Low;
-        sort(src_vec, src_vec + 1, block_asc);
+        vector<Src> src_vec;
+        Src src_temp;
+        src_temp.block = block1;
+        src_temp.dir = Upp;
+        src_vec.push_back(src_temp);
+        src_temp.block = block2;
+        src_temp.dir = Low;
+        src_vec.push_back(src_temp);
+        sort(src_vec.begin(), src_vec.end(), block_asc);
         depth++;
+
+#if TEST == 0
+        printf("depth = %d\n", depth);
+#endif
+
         for (int i = 0; i < 2; i++)
         {
             // ブロッキングブロックを積み替える場合
@@ -771,6 +810,11 @@ int bb2a(Instance &instance, int UB_cur, Direction dir, clock_t start)
     {
         int block;
         depth++;
+
+#if TEST == 0
+        printf("depth = %d\n", depth);
+#endif
+
         if (dir == Upp)
         {
             src.x = instance.config.pos[instance.config.priority - 1].x;
@@ -909,6 +953,11 @@ int bb2a(Instance &instance, int UB_cur, Direction dir, clock_t start)
     if (depth == 0)
     {
         UB_cur++;
+
+#if TEST == 0
+        printf("UB_cur++\n");
+#endif
+
         ans = bb2a(instance, UB_cur, Any, start);
         if (ans != -1 && ans != 0)
         {
@@ -963,6 +1012,7 @@ int bb3(Instance &instance, int UB_cur, Direction dir, clock_t start)
             instance.config.retrieve(src);
 
 #if TEST == 0
+            printf("Number Retrieval:%d\n", instance.config.priority - 1);
             instance.config.print();
 #endif
 
@@ -976,15 +1026,24 @@ int bb3(Instance &instance, int UB_cur, Direction dir, clock_t start)
             block2 = instance.config.count(Right);
             block3 = instance.config.count(Low);
         }
-        Src src_vec[3];
-        src_vec[0].block = block1;
-        src_vec[0].dir = Upp;
-        src_vec[1].block = block2;
-        src_vec[1].dir = Right;
-        src_vec[2].block = block3;
-        src_vec[2].dir = Low;
-        sort(src_vec, src_vec + 2, block_asc);
+        vector<Src> src_vec;
+        Src src_temp;
+        src_temp.block = block1;
+        src_temp.dir = Upp;
+        src_vec.push_back(src_temp);
+        src_temp.block = block2;
+        src_temp.dir = Right;
+        src_vec.push_back(src_temp);
+        src_temp.block = block3;
+        src_temp.dir = Low;
+        src_vec.push_back(src_temp);
+        sort(src_vec.begin(), src_vec.end(), block_asc);
         depth++;
+
+#if TEST == 0
+        printf("depth = %d\n", depth);
+#endif
+
         for (int i = 0; i < 3; i++)
         {
             if (depth + src_vec[i].block - 1 > UB_cur)
@@ -1175,6 +1234,11 @@ int bb3(Instance &instance, int UB_cur, Direction dir, clock_t start)
     {
         int block;
         depth++;
+
+#if TEST == 0
+        printf("depth = %d\n", depth);
+#endif
+
         if (dir == Upp)
         {
             src.x = instance.config.pos[instance.config.priority - 1].x;
@@ -1359,6 +1423,11 @@ int bb3(Instance &instance, int UB_cur, Direction dir, clock_t start)
     if (depth == 0)
     {
         UB_cur++;
+
+#if TEST == 0
+        printf("UB_cur++\n");
+#endif
+
         ans = bb3(instance, UB_cur, Any, start);
         if (ans != -1 && ans != 0)
         {
@@ -1414,6 +1483,7 @@ int bb4(Instance &instance, int UB_cur, Direction dir, clock_t start)
             instance.config.retrieve(src);
 
 #if TEST == 0
+            printf("Number Retrieval:%d\n", instance.config.priority - 1);
             instance.config.print();
 #endif
 
@@ -1428,17 +1498,27 @@ int bb4(Instance &instance, int UB_cur, Direction dir, clock_t start)
             block3 = instance.config.count(Low);
             block4 = instance.config.count(Left);
         }
-        Src src_vec[4];
-        src_vec[0].block = block1;
-        src_vec[0].dir = Upp;
-        src_vec[1].block = block2;
-        src_vec[1].dir = Right;
-        src_vec[2].block = block3;
-        src_vec[2].dir = Low;
-        src_vec[3].block = block4;
-        src_vec[3].dir = Left;
-        sort(src_vec, src_vec + 3, block_asc);
+        vector<Src> src_vec;
+        Src src_temp;
+        src_temp.block = block1;
+        src_temp.dir = Upp;
+        src_vec.push_back(src_temp);
+        src_temp.block = block2;
+        src_temp.dir = Right;
+        src_vec.push_back(src_temp);
+        src_temp.block = block3;
+        src_temp.dir = Low;
+        src_vec.push_back(src_temp);
+        src_temp.block = block4;
+        src_temp.dir = Left;
+        src_vec.push_back(src_temp);
+        sort(src_vec.begin(), src_vec.end(), block_asc);
         depth++;
+
+#if TEST == 0
+        printf("depth = %d\n", depth);
+#endif
+
         for (int i = 0; i < 4; i++)
         {
             if (depth + src_vec[i].block - 1 > UB_cur)
@@ -1665,6 +1745,11 @@ int bb4(Instance &instance, int UB_cur, Direction dir, clock_t start)
     {
         int block;
         depth++;
+
+#if TEST == 0
+        printf("depth = %d\n", depth);
+#endif
+
         if (dir == Upp)
         {
             src.x = instance.config.pos[instance.config.priority - 1].x;
@@ -1883,6 +1968,11 @@ int bb4(Instance &instance, int UB_cur, Direction dir, clock_t start)
     if (depth == 0)
     {
         UB_cur++;
+
+#if TEST == 0
+        printf("UB_cur++\n");
+#endif
+
         ans = bb4(instance, UB_cur, Any, start);
         if (ans != -1 && ans != 0)
         {

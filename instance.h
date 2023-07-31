@@ -306,6 +306,10 @@ public:
                     while (!config_temp.block[dst.x][dst.y - 1] && (dst.y > 0))
                         dst.y--;
                     Point src = {config_temp.pos[n - 1].x, j};
+                    if (config_temp.block[dst.x][dst.y])
+                    {
+                        return 100;
+                    }
                     config_temp.relocate(src, dst);
 
 #if UB_TEST == 0
@@ -381,7 +385,15 @@ public:
                                 }
                             }
                             Point src = {config_temp.pos[n - 1].x, j};
+                            if (config_temp.block[dst.x][dst.y])
+                            {
+                                return 100;
+                            }
                             config_temp.relocate(src, dst);
+
+#if UB_TEST == 0
+                            config_temp.print();
+#endif
                         }
                     }
                     break;
@@ -429,7 +441,15 @@ public:
                                 }
                             }
                             Point src = {j, config_temp.pos[n - 1].y};
+                            if (config_temp.block[dst.x][dst.y])
+                            {
+                                return 100;
+                            }
                             config_temp.relocate(src, dst);
+
+#if UB_TEST == 0
+                            config_temp.print();
+#endif
                         }
                     }
                     break;
@@ -536,6 +556,10 @@ public:
                                 }
                             }
                             Point src = {config_temp.pos[n - 1].x, j};
+                            if (config_temp.block[dst.x][dst.y])
+                            {
+                                return 100;
+                            }
                             config_temp.relocate(src, dst);
 #if UB_TEST == 0
                             config_temp.print();
@@ -605,6 +629,10 @@ public:
                                 }
                             }
                             Point src = {j, config_temp.pos[n - 1].y};
+                            if (config_temp.block[dst.x][dst.y])
+                            {
+                                return 100;
+                            }
                             config_temp.relocate(src, dst);
 #if UB_TEST == 0
                             config_temp.print();
@@ -674,6 +702,10 @@ public:
                                 }
                             }
                             Point src = {config_temp.pos[n - 1].x, j};
+                            if (config_temp.block[dst.x][dst.y])
+                            {
+                                return 100;
+                            }
                             config_temp.relocate(src, dst);
 #if UB_TEST == 0
                             config_temp.print();
@@ -798,6 +830,10 @@ public:
                                 }
                             }
                             Point src = {config_temp.pos[n - 1].x, j};
+                            if (config_temp.block[dst.x][dst.y])
+                            {
+                                return 100;
+                            }
                             config_temp.relocate(src, dst);
                         }
                     }
@@ -883,6 +919,10 @@ public:
                                 }
                             }
                             Point src = {j, config_temp.pos[n - 1].y};
+                            if (config_temp.block[dst.x][dst.y])
+                            {
+                                return 100;
+                            }
                             config_temp.relocate(src, dst);
                         }
                     }
@@ -965,6 +1005,10 @@ public:
                                 }
                             }
                             Point src = {config_temp.pos[n - 1].x, j};
+                            if (config_temp.block[dst.x][dst.y])
+                            {
+                                return 100;
+                            }
                             config_temp.relocate(src, dst);
                         }
                     }
@@ -1050,6 +1094,10 @@ public:
                                 }
                             }
                             Point src = {j, config_temp.pos[n - 1].y};
+                            if (config_temp.block[dst.x][dst.y])
+                            {
+                                return 100;
+                            }
                             config_temp.relocate(src, dst);
                         }
                     }

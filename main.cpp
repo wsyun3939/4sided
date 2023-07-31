@@ -45,12 +45,12 @@ int main()
         instance->config.LB4 = instance->LB4(Upp, Right, Low, Left, Any);
         cout << "LB4=" << instance->config.LB4 << endl;
         instance->config.UB1 = instance->UB1();
-        instance->config.UB2 = instance->UB2(Upp, Right);
-        instance->config.UB3 = instance->UB3(Upp, Right, Low);
-        instance->config.UB4 = instance->UB4(Upp, Right, Low, Left);
         cout << "UB1=" << instance->config.UB1 << endl;
+        instance->config.UB2 = instance->UB2(Upp, Right);
         cout << "UB2=" << instance->config.UB2 << endl;
+        instance->config.UB3 = instance->UB3(Upp, Right, Low);
         cout << "UB3=" << instance->config.UB3 << endl;
+        instance->config.UB4 = instance->UB4(Upp, Right, Low, Left);
         cout << "UB4=" << instance->config.UB4 << endl;
 
 #if BB == 1
@@ -66,6 +66,7 @@ int main()
 #if BB == 2
         temp = bb2(*instance, instance->config.LB2, Any, start);
         cout << temp << endl;
+        // getchar();
         if (a % 100 == 1)
         {
             sprintf(filename, "../Benchmark/%d-%d-%d(bb2).csv", TIER, STACK, nblock);
