@@ -46,6 +46,7 @@ int main()
         cout << "LB4=" << instance->config.LB4 << endl;
         instance->config.UB1 = instance->UB1();
         cout << "UB1=" << instance->config.UB1 << endl;
+        instance->config.print();
         instance->config.UB2 = instance->UB2(Upp, Right);
         cout << "UB2=" << instance->config.UB2 << endl;
         instance->config.UB3 = instance->UB3(Upp, Right, Low);

@@ -321,6 +321,11 @@ int bb2(Instance &instance, int UB_cur, Direction dir, clock_t start)
                         dst.y = TIER - 1;
                         continue;
                     }
+                    if (src_vec[i].dir == Right && src.y == dst.y && src.x < dst.x)
+                    {
+                        dst.y = TIER - 1;
+                        continue;
+                    }
                     instance.config.block[dst.x][dst.y] = p;
                     instance.config.pos[p - 1] = dst;
                     LB_temp = instance.LB2(Upp, Right, src_vec[i].dir);
@@ -341,6 +346,11 @@ int bb2(Instance &instance, int UB_cur, Direction dir, clock_t start)
                     while (!instance.config.block[dst.x - 1][dst.y] && (dst.x > 0))
                         dst.x--;
                     if ((src.y == dst.y) && (src.x == dst.x))
+                    {
+                        dst.x = STACK - 1;
+                        continue;
+                    }
+                    if (src_vec[i].dir == Upp && src.x == dst.x && src.y < dst.y)
                     {
                         dst.x = STACK - 1;
                         continue;
@@ -474,6 +484,11 @@ int bb2(Instance &instance, int UB_cur, Direction dir, clock_t start)
                     dst.y = TIER - 1;
                     continue;
                 }
+                if (dir == Right && src.y == dst.y && src.x < dst.x)
+                {
+                    dst.y = TIER - 1;
+                    continue;
+                }
                 instance.config.block[dst.x][dst.y] = p;
                 instance.config.pos[p - 1] = dst;
                 LB_temp = instance.LB2(Upp, Right, dir);
@@ -494,6 +509,11 @@ int bb2(Instance &instance, int UB_cur, Direction dir, clock_t start)
                 while (!instance.config.block[dst.x - 1][dst.y] && (dst.x > 0))
                     dst.x--;
                 if ((src.y == dst.y) && (src.x == dst.x))
+                {
+                    dst.x = STACK - 1;
+                    continue;
+                }
+                if (dir == Upp && src.x == dst.x && src.y < dst.y)
                 {
                     dst.x = STACK - 1;
                     continue;
@@ -1101,6 +1121,11 @@ int bb3(Instance &instance, int UB_cur, Direction dir, clock_t start)
                         dst.y = TIER - 1;
                         continue;
                     }
+                    if (src_vec[i].dir == Right && src.y == dst.y && src.x < dst.x)
+                    {
+                        dst.y = TIER - 1;
+                        continue;
+                    }
                     instance.config.block[dst.x][dst.y] = p;
                     instance.config.pos[p - 1] = dst;
                     LB_temp = instance.LB3(Upp, Right, Low, src_vec[i].dir);
@@ -1125,6 +1150,16 @@ int bb3(Instance &instance, int UB_cur, Direction dir, clock_t start)
                         dst.x = STACK - 1;
                         continue;
                     }
+                    if (dir == Upp && src.x == dst.x && src.y < dst.y)
+                    {
+                        dst.x = STACK - 1;
+                        continue;
+                    }
+                    if (dir == Low && src.x == dst.x && src.y > dst.y)
+                    {
+                        dst.x = STACK - 1;
+                        continue;
+                    }
                     instance.config.block[dst.x][dst.y] = p;
                     instance.config.pos[p - 1] = dst;
                     LB_temp = instance.LB3(Upp, Right, Low, src_vec[i].dir);
@@ -1145,6 +1180,11 @@ int bb3(Instance &instance, int UB_cur, Direction dir, clock_t start)
                     while (!instance.config.block[dst.x][dst.y + 1] && (dst.y < TIER - 1))
                         dst.y++;
                     if ((src.x == dst.x) && (src.y == dst.y))
+                    {
+                        dst.y = 0;
+                        continue;
+                    }
+                    if (dir == Right && src.y == dst.y && src.x < dst.x)
                     {
                         dst.y = 0;
                         continue;
@@ -1289,7 +1329,11 @@ int bb3(Instance &instance, int UB_cur, Direction dir, clock_t start)
                     dst.y = TIER - 1;
                     continue;
                 }
-
+                if (dir == Right && src.y == dst.y && src.x < dst.x)
+                {
+                    dst.y = TIER - 1;
+                    continue;
+                }
                 instance.config.block[dst.x][dst.y] = p;
                 instance.config.pos[p - 1] = dst;
                 LB_temp = instance.LB3(Upp, Right, Low, dir);
@@ -1314,6 +1358,16 @@ int bb3(Instance &instance, int UB_cur, Direction dir, clock_t start)
                     dst.x = STACK - 1;
                     continue;
                 }
+                if (dir == Upp && src.x == dst.x && src.y < dst.y)
+                {
+                    dst.x = STACK - 1;
+                    continue;
+                }
+                if (dir == Low && src.x == dst.x && src.y > dst.y)
+                {
+                    dst.x = STACK - 1;
+                    continue;
+                }
                 instance.config.block[dst.x][dst.y] = p;
                 instance.config.pos[p - 1] = dst;
                 LB_temp = instance.LB3(Upp, Right, Low, dir);
@@ -1334,6 +1388,11 @@ int bb3(Instance &instance, int UB_cur, Direction dir, clock_t start)
                 while (!instance.config.block[dst.x][dst.y + 1] && (dst.y < TIER - 1))
                     dst.y++;
                 if ((src.x == dst.x) && (src.y == dst.y))
+                {
+                    dst.y = 0;
+                    continue;
+                }
+                if (dir == Right && src.y == dst.y && src.x < dst.x)
                 {
                     dst.y = 0;
                     continue;
@@ -1585,6 +1644,16 @@ int bb4(Instance &instance, int UB_cur, Direction dir, clock_t start)
                         dst.y = TIER - 1;
                         continue;
                     }
+                    if (src_vec[i].dir == Right && src.y == dst.y && src.x < dst.x)
+                    {
+                        dst.y = TIER - 1;
+                        continue;
+                    }
+                    if (src_vec[i].dir == Left && src.y == dst.y && src.x > dst.x)
+                    {
+                        dst.y = TIER - 1;
+                        continue;
+                    }
                     instance.config.block[dst.x][dst.y] = p;
                     instance.config.pos[p - 1] = dst;
                     LB_temp = instance.LB4(Upp, Right, Low, Left, src_vec[i].dir);
@@ -1605,6 +1674,16 @@ int bb4(Instance &instance, int UB_cur, Direction dir, clock_t start)
                     while (!instance.config.block[dst.x - 1][dst.y] && (dst.x > 0))
                         dst.x--;
                     if ((src.y == dst.y) && (src.x == dst.x))
+                    {
+                        dst.x = STACK - 1;
+                        continue;
+                    }
+                    if (src_vec[i].dir == Upp && src.x == dst.x && src.y < dst.y)
+                    {
+                        dst.x = STACK - 1;
+                        continue;
+                    }
+                    if (src_vec[i].dir == Low && src.x == dst.x && src.y > dst.y)
                     {
                         dst.x = STACK - 1;
                         continue;
@@ -1633,6 +1712,16 @@ int bb4(Instance &instance, int UB_cur, Direction dir, clock_t start)
                         dst.y = 0;
                         continue;
                     }
+                    if (src_vec[i].dir == Right && src.y == dst.y && src.x < dst.x)
+                    {
+                        dst.y = 0;
+                        continue;
+                    }
+                    if (src_vec[i].dir == Left && src.y == dst.y && src.x > dst.x)
+                    {
+                        dst.y = 0;
+                        continue;
+                    }
                     instance.config.block[dst.x][dst.y] = p;
                     instance.config.pos[p - 1] = dst;
                     LB_temp = instance.LB4(Upp, Right, Low, Left, src_vec[i].dir);
@@ -1653,6 +1742,16 @@ int bb4(Instance &instance, int UB_cur, Direction dir, clock_t start)
                     while (!instance.config.block[dst.x + 1][dst.y] && (dst.x < STACK - 1))
                         dst.x++;
                     if ((src.y == dst.y) && (src.x == dst.x))
+                    {
+                        dst.x = 0;
+                        continue;
+                    }
+                    if (src_vec[i].dir == Upp && src.x == dst.x && src.y < dst.y)
+                    {
+                        dst.x = 0;
+                        continue;
+                    }
+                    if (src_vec[i].dir == Low && src.x == dst.x && src.y > dst.y)
                     {
                         dst.x = 0;
                         continue;
@@ -1811,6 +1910,16 @@ int bb4(Instance &instance, int UB_cur, Direction dir, clock_t start)
                     dst.y = TIER - 1;
                     continue;
                 }
+                if (dir == Right && src.y == dst.y && src.x < dst.x)
+                {
+                    dst.y = TIER - 1;
+                    continue;
+                }
+                if (dir == Left && src.y == dst.y && src.x > dst.x)
+                {
+                    dst.y = TIER - 1;
+                    continue;
+                }
                 instance.config.block[dst.x][dst.y] = p;
                 instance.config.pos[p - 1] = dst;
                 LB_temp = instance.LB3(Upp, Right, Low, dir);
@@ -1831,6 +1940,16 @@ int bb4(Instance &instance, int UB_cur, Direction dir, clock_t start)
                 while (!instance.config.block[dst.x - 1][dst.y] && (dst.x > 0))
                     dst.x--;
                 if ((src.y == dst.y) && (src.x == dst.x))
+                {
+                    dst.x = STACK - 1;
+                    continue;
+                }
+                if (dir == Upp && src.x == dst.x && src.y < dst.y)
+                {
+                    dst.x = STACK - 1;
+                    continue;
+                }
+                if (dir == Low && src.x == dst.x && src.y > dst.y)
                 {
                     dst.x = STACK - 1;
                     continue;
@@ -1859,6 +1978,16 @@ int bb4(Instance &instance, int UB_cur, Direction dir, clock_t start)
                     dst.y = 0;
                     continue;
                 }
+                if (dir == Right && src.y == dst.y && src.x < dst.x)
+                {
+                    dst.y = 0;
+                    continue;
+                }
+                if (dir == Left && src.y == dst.y && src.x > dst.x)
+                {
+                    dst.y = 0;
+                    continue;
+                }
                 instance.config.block[dst.x][dst.y] = p;
                 instance.config.pos[p - 1] = dst;
                 LB_temp = instance.LB3(Upp, Right, Low, dir);
@@ -1879,6 +2008,16 @@ int bb4(Instance &instance, int UB_cur, Direction dir, clock_t start)
                 while (!instance.config.block[dst.x + 1][dst.y] && (dst.x < STACK - 1))
                     dst.x++;
                 if ((src.y == dst.y) && (src.x == dst.x))
+                {
+                    dst.x = 0;
+                    continue;
+                }
+                if (dir == Upp && src.x == dst.x && src.y < dst.y)
+                {
+                    dst.x = 0;
+                    continue;
+                }
+                if (dir == Low && src.x == dst.x && src.y > dst.y)
                 {
                     dst.x = 0;
                     continue;

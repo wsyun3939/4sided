@@ -4,10 +4,10 @@
 
 #define TIER 3
 #define STACK 6
-#define NBLOCK 15
-#define NUMBER 1
-#define TEST 1
-#define UB_TEST 1
+#define NBLOCK 16
+#define NUMBER 174
+#define TEST 0
+#define UB_TEST 0
 
 #define BB 2
 
