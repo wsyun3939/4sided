@@ -67,7 +67,7 @@ int main()
 #if BB == 2
         temp = bb2(*instance, instance->config.LB2, Any, start);
         cout << temp << endl;
-        // getchar();
+        getchar();
         if (a % 100 == 1)
         {
             sprintf(filename, "../Benchmark/%d-%d-%d(bb2).csv", TIER, STACK, nblock);

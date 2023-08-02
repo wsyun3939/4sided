@@ -1,1 +1,5 @@
-a.out a main.o main 
+a.out 
+a 
+main.o 
+main 
+config.h
