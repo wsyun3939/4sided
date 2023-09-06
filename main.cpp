@@ -127,7 +127,7 @@ int main()
             fclose(fp_csv);
         }
     }
-    cout << "平均積み替え変え回数：" << (double)sum / (100 * TIER) << endl;
+    cout << "平均積み替え変え回数：" << (double)sum / (100 * TIER - timeup) << endl;
     cout << "infeasible:" << timeup << endl;
     cout << "最大計算時間:" << (double)max / CLOCKS_PER_SEC << endl;
     cout << "計算時間の平均:" << (double)sol_lapse / ((100 * TIER - timeup) * CLOCKS_PER_SEC) << endl;
