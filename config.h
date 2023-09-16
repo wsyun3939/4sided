@@ -3,13 +3,13 @@
 #include <bits/stdc++.h>
 
 #define TIER 3
-#define STACK 6
-#define NBLOCK 15
-#define NUMBER 1
+#define STACK 7
+#define NBLOCK 18
+#define NUMBER 2501
 #define TEST 1
 #define UB_TEST 1
 
-#define BB -2
+#define BB 4
 
 using namespace std;
 
@@ -58,6 +58,9 @@ public:
 
     // 上界値
     int UB1, UB2, UB3, UB4;
+
+    // 上界値におけるT
+    int UBT=0;
 
     // 各方向における最大優先度
     int P_UL[STACK];
