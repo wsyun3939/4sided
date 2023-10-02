@@ -79,7 +79,7 @@ int main()
                 cout << temp << endl;
                 if (a % 100 == 1)
                 {
-                        sprintf(filename, "../Benchmark/%d-%d-%d(bb1).csv", TIER, STACK, nblock);
+                        sprintf(filename, "../Benchmark/%d-%d-%d(bb1_fixed).csv", TIER, STACK, nblock);
                         fp_csv = fopen(filename, "w");
                 }
 #endif
@@ -89,12 +89,12 @@ int main()
                 temp = bb2(*instance, instance->config.LB2, Any, start, T, 0);
                 cout << temp << endl;
                 cout << "T=" << T << endl;
-                // getchar();
+                getchar();
                 if (a % 100 == 1)
                 {
-                        sprintf(filename, "../Benchmark/%d-%d-%d(bb2).csv", TIER, STACK, nblock);
+                        sprintf(filename, "../Benchmark/%d-%d-%d(bb2_fixed).csv", TIER, STACK, nblock);
                         fp_csv = fopen(filename, "w");
-                        sprintf(filename, "../Benchmark/%d-%d-%d(ip2T).csv", TIER, STACK, nblock);
+                        sprintf(filename, "../Benchmark/%d-%d-%d(ip2T_fixed).csv", TIER, STACK, nblock);
                         fp_csv2 = fopen(filename, "w");
                 }
 #endif
@@ -104,9 +104,9 @@ int main()
                 cout << temp << endl;
                 if (a % 100 == 1)
                 {
-                        sprintf(filename, "../Benchmark/%d-%d-%d(bb2a).csv", TIER, STACK, nblock);
+                        sprintf(filename, "../Benchmark/%d-%d-%d(bb2a_fixed).csv", TIER, STACK, nblock);
                         fp_csv = fopen(filename, "w");
-                        sprintf(filename, "../Benchmark/%d-%d-%d(ip2sT).csv", TIER, STACK, nblock);
+                        sprintf(filename, "../Benchmark/%d-%d-%d(ip2sT_fixed).csv", TIER, STACK, nblock);
                         fp_csv2 = fopen(filename, "w");
                 }
 #endif
@@ -114,11 +114,12 @@ int main()
 #if BB == 3
                 temp = bb3(*instance, instance->config.LB3, Any, start, T, 0);
                 cout << temp << endl;
+                // getchar();
                 if (a % 100 == 1)
                 {
-                        sprintf(filename, "../Benchmark/%d-%d-%d(bb3).csv", TIER, STACK, nblock);
+                        sprintf(filename, "../Benchmark/%d-%d-%d(bb3_fixed).csv", TIER, STACK, nblock);
                         fp_csv = fopen(filename, "w");
-                        sprintf(filename, "../Benchmark/%d-%d-%d(ip3T).csv", TIER, STACK, nblock);
+                        sprintf(filename, "../Benchmark/%d-%d-%d(ip3T_fixed).csv", TIER, STACK, nblock);
                         fp_csv2 = fopen(filename, "w");
                 }
 #endif
@@ -128,9 +129,9 @@ int main()
                 cout << temp << endl;
                 if (a % 100 == 1)
                 {
-                        sprintf(filename, "../Benchmark/%d-%d-%d(bb4).csv", TIER, STACK, nblock);
+                        sprintf(filename, "../Benchmark/%d-%d-%d(bb4_fixed).csv", TIER, STACK, nblock);
                         fp_csv = fopen(filename, "w");
-                        sprintf(filename, "../Benchmark/%d-%d-%d(ip4T).csv", TIER, STACK, nblock);
+                        sprintf(filename, "../Benchmark/%d-%d-%d(ip4T_fixed).csv", TIER, STACK, nblock);
                         fp_csv2 = fopen(filename, "w");
                 }
 #endif
