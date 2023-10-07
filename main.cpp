@@ -126,6 +126,8 @@ int main()
 #if BB == 4
                 temp = bb4(*instance, instance->config.LB4, Any, start, T, 0);
                 cout << temp << endl;
+                cout << "T=" << T << endl;
+                getchar();
                 if (a % 100 == 1)
                 {
                         sprintf(filename, "../Benchmark/%d-%d-%d(bb4).csv", TIER, STACK, nblock);

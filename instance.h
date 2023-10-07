@@ -788,6 +788,9 @@ public:
                 T_temp = 0;
                 Point src = {config_temp.pos[n - 1].x, config_temp.pos[n - 1].y};
                 config_temp.retrieve(src);
+#if UB_TEST == 0
+                config_temp.print();
+#endif
             }
             else
             {
