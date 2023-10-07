@@ -293,7 +293,7 @@ public:
                     // 最大優先度が最も低いスタックを格納
                     int temp = 0;
                     // 積み替え先
-                    Point dst = {0, TIER - 1};
+                    Point dst = config_temp.pos[n - 1];
                     // 積み替え先スタックを決定
                     for (int i = 0; i < STACK; i++)
                     {
@@ -306,7 +306,7 @@ public:
                     while (!config_temp.block[dst.x][dst.y - 1] && (dst.y > 0))
                         dst.y--;
                     Point src = {config_temp.pos[n - 1].x, j};
-                    if (config_temp.block[dst.x][dst.y])
+                    if (config_temp.pos[n - 1] == dst)
                     {
                         return 100;
                     }
@@ -359,7 +359,7 @@ public:
                             // 最大優先度が最も低いスタックを格納
                             int temp = 0;
                             // 積み替え先
-                            Point dst = {0, TIER - 1};
+                            Point dst = config_temp.pos[n - 1];
                             // 積み替え先を決定
                             for (int i = 0; i < STACK; i++)
                             {
@@ -395,7 +395,7 @@ public:
                             }
                             config_temp.block[config_temp.pos[n - 1].x][j] = p;
                             Point src = {config_temp.pos[n - 1].x, j};
-                            if (config_temp.block[dst.x][dst.y])
+                            if (config_temp.pos[n - 1] == dst)
                             {
                                 return 100;
                             }
@@ -421,7 +421,7 @@ public:
                             // 最大優先度が最も低いスタックを格納
                             int temp = 0;
                             // 積み替え先
-                            Point dst = {0, TIER - 1};
+                            Point dst = config_temp.pos[n - 1];
                             // 積み替え先を決定
                             for (int i = 0; i < STACK; i++)
                             {
@@ -457,7 +457,7 @@ public:
                             }
                             Point src = {j, config_temp.pos[n - 1].y};
                             config_temp.block[j][config_temp.pos[n - 1].y] = p;
-                            if (config_temp.block[dst.x][dst.y])
+                            if (config_temp.pos[n - 1] == dst)
                             {
                                 return 100;
                             }
@@ -531,7 +531,7 @@ public:
                             // 最大優先度が最も低いスタックを格納
                             int temp = 0;
                             // 積み替え先
-                            Point dst = {0, TIER - 1};
+                            Point dst = config_temp.pos[n - 1];
                             // 積み替え先を決定
                             // 上方向
                             for (int i = 0; i < STACK; i++)
@@ -585,7 +585,7 @@ public:
                             }
                             Point src = {config_temp.pos[n - 1].x, j};
                             config_temp.block[config_temp.pos[n - 1].x][j] = p;
-                            if (config_temp.block[dst.x][dst.y])
+                            if (config_temp.pos[n - 1] == dst)
                             {
                                 return 100;
                             }
@@ -610,7 +610,7 @@ public:
                             // 最大優先度が最も低いスタックを格納
                             int temp = 0;
                             // 積み替え先
-                            Point dst = {0, TIER - 1};
+                            Point dst = config_temp.pos[n - 1];
                             // 積み替え先を決定
                             // 上方向
                             for (int i = 0; i < STACK; i++)
@@ -666,7 +666,7 @@ public:
                             }
                             Point src = {j, config_temp.pos[n - 1].y};
                             config_temp.block[j][config_temp.pos[n - 1].y] = p;
-                            if (config_temp.block[dst.x][dst.y])
+                            if (config_temp.pos[n - 1] == dst)
                             {
                                 return 100;
                             }
@@ -691,7 +691,7 @@ public:
                             // 最大優先度が最も低いスタックを格納
                             int temp = 0;
                             // 積み替え先
-                            Point dst = {0, TIER - 1};
+                            Point dst = config_temp.pos[n - 1];
                             // 積み替え先を決定
                             // 上方向
                             for (int i = 0; i < STACK; i++)
@@ -745,7 +745,7 @@ public:
                             }
                             Point src = {config_temp.pos[n - 1].x, j};
                             config_temp.block[config_temp.pos[n - 1].x][j] = p;
-                            if (config_temp.block[dst.x][dst.y])
+                            if (config_temp.pos[n - 1] == dst)
                             {
                                 return 100;
                             }
@@ -820,7 +820,7 @@ public:
                             // 最大優先度が最も低いスタックを格納
                             int temp = 0;
                             // 積み替え先
-                            Point dst = {0, TIER - 1};
+                            Point dst = config_temp.pos[n - 1];
                             // 積み替え先を決定
                             // 上方向
                             for (int i = 0; i < STACK; i++)
@@ -892,11 +892,14 @@ public:
                             }
                             Point src = {config_temp.pos[n - 1].x, j};
                             config_temp.block[config_temp.pos[n - 1].x][j] = p;
-                            if (config_temp.block[dst.x][dst.y])
+                            if (config_temp.pos[n - 1] == dst)
                             {
                                 return 100;
                             }
                             config_temp.relocate(src, dst);
+#if UB_TEST == 0
+                            config_temp.print();
+#endif
                         }
                     }
                     break;
@@ -914,7 +917,7 @@ public:
                             // 最大優先度が最も低いスタックを格納
                             int temp = 0;
                             // 積み替え先
-                            Point dst = {0, TIER - 1};
+                            Point dst = config_temp.pos[n - 1];
                             // 積み替え先を決定
                             // 上方向
                             for (int i = 0; i < STACK; i++)
@@ -966,9 +969,6 @@ public:
                                         dst.x = i;
                                         dst.y = dst_y;
                                     }
-
-                                    Point src = {config_temp.pos[n - 1].x, j};
-                                    config_temp.relocate(src, dst);
                                 }
                             }
                             // 左方向
@@ -989,11 +989,14 @@ public:
                             }
                             Point src = {j, config_temp.pos[n - 1].y};
                             config_temp.block[j][config_temp.pos[n - 1].y] = p;
-                            if (config_temp.block[dst.x][dst.y])
+                            if (config_temp.pos[n - 1] == dst)
                             {
                                 return 100;
                             }
                             config_temp.relocate(src, dst);
+#if UB_TEST == 0
+                            config_temp.print();
+#endif
                         }
                     }
                     break;
@@ -1011,7 +1014,7 @@ public:
                             // 最大優先度が最も低いスタックを格納
                             int temp = 0;
                             // 積み替え先
-                            Point dst = {0, TIER - 1};
+                            Point dst = config_temp.pos[n - 1];
                             // 積み替え先を決定
                             // 上方向
                             for (int i = 0; i < STACK; i++)
@@ -1083,11 +1086,14 @@ public:
                             }
                             Point src = {config_temp.pos[n - 1].x, j};
                             config_temp.block[config_temp.pos[n - 1].x][j] = p;
-                            if (config_temp.block[dst.x][dst.y])
+                            if (config_temp.pos[n - 1] == dst)
                             {
                                 return 100;
                             }
                             config_temp.relocate(src, dst);
+#if UB_TEST == 0
+                            config_temp.print();
+#endif
                         }
                     }
                     break;
@@ -1105,7 +1111,7 @@ public:
                             // 最大優先度が最も低いスタックを格納
                             int temp = 0;
                             // 積み替え先
-                            Point dst = {0, TIER - 1};
+                            Point dst = config_temp.pos[n - 1];
                             // 積み替え先を決定
                             // 上方向
                             for (int i = 0; i < STACK; i++)
@@ -1180,11 +1186,14 @@ public:
                             }
                             Point src = {j, config_temp.pos[n - 1].y};
                             config_temp.block[j][config_temp.pos[n - 1].y] = p;
-                            if (config_temp.block[dst.x][dst.y])
+                            if (config_temp.pos[n - 1] == dst)
                             {
                                 return 100;
                             }
                             config_temp.relocate(src, dst);
+#if UB_TEST == 0
+                            config_temp.print();
+#endif
                         }
                     }
                     break;
@@ -1193,6 +1202,9 @@ public:
                 T_temp = 0;
                 Point src = {config_temp.pos[n - 1].x, config_temp.pos[n - 1].y};
                 config_temp.retrieve(src);
+#if UB_TEST == 0
+                config_temp.print();
+#endif
             }
         }
         return UB4;
