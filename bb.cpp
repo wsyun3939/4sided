@@ -1049,7 +1049,7 @@ int bb3(Instance &instance, int UB_cur, Direction dir, clock_t start, int &T, in
     if (depth + instance.config.LB3 == UB_cur - 1)
     {
         int T_temp2 = T_temp;
-        int UB_temp = instance.UB3(Upp, Right, Low,T_temp2);
+        int UB_temp = instance.UB3(Upp, Right, Low, T_temp2);
         if (instance.config.UB3 > UB_temp + depth)
         {
             instance.config.UBT = max(instance.config.UBT, max(T, T_temp2));
@@ -1985,7 +1985,7 @@ int bb4(Instance &instance, int UB_cur, Direction dir, clock_t start, int &T, in
                 }
                 instance.config.block[dst.x][dst.y] = p;
                 instance.config.pos[p - 1] = dst;
-                LB_temp = instance.LB3(Upp, Right, Low, dir);
+                LB_temp = instance.LB4(Upp, Right, Low, Left, dir);
                 temp.dst = dst;
                 temp.LB = LB_temp;
                 temp.p = instance.config.P_UL[dst.x];
@@ -2019,7 +2019,7 @@ int bb4(Instance &instance, int UB_cur, Direction dir, clock_t start, int &T, in
                 }
                 instance.config.block[dst.x][dst.y] = p;
                 instance.config.pos[p - 1] = dst;
-                LB_temp = instance.LB3(Upp, Right, Low, dir);
+                LB_temp = instance.LB4(Upp, Right, Low, Left, dir);
                 temp.dst = dst;
                 temp.LB = LB_temp;
                 temp.p = instance.config.P_LR[dst.y];
@@ -2053,7 +2053,7 @@ int bb4(Instance &instance, int UB_cur, Direction dir, clock_t start, int &T, in
                 }
                 instance.config.block[dst.x][dst.y] = p;
                 instance.config.pos[p - 1] = dst;
-                LB_temp = instance.LB3(Upp, Right, Low, dir);
+                LB_temp = instance.LB4(Upp, Right, Low, Left, dir);
                 temp.dst = dst;
                 temp.LB = LB_temp;
                 temp.p = instance.config.P_UL[dst.x];
