@@ -67,7 +67,7 @@ bool dst_desc(Dst &left, Dst &right)
 }
 
 // 一方向(上)からの積み替え・取り出し
-int bb1(Instance &instance, int UB_cur, clock_t start)
+int bb1(Instance &instance, int UB_cur, clock_t start, int &T, int T_temp)
 {
     // 節点の深さ
     static int depth = 0;
@@ -77,24 +77,36 @@ int bb1(Instance &instance, int UB_cur, clock_t start)
     if (((double)(clock() - start) / CLOCKS_PER_SEC) > 1800)
     {
         depth = 0;
+        T = max(T, T_temp);
         return -1;
-    }
-    if (depth + instance.config.LB1 == UB_cur - 1)
-    {
-        int UB_temp = instance.UB1();
-        if (instance.config.UB1 > UB_temp + depth)
-        {
-            instance.config.UB1 = UB_temp + depth;
-        }
     }
     if (instance.config.UB1 == UB_cur)
     {
         depth = 0;
+        T = instance.config.UBT;
         return min_rel = instance.config.UB1;
+    }
+    if (depth + instance.config.LB1 == UB_cur - 1)
+    {
+        int T_temp2 = T_temp;
+        int UB_temp = instance.UB1(T_temp2);
+        if (instance.config.UB1 > UB_temp + depth)
+        {
+            instance.config.UBT = max(instance.config.UBT, max(T, T_temp2));
+            instance.config.UB1 = UB_temp + depth;
+            if (instance.config.UB1 == UB_cur)
+            {
+                depth = 0;
+                T = instance.config.UBT;
+                return min_rel = instance.config.UB1;
+            }
+        }
     }
     int block1 = instance.config.count(Upp);
     while (block1 == 0)
     {
+        T = max(T, T_temp);
+        T_temp = 0;
         Point src = instance.config.pos[instance.config.priority - 1];
         instance.config.retrieve(src);
 
@@ -106,6 +118,7 @@ int bb1(Instance &instance, int UB_cur, clock_t start)
         {
             min_rel = depth;
             depth = 0;
+            T = max(T, T_temp);
             return min_rel;
         }
         block1 = instance.config.count(Upp);
@@ -128,6 +141,12 @@ int bb1(Instance &instance, int UB_cur, clock_t start)
     }
     sort(vec_src.begin(), vec_src.end(), src_asc);
     depth++;
+    T_temp++;
+
+#if TEST == 0
+    printf("depth=%d\n", depth);
+#endif
+
     // vec_srcをforループで回す
     for (auto src = vec_src.begin(); src != vec_src.end(); src++)
     {
@@ -173,7 +192,7 @@ int bb1(Instance &instance, int UB_cur, clock_t start)
 #endif
 
                     instance_temp = instance;
-                    ans = bb1(instance_temp, UB_cur, start);
+                    ans = bb1(instance_temp, UB_cur, start, T, T_temp);
                     if (ans != -1 && ans != 0)
                     {
                         return min_rel;
@@ -199,7 +218,7 @@ int bb1(Instance &instance, int UB_cur, clock_t start)
                     instance.config.print();
 #endif
 
-                    ans = bb1(instance, UB_cur, start);
+                    ans = bb1(instance, UB_cur, start, T, T_temp);
                     if (ans != -1 && ans != 0)
                     {
                         return min_rel;
@@ -214,10 +233,11 @@ int bb1(Instance &instance, int UB_cur, clock_t start)
         }
     }
     depth--;
+    T_temp--;
     if (depth == 0)
     {
         UB_cur++;
-        ans = bb1(instance, UB_cur, start);
+        ans = bb1(instance, UB_cur, start, T, T_temp);
         if (ans != -1 && ans != 0)
         {
             return min_rel;
@@ -230,7 +250,7 @@ int bb1(Instance &instance, int UB_cur, clock_t start)
 }
 
 // 二方向(上右)からの積み替え・取り出し
-int bb2(Instance &instance, int LB, int UB_cur, clock_t start)
+int bb2(Instance &instance, int LB, int UB_cur, clock_t start, int &T, int T_temp)
 {
     // 節点の深さ
     static int depth = 0;
@@ -248,26 +268,38 @@ int bb2(Instance &instance, int LB, int UB_cur, clock_t start)
     if (((double)(clock() - start) / CLOCKS_PER_SEC) > 1800)
     {
         depth = 0;
+        T = max(T, T_temp);
         return -1;
-    }
-    if (depth + LB == UB_cur - 1)
-    {
-        int UB_temp = instance.UB2(Upp, Right);
-        if (instance.config.UB2 > UB_temp + depth)
-        {
-            instance.config.UB2 = UB_temp + depth;
-        }
     }
     if (instance.config.UB2 == UB_cur)
     {
         depth = 0;
+        T = instance.config.UBT;
         return min_rel = instance.config.UB2;
+    }
+    if (depth + instance.config.LB2 == UB_cur - 1)
+    {
+        int T_temp2 = T_temp;
+        int UB_temp = instance.UB2(Upp, Right, T_temp2);
+        if (instance.config.UB2 > UB_temp + depth)
+        {
+            instance.config.UBT = max(instance.config.UBT, max(T, T_temp2));
+            instance.config.UB2 = UB_temp + depth;
+            if (instance.config.UB2 == UB_cur)
+            {
+                depth = 0;
+                T = instance.config.UBT;
+                return min_rel = instance.config.UB2;
+            }
+        }
     }
     Point src;
     int block1 = instance.config.count(Upp);
     int block2 = instance.config.count(Right);
     while ((block1 == 0) || (block2 == 0))
     {
+        T = max(T, T_temp);
+        T_temp = 0;
         src = instance.config.pos[instance.config.priority - 1];
         instance.config.retrieve(src);
 
@@ -279,6 +311,7 @@ int bb2(Instance &instance, int LB, int UB_cur, clock_t start)
         {
             min_rel = depth;
             depth = 0;
+            T = max(T, T_temp);
             return min_rel;
         }
         block1 = instance.config.count(Upp);
@@ -318,6 +351,7 @@ int bb2(Instance &instance, int LB, int UB_cur, clock_t start)
     }
     sort(vec_src.begin(), vec_src.end(), src_asc);
     depth++;
+    T_temp++;
     for (auto src = vec_src.begin(); src != vec_src.end(); src++)
     {
         // 積み替え先ブロックを決定
@@ -400,7 +434,7 @@ int bb2(Instance &instance, int LB, int UB_cur, clock_t start)
 #endif
 
                 instance_temp = instance;
-                ans = bb2(instance_temp, it->LB, UB_cur, start);
+                ans = bb2(instance_temp, it->LB, UB_cur, start, T, T_temp);
                 if (ans != -1 && ans != 0)
                 {
                     return min_rel;
@@ -431,7 +465,7 @@ int bb2(Instance &instance, int LB, int UB_cur, clock_t start)
                 instance.config.print();
 #endif
 
-                ans = bb2(instance, it->LB, UB_cur, start);
+                ans = bb2(instance, it->LB, UB_cur, start, T, T_temp);
                 if (ans != -1 && ans != 0)
                 {
                     return min_rel;
@@ -449,10 +483,11 @@ int bb2(Instance &instance, int LB, int UB_cur, clock_t start)
         }
     }
     depth--;
+    T_temp--;
     if (depth == 0)
     {
         UB_cur++;
-        ans = bb2(instance, LB, UB_cur, start);
+        ans = bb2(instance, LB, UB_cur, start, T, T_temp);
         if (ans != -1 && ans != 0)
         {
             return min_rel;
@@ -465,7 +500,7 @@ int bb2(Instance &instance, int LB, int UB_cur, clock_t start)
 }
 
 // 二方向(上下)からの積み替え・取り出し
-int bb2a(Instance &instance, int LB, int UB_cur, clock_t start)
+int bb2a(Instance &instance, int LB, int UB_cur, clock_t start, int &T, int T_temp)
 {
     // 節点の深さ
     static int depth = 0;
@@ -478,26 +513,38 @@ int bb2a(Instance &instance, int LB, int UB_cur, clock_t start)
     if (((double)(clock() - start) / CLOCKS_PER_SEC) > 1800)
     {
         depth = 0;
+        T = max(T, T_temp);
         return -1;
-    }
-    if (depth + LB == UB_cur - 1)
-    {
-        int UB_temp = instance.UB2(Upp, Low);
-        if (instance.config.UB2 > UB_temp + depth)
-        {
-            instance.config.UB2 = UB_temp + depth;
-        }
     }
     if (instance.config.UB2 == UB_cur)
     {
         depth = 0;
+        T = instance.config.UBT;
         return min_rel = instance.config.UB2;
+    }
+    if (depth + instance.config.LB2a == UB_cur - 1)
+    {
+        int T_temp2 = T_temp;
+        int UB_temp = instance.UB2(Upp, Low, T_temp2);
+        if (instance.config.UB2 > UB_temp + depth)
+        {
+            instance.config.UBT = max(instance.config.UBT, max(T, T_temp2));
+            instance.config.UB2 = UB_temp + depth;
+            if (instance.config.UB2 == UB_cur)
+            {
+                depth = 0;
+                T = instance.config.UBT;
+                return min_rel = instance.config.UB2;
+            }
+        }
     }
     Point src;
     int block1 = instance.config.count(Upp);
     int block2 = instance.config.count(Low);
     while ((block1 == 0) || (block2 == 0))
     {
+        T = max(T, T_temp);
+        T_temp = 0;
         src = instance.config.pos[instance.config.priority - 1];
         instance.config.retrieve(src);
 
@@ -509,6 +556,7 @@ int bb2a(Instance &instance, int LB, int UB_cur, clock_t start)
         {
             min_rel = depth;
             depth = 0;
+            T = max(T, T_temp);
             return min_rel;
         }
         block1 = instance.config.count(Upp);
@@ -548,6 +596,7 @@ int bb2a(Instance &instance, int LB, int UB_cur, clock_t start)
     }
     sort(vec_src.begin(), vec_src.end(), src_asc);
     depth++;
+    T_temp++;
     for (auto src = vec_src.begin(); src != vec_src.end(); src++)
     {
         vector<Dst> vec_dst;
@@ -624,7 +673,7 @@ int bb2a(Instance &instance, int LB, int UB_cur, clock_t start)
 #endif
 
                 instance_temp = instance;
-                ans = bb2a(instance_temp, it->LB, UB_cur, start);
+                ans = bb2a(instance_temp, it->LB, UB_cur, start, T, T_temp);
                 if (ans != -1 && ans != 0)
                 {
                     return min_rel;
@@ -650,7 +699,7 @@ int bb2a(Instance &instance, int LB, int UB_cur, clock_t start)
                 instance.config.print();
 #endif
 
-                ans = bb2a(instance, it->LB, UB_cur, start);
+                ans = bb2a(instance, it->LB, UB_cur, start, T, T_temp);
                 if (ans != -1 && ans != 0)
                 {
                     return min_rel;
@@ -664,10 +713,11 @@ int bb2a(Instance &instance, int LB, int UB_cur, clock_t start)
         }
     }
     depth--;
+    T_temp--;
     if (depth == 0)
     {
         UB_cur++;
-        ans = bb2a(instance, LB, UB_cur, start);
+        ans = bb2a(instance, LB, UB_cur, start, T, T_temp);
         if (ans != -1 && ans != 0)
         {
             return min_rel;
@@ -680,7 +730,7 @@ int bb2a(Instance &instance, int LB, int UB_cur, clock_t start)
 }
 
 // 三方向(上右下)からの積み替え・取り出し
-int bb3(Instance &instance, int LB, int UB_cur, clock_t start)
+int bb3(Instance &instance, int LB, int UB_cur, clock_t start, int &T, int T_temp)
 {
     // 節点の深さ
     static int depth = 0;
@@ -693,20 +743,30 @@ int bb3(Instance &instance, int LB, int UB_cur, clock_t start)
     if (((double)(clock() - start) / CLOCKS_PER_SEC) > 1800)
     {
         depth = 0;
+        T = max(T, T_temp);
         return -1;
-    }
-    if (depth + LB == UB_cur - 1)
-    {
-        int UB_temp = instance.UB3(Upp, Right, Low);
-        if (instance.config.UB3 > UB_temp + depth)
-        {
-            instance.config.UB3 = UB_temp + depth;
-        }
     }
     if (instance.config.UB3 == UB_cur)
     {
         depth = 0;
+        T = instance.config.UBT;
         return min_rel = instance.config.UB3;
+    }
+    if (depth + instance.config.LB3 == UB_cur - 1)
+    {
+        int T_temp2 = T_temp;
+        int UB_temp = instance.UB3(Upp, Right, Low, T_temp2);
+        if (instance.config.UB3 > UB_temp + depth)
+        {
+            instance.config.UBT = max(instance.config.UBT, max(T, T_temp2));
+            instance.config.UB3 = UB_temp + depth;
+            if (instance.config.UB3 == UB_cur)
+            {
+                depth = 0;
+                T = instance.config.UBT;
+                return min_rel = instance.config.UB3;
+            }
+        }
     }
     Point src;
     int block1 = instance.config.count(Upp);
@@ -714,6 +774,8 @@ int bb3(Instance &instance, int LB, int UB_cur, clock_t start)
     int block3 = instance.config.count(Low);
     while ((block1 == 0) || (block2 == 0) || (block3 == 0))
     {
+        T = max(T, T_temp);
+        T_temp = 0;
         src = instance.config.pos[instance.config.priority - 1];
         instance.config.retrieve(src);
 
@@ -725,6 +787,7 @@ int bb3(Instance &instance, int LB, int UB_cur, clock_t start)
         {
             min_rel = depth;
             depth = 0;
+            T = max(T, T_temp);
             return min_rel;
         }
         block1 = instance.config.count(Upp);
@@ -780,6 +843,7 @@ int bb3(Instance &instance, int LB, int UB_cur, clock_t start)
     }
     sort(vec_src.begin(), vec_src.end(), src_asc);
     depth++;
+    T_temp++;
     for (auto src = vec_src.begin(); src != vec_src.end(); src++)
     {
         vector<Dst> vec_dst;
@@ -885,7 +949,7 @@ int bb3(Instance &instance, int LB, int UB_cur, clock_t start)
 #endif
 
                 instance_temp = instance;
-                ans = bb3(instance_temp, it->LB, UB_cur, start);
+                ans = bb3(instance_temp, it->LB, UB_cur, start, T, T_temp);
                 if (ans != -1 && ans != 0)
                 {
                     return min_rel;
@@ -915,7 +979,7 @@ int bb3(Instance &instance, int LB, int UB_cur, clock_t start)
                 instance.config.print();
 #endif
 
-                ans = bb3(instance, it->LB, UB_cur, start);
+                ans = bb3(instance, it->LB, UB_cur, start, T, T_temp);
                 if (ans != -1 && ans != 0)
                 {
                     return min_rel;
@@ -933,10 +997,11 @@ int bb3(Instance &instance, int LB, int UB_cur, clock_t start)
         }
     }
     depth--;
+    T_temp--;
     if (depth == 0)
     {
         UB_cur++;
-        ans = bb3(instance, LB, UB_cur, start);
+        ans = bb3(instance, LB, UB_cur, start, T, T_temp);
         if (ans != -1 && ans != 0)
         {
             return min_rel;
@@ -949,7 +1014,7 @@ int bb3(Instance &instance, int LB, int UB_cur, clock_t start)
 }
 
 // 四方向(上右下左)からの積み替え・取り出し
-int bb4(Instance &instance, int LB, int UB_cur, clock_t start)
+int bb4(Instance &instance, int LB, int UB_cur, clock_t start, int &T, int T_temp)
 {
     // 節点の深さ
     static int depth = 0;
@@ -962,20 +1027,30 @@ int bb4(Instance &instance, int LB, int UB_cur, clock_t start)
     if (((double)(clock() - start) / CLOCKS_PER_SEC) > 1800)
     {
         depth = 0;
+        T = max(T, T_temp);
         return -1;
-    }
-    if (depth + instance.config.LB4 == UB_cur - 1)
-    {
-        int UB_temp = instance.UB4(Upp, Right, Low, Left);
-        if (instance.config.UB4 > UB_temp + depth)
-        {
-            instance.config.UB4 = UB_temp + depth;
-        }
     }
     if (instance.config.UB4 == UB_cur)
     {
         depth = 0;
+        T = instance.config.UBT;
         return min_rel = instance.config.UB4;
+    }
+    if (depth + instance.config.LB4 == UB_cur - 1)
+    {
+        int T_temp2 = T_temp;
+        int UB_temp = instance.UB4(Upp, Right, Low, Left, T_temp2);
+        if (instance.config.UB4 > UB_temp + depth)
+        {
+            instance.config.UBT = max(instance.config.UBT, max(T, T_temp2));
+            instance.config.UB4 = UB_temp + depth;
+            if (instance.config.UB4 == UB_cur)
+            {
+                depth = 0;
+                T = instance.config.UBT;
+                return min_rel = instance.config.UB4;
+            }
+        }
     }
     Point src;
     int block1 = instance.config.count(Upp);
@@ -984,6 +1059,8 @@ int bb4(Instance &instance, int LB, int UB_cur, clock_t start)
     int block4 = instance.config.count(Left);
     while ((block1 == 0) || (block2 == 0) || (block3 == 0) || (block4 == 0))
     {
+        T = max(T, T_temp);
+        T_temp = 0;
         src = instance.config.pos[instance.config.priority - 1];
         instance.config.retrieve(src);
 
@@ -995,6 +1072,7 @@ int bb4(Instance &instance, int LB, int UB_cur, clock_t start)
         {
             min_rel = depth;
             depth = 0;
+            T = max(T, T_temp);
             return min_rel;
         }
         block1 = instance.config.count(Upp);
@@ -1066,6 +1144,7 @@ int bb4(Instance &instance, int LB, int UB_cur, clock_t start)
     }
     sort(vec_src.begin(), vec_src.end(), src_asc);
     depth++;
+    T_temp++;
     for (auto src = vec_src.begin(); src != vec_src.end(); src++)
     {
         vector<Dst> vec_dst;
@@ -1198,7 +1277,7 @@ int bb4(Instance &instance, int LB, int UB_cur, clock_t start)
 #endif
 
                 instance_temp = instance;
-                ans = bb4(instance_temp, it->LB, UB_cur, start);
+                ans = bb4(instance_temp, it->LB, UB_cur, start, T, T_temp);
                 if (ans != -1 && ans != 0)
                 {
                     return min_rel;
@@ -1228,7 +1307,7 @@ int bb4(Instance &instance, int LB, int UB_cur, clock_t start)
                 instance.config.print();
 #endif
 
-                ans = bb4(instance, it->LB, UB_cur, start);
+                ans = bb4(instance, it->LB, UB_cur, start, T, T_temp);
                 if (ans != -1 && ans != 0)
                 {
                     return min_rel;
@@ -1247,10 +1326,11 @@ int bb4(Instance &instance, int LB, int UB_cur, clock_t start)
         }
     }
     depth--;
+    T_temp--;
     if (depth == 0)
     {
         UB_cur++;
-        ans = bb4(instance, LB, UB_cur, start);
+        ans = bb4(instance, LB, UB_cur, start, T, T_temp);
         if (ans != -1 && ans != 0)
         {
             return min_rel;
