@@ -47,28 +47,28 @@ int main()
 #if BB == 2
                 instance->config.LB2 = instance->LB2(Upp, Right, Any);
                 cout << "LB2=" << instance->config.LB2 << endl;
-                instance->config.UB2 = instance->UB2(Upp, Right, T);
+                instance->config.UB2 = instance->UB2(Upp, Right, instance->config.UBT);
                 cout << "UB2=" << instance->config.UB2 << endl;
 #endif
 
 #if BB == -2
                 instance->config.LB2a = instance->LB2a(Any);
                 cout << "LB2a=" << instance->config.LB2a << endl;
-                instance->config.UB2 = instance->UB2(Upp, Low, T);
-                cout << "UB2=" << instance->config.UB2 << endl;
+                instance->config.UB2s = instance->UB2s(Upp, Low, instance->config.UBT);
+                cout << "UB2s=" << instance->config.UB2s << endl;
 #endif
 
 #if BB == 3
                 instance->config.LB3 = instance->LB3(Upp, Right, Low, Any);
                 cout << "LB3=" << instance->config.LB3 << endl;
-                instance->config.UB3 = instance->UB3(Upp, Right, Low, T);
+                instance->config.UB3 = instance->UB3(Upp, Right, Low, instance->config.UBT);
                 cout << "UB3=" << instance->config.UB3 << endl;
 #endif
 
 #if BB == 4
                 instance->config.LB4 = instance->LB4(Upp, Right, Low, Left, Any);
                 cout << "LB4=" << instance->config.LB4 << endl;
-                instance->config.UB4 = instance->UB4(Upp, Right, Low, Left, T);
+                instance->config.UB4 = instance->UB4(Upp, Right, Low, Left, instance->config.UBT);
                 cout << "UB4=" << instance->config.UB4 << endl;
 #endif
 
@@ -102,9 +102,11 @@ int main()
 #if BB == -2
                 temp = bb2a(*instance, instance->config.LB2a, Any, start, T, 0);
                 cout << temp << endl;
+                cout << "T=" << T << endl;
+                // getchar();
                 if (a % 100 == 1)
                 {
-                        sprintf(filename, "../Benchmark/%d-%d-%d(bb2a).csv", TIER, STACK, nblock);
+                        sprintf(filename, "../Benchmark/%d-%d-%d(bb2s).csv", TIER, STACK, nblock);
                         fp_csv = fopen(filename, "w");
                         sprintf(filename, "../Benchmark/%d-%d-%d(ip2sT).csv", TIER, STACK, nblock);
                         fp_csv2 = fopen(filename, "w");

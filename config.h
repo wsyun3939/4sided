@@ -2,14 +2,14 @@
 #define ___config
 #include <bits/stdc++.h>
 
-#define TIER 4
+#define TIER 3
 #define STACK 10
-#define NBLOCK 36
-#define NUMBER 10301
+#define NBLOCK 27
+#define NUMBER 10001
 #define TEST 1
 #define UB_TEST 1
 
-#define BB 4
+#define BB -2
 
 using namespace std;
 
@@ -57,10 +57,10 @@ public:
     int LB1, LB2, LB2a, LB3, LB4;
 
     // 上界値
-    int UB1, UB2, UB3, UB4;
+    int UB1, UB2, UB2s, UB3, UB4;
 
     // 上界値におけるT
-    int UBT=0;
+    int UBT = 0;
 
     // 各方向における最大優先度
     int P_UL[STACK];

@@ -654,25 +654,25 @@ int bb2a(Instance &instance, int UB_cur, Direction dir, clock_t start, int &T, i
         T = max(T, T_temp);
         return -1;
     }
-    if (instance.config.UB2 == UB_cur)
+    if (instance.config.UB2s == UB_cur)
     {
         depth = 0;
         T = instance.config.UBT;
-        return min_rel = instance.config.UB2;
+        return min_rel = instance.config.UB2s;
     }
     if (depth + instance.config.LB2a == UB_cur - 1)
     {
         int T_temp2 = T_temp;
-        int UB_temp = instance.UB2(Upp, Low, T_temp2);
-        if (instance.config.UB2 > UB_temp + depth)
+        int UB_temp = instance.UB2s(Upp, Low, T_temp2);
+        if (instance.config.UB2s > UB_temp + depth)
         {
             instance.config.UBT = max(instance.config.UBT, max(T, T_temp2));
-            instance.config.UB2 = UB_temp + depth;
-            if (instance.config.UB2 == UB_cur)
+            instance.config.UB2s = UB_temp + depth;
+            if (instance.config.UB2s == UB_cur)
             {
                 depth = 0;
                 T = instance.config.UBT;
-                return min_rel = instance.config.UB2;
+                return min_rel = instance.config.UB2s;
             }
         }
     }
