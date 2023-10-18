@@ -40,7 +40,7 @@ int main()
 #if BB == 1
                 instance->config.LB1 = instance->LB1();
                 cout << "LB1=" << instance->config.LB1 << endl;
-                instance->config.UB1 = instance->UB1();
+                instance->config.UB1 = instance->UB1(instance->config.UBT);
                 cout << "UB1=" << instance->config.UB1 << endl;
 #endif
 
@@ -75,12 +75,16 @@ int main()
                 T = 0;
 
 #if BB == 1
-                temp = bb1(*instance, instance->config.LB1, start);
+                temp = bb1(*instance, instance->config.LB1, start, T, 0);
                 cout << temp << endl;
+                cout << "T=" << T << endl;
+                // getchar();
                 if (a % 100 == 1)
                 {
                         sprintf(filename, "../Benchmark/%d-%d-%d(bb1).csv", TIER, STACK, nblock);
                         fp_csv = fopen(filename, "w");
+                        sprintf(filename, "../Benchmark/%d-%d-%d(ip1T).csv", TIER, STACK, nblock);
+                        fp_csv2 = fopen(filename, "w");
                 }
 #endif
 

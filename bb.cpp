@@ -43,7 +43,7 @@ bool asc_desc(Dst &left, Dst &right)
 }
 
 // 一方向(上)からの積み替え・取り出し
-int bb1(Instance &instance, int UB_cur, clock_t start)
+int bb1(Instance &instance, int UB_cur, clock_t start, int &T, int T_temp)
 {
     // 節点の深さ
     static int depth = 0;
@@ -53,24 +53,36 @@ int bb1(Instance &instance, int UB_cur, clock_t start)
     if (((double)(clock() - start) / CLOCKS_PER_SEC) > 1800)
     {
         depth = 0;
+        T = max(T, T_temp);
         return -1;
-    }
-    if (depth + instance.config.LB1 == UB_cur - 1)
-    {
-        int UB_temp = instance.UB1();
-        if (instance.config.UB1 > UB_temp + depth)
-        {
-            instance.config.UB1 = UB_temp + depth;
-        }
     }
     if (instance.config.UB1 == UB_cur)
     {
         depth = 0;
+        T = instance.config.UBT;
         return min_rel = instance.config.UB1;
+    }
+    if (depth + instance.config.LB1 == UB_cur - 1)
+    {
+        int T_temp2 = T_temp;
+        int UB_temp = instance.UB1(T_temp2);
+        if (instance.config.UB1 > UB_temp + depth)
+        {
+            instance.config.UBT = max(instance.config.UBT, max(T, T_temp2));
+            instance.config.UB1 = UB_temp + depth;
+            if (instance.config.UB1 == UB_cur)
+            {
+                depth = 0;
+                T = instance.config.UBT;
+                return min_rel = instance.config.UB1;
+            }
+        }
     }
     int block1 = instance.config.count(Upp);
     while (block1 == 0)
     {
+        T = max(T, T_temp);
+        T_temp = 0;
         Point src = instance.config.pos[instance.config.priority - 1];
         instance.config.retrieve(src);
 
@@ -83,6 +95,7 @@ int bb1(Instance &instance, int UB_cur, clock_t start)
         {
             min_rel = depth;
             depth = 0;
+            T = max(T, T_temp);
             return min_rel;
         }
         block1 = instance.config.count(Upp);
@@ -96,6 +109,7 @@ int bb1(Instance &instance, int UB_cur, clock_t start)
         src.y--;
     }
     depth++;
+    T_temp++;
 
 #if TEST == 0
     printf("depth = %d\n", depth);
@@ -144,7 +158,7 @@ int bb1(Instance &instance, int UB_cur, clock_t start)
 #endif
 
                 instance_temp = instance;
-                ans = bb1(instance_temp, UB_cur, start);
+                ans = bb1(instance_temp, UB_cur, start, T, T_temp);
                 if (ans != -1 && ans != 0)
                 {
                     return min_rel;
@@ -170,7 +184,7 @@ int bb1(Instance &instance, int UB_cur, clock_t start)
                 instance.config.print();
 #endif
 
-                ans = bb1(instance, UB_cur, start);
+                ans = bb1(instance, UB_cur, start, T, T_temp);
                 if (ans != -1 && ans != 0)
                 {
                     return min_rel;
@@ -184,6 +198,7 @@ int bb1(Instance &instance, int UB_cur, clock_t start)
         }
     }
     depth--;
+    T_temp--;
     if (depth == 0)
     {
         UB_cur++;
@@ -192,7 +207,7 @@ int bb1(Instance &instance, int UB_cur, clock_t start)
         printf("UB_cur++\n");
 #endif
 
-        ans = bb1(instance, UB_cur, start);
+        ans = bb1(instance, UB_cur, start, T, T_temp);
         if (ans != -1 && ans != 0)
         {
             return min_rel;

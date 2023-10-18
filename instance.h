@@ -277,10 +277,11 @@ public:
         return LB4;
     }
 
-    int UB1()
+    int UB1(int &T)
     {
         Config config_temp = config;
         int UB1 = 0;
+        int T_temp = T;
         for (int n = config_temp.priority; n <= nblock; n++)
         {
             // ブロッキングブロックを積み替える場合
@@ -290,6 +291,7 @@ public:
                 if (config_temp.block[config_temp.pos[n - 1].x][j])
                 {
                     UB1++;
+                    T_temp++;
                     // 最大優先度が最も低いスタックを格納
                     int temp = 0;
                     // 積み替え先
@@ -301,10 +303,12 @@ public:
                         {
                             temp = config_temp.P_UL[i];
                             dst.x = i;
+                            int dst_y = TIER - 1;
+                            while (!config_temp.block[dst.x][dst_y - 1] && (dst_y > 0))
+                                dst_y--;
+                            dst.y = dst_y;
                         }
                     }
-                    while (!config_temp.block[dst.x][dst.y - 1] && (dst.y > 0))
-                        dst.y--;
                     Point src = {config_temp.pos[n - 1].x, j};
                     if (config_temp.pos[n - 1] == dst)
                     {
@@ -319,6 +323,13 @@ public:
             }
             Point src = {config_temp.pos[n - 1].x, config_temp.pos[n - 1].y};
             config_temp.retrieve(src);
+
+#if UB_TEST == 0
+            config_temp.print();
+#endif
+
+            T = max(T, T_temp);
+            T_temp = 0;
         }
         return UB1;
     }
