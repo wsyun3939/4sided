@@ -3,13 +3,13 @@
 #include <bits/stdc++.h>
 
 #define TIER 3
-#define STACK 7
-#define NBLOCK 18
-#define NUMBER 2501
+#define STACK 9
+#define NBLOCK 24
+#define NUMBER 7501
 #define TEST 1
 #define UB_TEST 1
 
-#define BB 4
+#define BB 1
 
 using namespace std;
 
