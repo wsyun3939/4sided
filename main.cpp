@@ -33,15 +33,8 @@ int main()
                 Instance *instance = new Instance();
                 char filename[BUFFER];
 
-#if Bench == 1
                 snprintf(filename, BUFFER, "../Benchmark/%d-%d-%d/%05d.txt", TIER, STACK, nblock, a);
                 instance->readFile(filename);
-#endif
-
-#if Bench == 2
-                snprintf(filename, BUFFER, "../Benchmark2D/%d-%d-%d/%05d.txt", TIER, STACK, nblock, a);
-                instance->readFile2D(filename);
-#endif
 
                 cout << filename << endl;
                 instance->config.print();

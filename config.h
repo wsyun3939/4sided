@@ -8,7 +8,6 @@
 #define NUMBER 1
 #define TEST 1
 #define UB_TEST 1
-#define Bench 2
 
 #define BB 1
 
