@@ -29,7 +29,7 @@ int main()
         FILE *fp_csv2 = NULL;
         for (int itr = 0; itr < TIER; itr++)
         {
-                for (int a = 1; a <= 100; a++)
+                for (int a = NUMBER; a <= 100; a++)
                 {
                         start = clock();
                         Instance *instance = new Instance();
