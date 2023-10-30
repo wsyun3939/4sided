@@ -23,67 +23,6 @@ public:
     }
 
     // ファイル読み込み
-    void readFile(const std::string &path)
-    {
-        std::ifstream file(path);
-        if (!file.is_open())
-        {
-            std::cerr << "Failed to open file: " << path << std::endl;
-            return;
-        }
-
-        std::string line;
-        int i = 0;
-        int j = 0;
-        // 最初の１行を捨てる
-        getline(file, line);
-
-        while (std::getline(file, line))
-        {
-            std::istringstream iss(line);
-            int num, value;
-            iss >> num;
-            nblock += num;
-            for (int k = 0; k < num; k++)
-            {
-                iss >> value;
-                if (value != 0)
-                {
-                    if (config.P_UL[i] > value)
-                        config.P_UL[i] = value;
-                    config.pos[value - 1].x = i;
-                    config.pos[value - 1].y = j;
-                }
-                config.block[i][j] = value;
-                j++;
-            }
-            j = 0;
-            i++;
-        }
-        file.close();
-
-        // 横方向の最大優先度を設定
-        for (int j = 0; j < TIER; j++)
-        {
-            for (int i = 0; i < STACK; i++)
-            {
-                if (config.block[i][j] == 0)
-                    continue;
-                if (config.P_LR[j] > config.block[i][j])
-                    config.P_LR[j] = config.block[i][j];
-            }
-        }
-        // 各ブロックスペースに対して，最大優先度を設定
-        for (int i = 0; i < STACK; i++)
-        {
-            for (int j = 0; j < TIER; j++)
-            {
-                config.P[i][j] = config.P_UL[i] + config.P_LR[j];
-            }
-        }
-    }
-
-    // ファイル読み込み
     void readFile2D(const std::string &path)
     {
         std::ifstream file(path);
@@ -103,7 +42,6 @@ public:
             for (int j = 0; j < TIER; j++)
             {
                 iss >> value;
-                cout << value << endl;
                 if (value != 0)
                 {
                     nblock++;
