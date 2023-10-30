@@ -23,7 +23,7 @@ public:
     }
 
     // ファイル読み込み
-    void readFile(const std::string &path)
+    void readFile2D(const std::string &path)
     {
         std::ifstream file(path);
         if (!file.is_open())
@@ -34,30 +34,24 @@ public:
 
         std::string line;
         int i = 0;
-        int j = 0;
-        // 最初の１行を捨てる
-        getline(file, line);
 
         while (std::getline(file, line))
         {
             std::istringstream iss(line);
-            int num, value;
-            iss >> num;
-            nblock += num;
-            for (int k = 0; k < num; k++)
+            int value;
+            for (int j = 0; j < TIER; j++)
             {
                 iss >> value;
                 if (value != 0)
                 {
+                    nblock++;
                     if (config.P_UL[i] > value)
                         config.P_UL[i] = value;
                     config.pos[value - 1].x = i;
                     config.pos[value - 1].y = j;
                 }
                 config.block[i][j] = value;
-                j++;
             }
-            j = 0;
             i++;
         }
         file.close();

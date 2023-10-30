@@ -3,9 +3,8 @@
 #include <bits/stdc++.h>
 
 #define TIER 3
-#define STACK 10
-#define NBLOCK 27
-#define NUMBER 10001
+#define STACK 6
+#define NBLOCK 12
 #define TEST 1
 #define UB_TEST 1
 
