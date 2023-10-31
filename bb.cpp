@@ -350,7 +350,7 @@ int bb2(Instance &instance, int UB_cur, Direction dir, clock_t start, int &T, in
                         dst.y = TIER - 1;
                         continue;
                     }
-                    if (src_vec[i].dir == Right && src.y == dst.y && src.x < dst.x)
+                    if (src_vec[i].dir == Right && src.y == dst.y && instance.config.pos[instance.config.priority - 1].x < dst.x)
                     {
                         dst.y = TIER - 1;
                         continue;
@@ -379,7 +379,7 @@ int bb2(Instance &instance, int UB_cur, Direction dir, clock_t start, int &T, in
                         dst.x = STACK - 1;
                         continue;
                     }
-                    if (src_vec[i].dir == Upp && src.x == dst.x && src.y < dst.y)
+                    if (src_vec[i].dir == Upp && src.x == dst.x && instance.config.pos[instance.config.priority - 1].y < dst.y)
                     {
                         dst.x = STACK - 1;
                         continue;
@@ -514,7 +514,7 @@ int bb2(Instance &instance, int UB_cur, Direction dir, clock_t start, int &T, in
                     dst.y = TIER - 1;
                     continue;
                 }
-                if (dir == Right && src.y == dst.y && src.x < dst.x)
+                if (dir == Right && src.y == dst.y && instance.config.pos[instance.config.priority - 1].x < dst.x)
                 {
                     dst.y = TIER - 1;
                     continue;
@@ -543,7 +543,7 @@ int bb2(Instance &instance, int UB_cur, Direction dir, clock_t start, int &T, in
                     dst.x = STACK - 1;
                     continue;
                 }
-                if (dir == Upp && src.x == dst.x && src.y < dst.y)
+                if (dir == Upp && src.x == dst.x && instance.config.pos[instance.config.priority - 1].y < dst.y)
                 {
                     dst.x = STACK - 1;
                     continue;
@@ -1182,7 +1182,7 @@ int bb3(Instance &instance, int UB_cur, Direction dir, clock_t start, int &T, in
                         dst.y = TIER - 1;
                         continue;
                     }
-                    if (src_vec[i].dir == Right && src.y == dst.y && src.x < dst.x)
+                    if (src_vec[i].dir == Right && src.y == dst.y && instance.config.pos[instance.config.priority - 1].x < dst.x)
                     {
                         dst.y = TIER - 1;
                         continue;
@@ -1211,12 +1211,12 @@ int bb3(Instance &instance, int UB_cur, Direction dir, clock_t start, int &T, in
                         dst.x = STACK - 1;
                         continue;
                     }
-                    if (dir == Upp && src.x == dst.x && src.y < dst.y)
+                    if (dir == Upp && src.x == dst.x && instance.config.pos[instance.config.priority - 1].y < dst.y)
                     {
                         dst.x = STACK - 1;
                         continue;
                     }
-                    if (dir == Low && src.x == dst.x && src.y > dst.y)
+                    if (dir == Low && src.x == dst.x && instance.config.pos[instance.config.priority - 1].y > dst.y)
                     {
                         dst.x = STACK - 1;
                         continue;
@@ -1245,7 +1245,7 @@ int bb3(Instance &instance, int UB_cur, Direction dir, clock_t start, int &T, in
                         dst.y = 0;
                         continue;
                     }
-                    if (dir == Right && src.y == dst.y && src.x < dst.x)
+                    if (dir == Right && src.y == dst.y && instance.config.pos[instance.config.priority - 1].x < dst.x)
                     {
                         dst.y = 0;
                         continue;
@@ -1391,7 +1391,7 @@ int bb3(Instance &instance, int UB_cur, Direction dir, clock_t start, int &T, in
                     dst.y = TIER - 1;
                     continue;
                 }
-                if (dir == Right && src.y == dst.y && src.x < dst.x)
+                if (dir == Right && src.y == dst.y && instance.config.pos[instance.config.priority - 1].x < dst.x)
                 {
                     dst.y = TIER - 1;
                     continue;
@@ -1420,12 +1420,12 @@ int bb3(Instance &instance, int UB_cur, Direction dir, clock_t start, int &T, in
                     dst.x = STACK - 1;
                     continue;
                 }
-                if (dir == Upp && src.x == dst.x && src.y < dst.y)
+                if (dir == Upp && src.x == dst.x && instance.config.pos[instance.config.priority - 1].y < dst.y)
                 {
                     dst.x = STACK - 1;
                     continue;
                 }
-                if (dir == Low && src.x == dst.x && src.y > dst.y)
+                if (dir == Low && src.x == dst.x && instance.config.pos[instance.config.priority - 1].y > dst.y)
                 {
                     dst.x = STACK - 1;
                     continue;
@@ -1454,7 +1454,7 @@ int bb3(Instance &instance, int UB_cur, Direction dir, clock_t start, int &T, in
                     dst.y = 0;
                     continue;
                 }
-                if (dir == Right && src.y == dst.y && src.x < dst.x)
+                if (dir == Right && src.y == dst.y && instance.config.pos[instance.config.priority - 1].x < dst.x)
                 {
                     dst.y = 0;
                     continue;
@@ -1721,12 +1721,12 @@ int bb4(Instance &instance, int UB_cur, Direction dir, clock_t start, int &T, in
                         dst.y = TIER - 1;
                         continue;
                     }
-                    if (src_vec[i].dir == Right && src.y == dst.y && src.x < dst.x)
+                    if (src_vec[i].dir == Right && src.y == dst.y && instance.config.pos[instance.config.priority - 1].x < dst.x)
                     {
                         dst.y = TIER - 1;
                         continue;
                     }
-                    if (src_vec[i].dir == Left && src.y == dst.y && src.x > dst.x)
+                    if (src_vec[i].dir == Left && src.y == dst.y && instance.config.pos[instance.config.priority - 1].x > dst.x)
                     {
                         dst.y = TIER - 1;
                         continue;
@@ -1755,12 +1755,12 @@ int bb4(Instance &instance, int UB_cur, Direction dir, clock_t start, int &T, in
                         dst.x = STACK - 1;
                         continue;
                     }
-                    if (src_vec[i].dir == Upp && src.x == dst.x && src.y < dst.y)
+                    if (src_vec[i].dir == Upp && src.x == dst.x && instance.config.pos[instance.config.priority - 1].y < dst.y)
                     {
                         dst.x = STACK - 1;
                         continue;
                     }
-                    if (src_vec[i].dir == Low && src.x == dst.x && src.y > dst.y)
+                    if (src_vec[i].dir == Low && src.x == dst.x && instance.config.pos[instance.config.priority - 1].y > dst.y)
                     {
                         dst.x = STACK - 1;
                         continue;
@@ -1789,12 +1789,12 @@ int bb4(Instance &instance, int UB_cur, Direction dir, clock_t start, int &T, in
                         dst.y = 0;
                         continue;
                     }
-                    if (src_vec[i].dir == Right && src.y == dst.y && src.x < dst.x)
+                    if (src_vec[i].dir == Right && src.y == dst.y && instance.config.pos[instance.config.priority - 1].x < dst.x)
                     {
                         dst.y = 0;
                         continue;
                     }
-                    if (src_vec[i].dir == Left && src.y == dst.y && src.x > dst.x)
+                    if (src_vec[i].dir == Left && src.y == dst.y && instance.config.pos[instance.config.priority - 1].x > dst.x)
                     {
                         dst.y = 0;
                         continue;
@@ -1823,12 +1823,12 @@ int bb4(Instance &instance, int UB_cur, Direction dir, clock_t start, int &T, in
                         dst.x = 0;
                         continue;
                     }
-                    if (src_vec[i].dir == Upp && src.x == dst.x && src.y < dst.y)
+                    if (src_vec[i].dir == Upp && src.x == dst.x && instance.config.pos[instance.config.priority - 1].y < dst.y)
                     {
                         dst.x = 0;
                         continue;
                     }
-                    if (src_vec[i].dir == Low && src.x == dst.x && src.y > dst.y)
+                    if (src_vec[i].dir == Low && src.x == dst.x && instance.config.pos[instance.config.priority - 1].y > dst.y)
                     {
                         dst.x = 0;
                         continue;
@@ -1988,12 +1988,12 @@ int bb4(Instance &instance, int UB_cur, Direction dir, clock_t start, int &T, in
                     dst.y = TIER - 1;
                     continue;
                 }
-                if (dir == Right && src.y == dst.y && src.x < dst.x)
+                if (dir == Right && src.y == dst.y && instance.config.pos[instance.config.priority - 1].x < dst.x)
                 {
                     dst.y = TIER - 1;
                     continue;
                 }
-                if (dir == Left && src.y == dst.y && src.x > dst.x)
+                if (dir == Left && src.y == dst.y && instance.config.pos[instance.config.priority - 1].x > dst.x)
                 {
                     dst.y = TIER - 1;
                     continue;
@@ -2022,12 +2022,12 @@ int bb4(Instance &instance, int UB_cur, Direction dir, clock_t start, int &T, in
                     dst.x = STACK - 1;
                     continue;
                 }
-                if (dir == Upp && src.x == dst.x && src.y < dst.y)
+                if (dir == Upp && src.x == dst.x && instance.config.pos[instance.config.priority - 1].y < dst.y)
                 {
                     dst.x = STACK - 1;
                     continue;
                 }
-                if (dir == Low && src.x == dst.x && src.y > dst.y)
+                if (dir == Low && src.x == dst.x && instance.config.pos[instance.config.priority - 1].y > dst.y)
                 {
                     dst.x = STACK - 1;
                     continue;
@@ -2056,12 +2056,12 @@ int bb4(Instance &instance, int UB_cur, Direction dir, clock_t start, int &T, in
                     dst.y = 0;
                     continue;
                 }
-                if (dir == Right && src.y == dst.y && src.x < dst.x)
+                if (dir == Right && src.y == dst.y && instance.config.pos[instance.config.priority - 1].x < dst.x)
                 {
                     dst.y = 0;
                     continue;
                 }
-                if (dir == Left && src.y == dst.y && src.x > dst.x)
+                if (dir == Left && src.y == dst.y && instance.config.pos[instance.config.priority - 1].x > dst.x)
                 {
                     dst.y = 0;
                     continue;
@@ -2090,12 +2090,12 @@ int bb4(Instance &instance, int UB_cur, Direction dir, clock_t start, int &T, in
                     dst.x = 0;
                     continue;
                 }
-                if (dir == Upp && src.x == dst.x && src.y < dst.y)
+                if (dir == Upp && src.x == dst.x && instance.config.pos[instance.config.priority - 1].y < dst.y)
                 {
                     dst.x = 0;
                     continue;
                 }
-                if (dir == Low && src.x == dst.x && src.y > dst.y)
+                if (dir == Low && src.x == dst.x && instance.config.pos[instance.config.priority - 1].y > dst.y)
                 {
                     dst.x = 0;
                     continue;
