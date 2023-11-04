@@ -901,7 +901,7 @@ int bb2a(Instance &instance, int UB_cur, Direction dir, clock_t start, int &T, i
             {
                 src.y++;
             }
-            block = block1;
+            block = block2;
         }
         vector<Dst> vec_dst;
         Point dst = {0, TIER - 1};
