@@ -2,8 +2,8 @@
 #define ___config
 #include <bits/stdc++.h>
 
-#define TIER 3
-#define STACK 6
+#define TIER 4
+#define STACK 5
 #define NBLOCK 12
 #define TEST 1
 #define UB_TEST 1
