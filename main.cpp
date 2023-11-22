@@ -95,7 +95,7 @@ int main()
                         temp = bb2(*instance, instance->config.LB2, Any, start, T, 0);
                         cout << temp << endl;
                         cout << "T=" << T << endl;
-                        getchar();
+                        // getchar();
                         if (a % 100 == 1)
                         {
                                 sprintf(filename, "../Benchmark2D/%d-%d-%d(bb2).csv", TIER, STACK, nblock);
@@ -122,6 +122,8 @@ int main()
 #if BB == 3
                         temp = bb3(*instance, instance->config.LB3, Any, start, T, 0);
                         cout << temp << endl;
+                        cout << "T=" << T << endl;
+                        getchar();
                         if (a % 100 == 1)
                         {
                                 sprintf(filename, "../Benchmark2D/%d-%d-%d(bb3).csv", TIER, STACK, nblock);
