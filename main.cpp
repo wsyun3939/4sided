@@ -22,6 +22,7 @@ int main()
         int sum = 0;
         // 最適解と下界値の差
         int gap = 0;
+        int LB=0;
         int temp;
         int nblock = NBLOCK;
         int T = 0;
@@ -78,6 +79,7 @@ int main()
 
 #if BB == 1
                         temp = bb1(*instance, instance->config.LB1, start, T, 0);
+                        LB=instance->config.LB1;
                         cout << temp << endl;
                         cout << "T=" << T << endl;
                         // getchar();
@@ -93,6 +95,7 @@ int main()
 #if BB == 2
                         instance->config.UB2 = 100;
                         temp = bb2(*instance, instance->config.LB2, Any, start, T, 0);
+                        LB=instance->config.LB2;
                         cout << temp << endl;
                         cout << "T=" << T << endl;
                         // getchar();
@@ -107,6 +110,7 @@ int main()
 
 #if BB == -2
                         temp = bb2a(*instance, instance->config.LB2a, Any, start, T, 0);
+                        LB=instance->config.LB2a;
                         cout << temp << endl;
                         cout << "T=" << T << endl;
                         // getchar();
@@ -121,6 +125,7 @@ int main()
 
 #if BB == 3
                         temp = bb3(*instance, instance->config.LB3, Any, start, T, 0);
+                        LB=instance->config.LB3;
                         cout << temp << endl;
                         cout << "T=" << T << endl;
                         // getchar();
@@ -135,6 +140,7 @@ int main()
 
 #if BB == 4
                         temp = bb4(*instance, instance->config.LB4, Any, start, T, 0);
+                        LB=instance->config.LB4;
                         cout << temp << endl;
                         cout << "T=" << T << endl;
                         // getchar();
@@ -160,6 +166,7 @@ int main()
                                         max = calc_time;
                                 }
                                 sum += temp;
+                                gap+=temp-LB;
                         }
                         fprintf(fp_csv, "%d\n", temp);
                         fprintf(fp_csv2, "%d\n", T);
@@ -172,5 +179,7 @@ int main()
         cout << "infeasible:" << timeup << endl;
         cout << "最大計算時間:" << (double)max / CLOCKS_PER_SEC << endl;
         cout << "計算時間の平均:" << (double)sol_lapse / ((100 * TIER - timeup) * CLOCKS_PER_SEC) << endl;
+        return 0;
+        cout << "gap:" << (double)gap / ((100 * TIER - timeup) * CLOCKS_PER_SEC) << endl;
         return 0;
 }
