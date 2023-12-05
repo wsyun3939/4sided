@@ -179,6 +179,6 @@ int main()
         cout << "infeasible:" << timeup << endl;
         cout << "最大計算時間:" << (double)max / CLOCKS_PER_SEC << endl;
         cout << "計算時間の平均:" << (double)sol_lapse / ((100 * TIER - timeup) * CLOCKS_PER_SEC) << endl;
-        cout << "gap:" << (double)gap / ((100 * TIER - timeup) * CLOCKS_PER_SEC) << endl;
+        cout << "gap:" << (double)gap / (100 * TIER - timeup) << endl;
         return 0;
 }
