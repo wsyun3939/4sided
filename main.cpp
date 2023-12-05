@@ -22,7 +22,9 @@ int main()
         int sum = 0;
         // 最適解と下界値の差
         int gap = 0;
+        int UB_gap = 0;
         int LB=0;
+        int UB=0;
         int temp;
         int nblock = NBLOCK;
         int T = 0;
@@ -45,6 +47,7 @@ int main()
                         cout << "LB1=" << instance->config.LB1 << endl;
                         instance->config.UB1 = instance->UB1(instance->config.UBT);
                         cout << "UB1=" << instance->config.UB1 << endl;
+                        UB=instance->config.UB1;
 #endif
 
 #if BB == 2
@@ -52,6 +55,7 @@ int main()
                         cout << "LB2=" << instance->config.LB2 << endl;
                         instance->config.UB2 = instance->UB2(Upp, Right, instance->config.UBT);
                         cout << "UB2=" << instance->config.UB2 << endl;
+                        UB=instance->config.UB2;
 #endif
 
 #if BB == -2
@@ -59,6 +63,7 @@ int main()
                         cout << "LB2a=" << instance->config.LB2a << endl;
                         instance->config.UB2s = instance->UB2s(Upp, Low, instance->config.UBT);
                         cout << "UB2s=" << instance->config.UB2s << endl;
+                        UB=instance->config.UB2s;
 #endif
 
 #if BB == 3
@@ -66,6 +71,7 @@ int main()
                         cout << "LB3=" << instance->config.LB3 << endl;
                         instance->config.UB3 = instance->UB3(Upp, Right, Low, instance->config.UBT);
                         cout << "UB3=" << instance->config.UB3 << endl;
+                        UB=instance->config.UB3;
 #endif
 
 #if BB == 4
@@ -73,6 +79,7 @@ int main()
                         cout << "LB4=" << instance->config.LB4 << endl;
                         instance->config.UB4 = instance->UB4(Upp, Right, Low, Left, instance->config.UBT);
                         cout << "UB4=" << instance->config.UB4 << endl;
+                        UB=instance->config.UB4;
 #endif
 
                         T = 0;
@@ -167,6 +174,7 @@ int main()
                                 }
                                 sum += temp;
                                 gap+=temp-LB;
+                                UB_gap+=UB-temp;
                         }
                         fprintf(fp_csv, "%d\n", temp);
                         fprintf(fp_csv2, "%d\n", T);
@@ -180,5 +188,6 @@ int main()
         cout << "最大計算時間:" << (double)max / CLOCKS_PER_SEC << endl;
         cout << "計算時間の平均:" << (double)sol_lapse / ((100 * TIER - timeup) * CLOCKS_PER_SEC) << endl;
         cout << "gap:" << (double)gap / (100 * TIER - timeup) << endl;
+        cout << "UB_gap:" << (double)UB_gap / (100 * TIER - timeup) << endl;
         return 0;
 }
