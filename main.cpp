@@ -63,7 +63,7 @@ int main()
 #if BB == -2
                         instance->config.LB2a = instance->LB2a(Any);
                         cout << "LB2a=" << instance->config.LB2a << endl;
-                        instance->config.UB2 = instance->UB2(Upp, Low, instance->config.UBT);
+                        instance->config.UB2 = instance->UB2s(Upp, Low, instance->config.UBT);
                         cout << "UB2=" << instance->config.UB2 << endl;
                         UB=instance->config.UB2;
 #endif

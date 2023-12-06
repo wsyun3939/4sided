@@ -525,7 +525,7 @@ int bb2a(Instance &instance, int LB, int UB_cur, clock_t start, int &T, int T_te
     if (depth + instance.config.LB2a == UB_cur - 1)
     {
         int T_temp2 = T_temp;
-        int UB_temp = instance.UB2(Upp, Low, T_temp2);
+        int UB_temp = instance.UB2s(Upp, Low, T_temp2);
         if (instance.config.UB2 > UB_temp + depth)
         {
             instance.config.UBT = max(instance.config.UBT, max(T, T_temp2));
