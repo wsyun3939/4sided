@@ -2,14 +2,14 @@
 #define ___config
 #include <bits/stdc++.h>
 
-#define TIER 3
-#define STACK 6
-#define NBLOCK 12
+#define TIER 5
+#define STACK 5
+#define NBLOCK 15
 #define NUMBER 1
 #define TEST 1
 #define UB_TEST 1
 
-#define BB 1
+#define BB 2
 
 using namespace std;
 

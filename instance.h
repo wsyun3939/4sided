@@ -347,7 +347,13 @@ public:
             }
             else
             {
-                Direction dir_rel = (block1 < block2) ? dir1 : dir2;
+                Direction dir_rel;
+                if (block1 != block2)
+                    dir_rel = (block1 < block2) ? dir1 : dir2;
+                else
+                {
+                    dir_rel = Upp;
+                }
                 switch (dir_rel)
                 {
                 case Upp:
@@ -509,7 +515,13 @@ public:
             }
             else
             {
-                Direction dir_rel = (block1 < block2) ? dir1 : dir2;
+                Direction dir_rel;
+                if (block1 != block2)
+                    dir_rel = (block1 < block2) ? dir1 : dir2;
+                else
+                {
+                    dir_rel = Upp;
+                }
                 switch (dir_rel)
                 {
                 case Upp:
@@ -674,13 +686,18 @@ public:
             else
             {
                 Direction dir_rel;
-                int a = min(min(block1, block2), block3);
-                if (a == block1)
-                    dir_rel = dir1;
-                else if (a == block2)
-                    dir_rel = dir2;
+                if (block1 <= block2 && block1 <= block3)
+                    dir_rel = Upp;
                 else
-                    dir_rel = dir3;
+                {
+                    int a = min(min(block1, block2), block3);
+                    if (a == block1)
+                        dir_rel = dir1;
+                    else if (a == block2)
+                        dir_rel = dir2;
+                    else
+                        dir_rel = dir3;
+                }
                 switch (dir_rel)
                 {
                 case Upp:
@@ -961,15 +978,20 @@ public:
             else
             {
                 Direction dir_rel;
-                int a = min(min(block1, block2), min(block3, block4));
-                if (a == block1)
-                    dir_rel = dir1;
-                else if (a == block2)
-                    dir_rel = dir2;
-                else if (a == block3)
-                    dir_rel = dir3;
+                if (block1 <= block2 && block1 <= block3 && block1 <= block4)
+                    dir_rel = Upp;
                 else
-                    dir_rel = dir4;
+                {
+                    int a = min(min(block1, block2), min(block3, block4));
+                    if (a == block1)
+                        dir_rel = dir1;
+                    else if (a == block2)
+                        dir_rel = dir2;
+                    else if (a == block3)
+                        dir_rel = dir3;
+                    else
+                        dir_rel = dir4;
+                }
                 switch (dir_rel)
                 {
                 case Upp:

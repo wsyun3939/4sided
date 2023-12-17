@@ -26,7 +26,23 @@ struct Dst
 // ブロッキングブロック数でひ比較
 bool block_asc(Src &left, Src &right)
 {
-    return left.block < right.block;
+    if (left.block == right.block)
+        if (left.dir == Upp)
+            return true;
+        else if (left.dir == Low)
+            if (right.dir != Upp)
+                return true;
+            else
+                return false;
+        else if (left.dir == Right)
+            if (right.dir == Upp || right.dir == Low)
+                return false;
+            else
+                return true;
+        else
+            return false;
+    else
+        return left.block < right.block;
 }
 
 // ソートする際の比較関数
