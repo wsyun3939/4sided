@@ -69,7 +69,7 @@ int main()
 #if BB == 3
                         instance->config.LB3 = instance->LB3(Upp, Right, Low, Any);
                         cout << "LB3=" << instance->config.LB3 << endl;
-                        instance->config.UB3 = instance->UB3(Upp, Right, Low, instance,Any->config.UBT,Any);
+                        instance->config.UB3 = instance->UB3(Upp, Right, Low, instance->config.UBT,Any);
                         cout << "UB3=" << instance->config.UB3 << endl;
                         UB=instance->config.UB3;
 #endif

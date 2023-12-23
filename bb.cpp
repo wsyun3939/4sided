@@ -259,9 +259,6 @@ int bb2(Instance &instance, int UB_cur, Direction dir, clock_t start, int &T, in
         T = instance.config.UBT;
         return min_rel = instance.config.UB2;
     }
-    static int idx = 0;
-    idx++;
-    printf("idx=%d\n", idx);
     if (depth + instance.config.LB2 == UB_cur - 1)
     {
         int T_temp2 = T_temp;
