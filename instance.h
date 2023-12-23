@@ -328,7 +328,7 @@ public:
         return UB1;
     }
 
-    int UB2(Direction dir1, Direction dir2, int &T)
+    int UB2(Direction dir1, Direction dir2, int &T, Direction rel)
     {
         Config config_temp = config;
         int UB2 = 0;
@@ -348,11 +348,18 @@ public:
             else
             {
                 Direction dir_rel;
-                if (block1 != block2)
-                    dir_rel = (block1 < block2) ? dir1 : dir2;
+                if (rel != Any)
+                {
+                    dir_rel = rel;
+                }
                 else
                 {
-                    dir_rel = Upp;
+                    if (block1 != block2)
+                        dir_rel = (block1 < block2) ? dir1 : dir2;
+                    else
+                    {
+                        dir_rel = Upp;
+                    }
                 }
                 switch (dir_rel)
                 {
@@ -496,7 +503,7 @@ public:
         return UB2;
     }
 
-    int UB2s(Direction dir1, Direction dir2, int &T)
+    int UB2s(Direction dir1, Direction dir2, int &T, Direction rel)
     {
         Config config_temp = config;
         int UB2s = 0;
@@ -516,11 +523,18 @@ public:
             else
             {
                 Direction dir_rel;
-                if (block1 != block2)
-                    dir_rel = (block1 < block2) ? dir1 : dir2;
+                if (rel != Any)
+                {
+                    dir_rel = rel;
+                }
                 else
                 {
-                    dir_rel = Upp;
+                    if (block1 != block2)
+                        dir_rel = (block1 < block2) ? dir1 : dir2;
+                    else
+                    {
+                        dir_rel = Upp;
+                    }
                 }
                 switch (dir_rel)
                 {
@@ -660,7 +674,7 @@ public:
         return UB2s;
     }
 
-    int UB3(Direction dir1, Direction dir2, Direction dir3, int &T)
+    int UB3(Direction dir1, Direction dir2, Direction dir3, int &T, Direction rel)
     {
         Config config_temp = config;
         int UB3 = 0;
@@ -686,17 +700,24 @@ public:
             else
             {
                 Direction dir_rel;
-                if (block1 <= block2 && block1 <= block3)
-                    dir_rel = Upp;
+                if (rel != Any)
+                {
+                    dir_rel = rel;
+                }
                 else
                 {
-                    int a = min(min(block1, block2), block3);
-                    if (a == block1)
-                        dir_rel = dir1;
-                    else if (a == block2)
-                        dir_rel = dir2;
+                    if (block1 <= block2 && block1 <= block3)
+                        dir_rel = Upp;
                     else
-                        dir_rel = dir3;
+                    {
+                        int a = min(min(block1, block2), block3);
+                        if (a == block1)
+                            dir_rel = dir1;
+                        else if (a == block2)
+                            dir_rel = dir2;
+                        else
+                            dir_rel = dir3;
+                    }
                 }
                 switch (dir_rel)
                 {
@@ -953,7 +974,7 @@ public:
         return UB3;
     }
 
-    int UB4(Direction dir1, Direction dir2, Direction dir3, Direction dir4, int &T)
+    int UB4(Direction dir1, Direction dir2, Direction dir3, Direction dir4, int &T, Direction rel)
     {
         Config config_temp = config;
         int UB4 = 0;
@@ -982,15 +1003,22 @@ public:
                     dir_rel = Upp;
                 else
                 {
-                    int a = min(min(block1, block2), min(block3, block4));
-                    if (a == block1)
-                        dir_rel = dir1;
-                    else if (a == block2)
-                        dir_rel = dir2;
-                    else if (a == block3)
-                        dir_rel = dir3;
+                    if (rel != Any)
+                    {
+                        dir_rel = rel;
+                    }
                     else
-                        dir_rel = dir4;
+                    {
+                        int a = min(min(block1, block2), min(block3, block4));
+                        if (a == block1)
+                            dir_rel = dir1;
+                        else if (a == block2)
+                            dir_rel = dir2;
+                        else if (a == block3)
+                            dir_rel = dir3;
+                        else
+                            dir_rel = dir4;
+                    }
                 }
                 switch (dir_rel)
                 {

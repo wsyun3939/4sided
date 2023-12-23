@@ -53,7 +53,7 @@ int main()
 #if BB == 2
                         instance->config.LB2 = instance->LB2(Upp, Right, Any);
                         cout << "LB2=" << instance->config.LB2 << endl;
-                        instance->config.UB2 = instance->UB2(Upp, Right, instance->config.UBT);
+                        instance->config.UB2 = instance->UB2(Upp, Right, instance->config.UBT,Any);
                         cout << "UB2=" << instance->config.UB2 << endl;
                         UB=instance->config.UB2;
 #endif
@@ -61,7 +61,7 @@ int main()
 #if BB == -2
                         instance->config.LB2a = instance->LB2a(Any);
                         cout << "LB2a=" << instance->config.LB2a << endl;
-                        instance->config.UB2s = instance->UB2s(Upp, Low, instance->config.UBT);
+                        instance->config.UB2s = instance->UB2s(Upp, Low, instance->config.UBT,Any);
                         cout << "UB2s=" << instance->config.UB2s << endl;
                         UB=instance->config.UB2s;
 #endif
@@ -69,7 +69,7 @@ int main()
 #if BB == 3
                         instance->config.LB3 = instance->LB3(Upp, Right, Low, Any);
                         cout << "LB3=" << instance->config.LB3 << endl;
-                        instance->config.UB3 = instance->UB3(Upp, Right, Low, instance->config.UBT);
+                        instance->config.UB3 = instance->UB3(Upp, Right, Low, instance,Any->config.UBT,Any);
                         cout << "UB3=" << instance->config.UB3 << endl;
                         UB=instance->config.UB3;
 #endif
@@ -77,7 +77,7 @@ int main()
 #if BB == 4
                         instance->config.LB4 = instance->LB4(Upp, Right, Low, Left, Any);
                         cout << "LB4=" << instance->config.LB4 << endl;
-                        instance->config.UB4 = instance->UB4(Upp, Right, Low, Left, instance->config.UBT);
+                        instance->config.UB4 = instance->UB4(Upp, Right, Low, Left, instance->config.UBT,Any);
                         cout << "UB4=" << instance->config.UB4 << endl;
                         UB=instance->config.UB4;
 #endif

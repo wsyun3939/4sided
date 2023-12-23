@@ -259,10 +259,13 @@ int bb2(Instance &instance, int UB_cur, Direction dir, clock_t start, int &T, in
         T = instance.config.UBT;
         return min_rel = instance.config.UB2;
     }
+    static int idx = 0;
+    idx++;
+    printf("idx=%d\n", idx);
     if (depth + instance.config.LB2 == UB_cur - 1)
     {
         int T_temp2 = T_temp;
-        int UB_temp = instance.UB2(Upp, Right, T_temp2);
+        int UB_temp = instance.UB2(Upp, Right, T_temp2,dir);
         if (instance.config.UB2 > UB_temp + depth)
         {
             instance.config.UBT = max(instance.config.UBT, max(T, T_temp2));
@@ -694,7 +697,7 @@ int bb2a(Instance &instance, int UB_cur, Direction dir, clock_t start, int &T, i
     if (depth + instance.config.LB2a == UB_cur - 1)
     {
         int T_temp2 = T_temp;
-        int UB_temp = instance.UB2s(Upp, Low, T_temp2);
+        int UB_temp = instance.UB2s(Upp, Low, T_temp2,dir);
         if (instance.config.UB2s > UB_temp + depth)
         {
             instance.config.UBT = max(instance.config.UBT, max(T, T_temp2));
@@ -1080,7 +1083,7 @@ int bb3(Instance &instance, int UB_cur, Direction dir, clock_t start, int &T, in
     if (depth + instance.config.LB3 == UB_cur - 1)
     {
         int T_temp2 = T_temp;
-        int UB_temp = instance.UB3(Upp, Right, Low, T_temp2);
+        int UB_temp = instance.UB3(Upp, Right, Low, T_temp2,dir);
         if (instance.config.UB3 > UB_temp + depth)
         {
             instance.config.UBT = max(instance.config.UBT, max(T, T_temp2));
@@ -1605,7 +1608,7 @@ int bb4(Instance &instance, int UB_cur, Direction dir, clock_t start, int &T, in
     if (depth + instance.config.LB4 == UB_cur - 1)
     {
         int T_temp2 = T_temp;
-        int UB_temp = instance.UB4(Upp, Right, Low, Left, T_temp2);
+        int UB_temp = instance.UB4(Upp, Right, Low, Left, T_temp2,dir);
         if (instance.config.UB4 > UB_temp + depth)
         {
             instance.config.UBT = max(instance.config.UBT, max(T, T_temp2));
