@@ -357,15 +357,10 @@ int bb2(Instance &instance, int UB_cur, Direction dir, clock_t start, int &T, in
             // 上側からの積み替え
             for (dst.x = 0; dst.x < STACK; dst.x++)
             {
-                if (!instance.config.block[dst.x][TIER - 1])
+                if (!instance.config.block[dst.x][TIER - 1] && !(src_vec[i].dir == Upp && src.x == dst.x))
                 {
                     while (!instance.config.block[dst.x][dst.y - 1] && (dst.y > 0))
                         dst.y--;
-                    if ((src.x == dst.x) && (src.y == dst.y))
-                    {
-                        dst.y = TIER - 1;
-                        continue;
-                    }
                     if (src_vec[i].dir == Right && src.y == dst.y && instance.config.pos[instance.config.priority - 1].x < dst.x)
                     {
                         dst.y = TIER - 1;
@@ -386,15 +381,10 @@ int bb2(Instance &instance, int UB_cur, Direction dir, clock_t start, int &T, in
             // 右側からの積み替え
             for (dst.y = 0; dst.y < TIER; dst.y++)
             {
-                if (!instance.config.block[STACK - 1][dst.y])
+                if (!instance.config.block[STACK - 1][dst.y] && !(src_vec[i].dir == Right && src.y == dst.y))
                 {
                     while (!instance.config.block[dst.x - 1][dst.y] && (dst.x > 0))
                         dst.x--;
-                    if ((src.y == dst.y) && (src.x == dst.x))
-                    {
-                        dst.x = STACK - 1;
-                        continue;
-                    }
                     if (src_vec[i].dir == Upp && src.x == dst.x && instance.config.pos[instance.config.priority - 1].y < dst.y)
                     {
                         dst.x = STACK - 1;
@@ -521,15 +511,10 @@ int bb2(Instance &instance, int UB_cur, Direction dir, clock_t start, int &T, in
         // 上側からの積み替え
         for (dst.x = 0; dst.x < STACK; dst.x++)
         {
-            if (!instance.config.block[dst.x][TIER - 1])
+            if (!instance.config.block[dst.x][TIER - 1] && !(dir == Upp && src.x == dst.x))
             {
                 while (!instance.config.block[dst.x][dst.y - 1] && (dst.y > 0))
                     dst.y--;
-                if ((src.x == dst.x) && (src.y == dst.y))
-                {
-                    dst.y = TIER - 1;
-                    continue;
-                }
                 if (dir == Right && src.y == dst.y && instance.config.pos[instance.config.priority - 1].x < dst.x)
                 {
                     dst.y = TIER - 1;
@@ -550,15 +535,10 @@ int bb2(Instance &instance, int UB_cur, Direction dir, clock_t start, int &T, in
         // 右側からの積み替え
         for (dst.y = 0; dst.y < TIER; dst.y++)
         {
-            if (!instance.config.block[STACK - 1][dst.y])
+            if (!instance.config.block[STACK - 1][dst.y] && !(dir == Right && src.y == dst.y))
             {
                 while (!instance.config.block[dst.x - 1][dst.y] && (dst.x > 0))
                     dst.x--;
-                if ((src.y == dst.y) && (src.x == dst.x))
-                {
-                    dst.x = STACK - 1;
-                    continue;
-                }
                 if (dir == Upp && src.x == dst.x && instance.config.pos[instance.config.priority - 1].y < dst.y)
                 {
                     dst.x = STACK - 1;
@@ -785,15 +765,10 @@ int bb2a(Instance &instance, int UB_cur, Direction dir, clock_t start, int &T, i
             // 上側からの積み替え
             for (dst.x = 0; dst.x < STACK; dst.x++)
             {
-                if (!instance.config.block[dst.x][TIER - 1])
+                if (!instance.config.block[dst.x][TIER - 1] && !(src_vec[i].dir == Upp && src.x == dst.x))
                 {
                     while (!instance.config.block[dst.x][dst.y - 1] && (dst.y > 0))
                         dst.y--;
-                    if ((src.x == dst.x) && (src.y == dst.y))
-                    {
-                        dst.y = TIER - 1;
-                        continue;
-                    }
                     instance.config.block[dst.x][dst.y] = p;
                     instance.config.pos[p - 1] = dst;
                     LB_temp = instance.LB2a(src_vec[i].dir);
@@ -807,15 +782,10 @@ int bb2a(Instance &instance, int UB_cur, Direction dir, clock_t start, int &T, i
             // 下側からの積み替え
             for (dst.x = 0; dst.x < STACK; dst.x++)
             {
-                if (!instance.config.block[dst.x][0])
+                if (!instance.config.block[dst.x][0] && !(src_vec[i].dir == Low && src.x == dst.x))
                 {
                     while (!instance.config.block[dst.x][dst.y + 1] && (dst.y < TIER - 1))
                         dst.y++;
-                    if ((src.x == dst.x) && (src.y == dst.y))
-                    {
-                        dst.y = 0;
-                        continue;
-                    }
                     instance.config.block[dst.x][dst.y] = p;
                     instance.config.pos[p - 1] = dst;
                     LB_temp = instance.LB2a(src_vec[i].dir);
@@ -927,16 +897,11 @@ int bb2a(Instance &instance, int UB_cur, Direction dir, clock_t start, int &T, i
         // 上側からの積み替え
         for (dst.x = 0; dst.x < STACK; dst.x++)
         {
-            if (!instance.config.block[dst.x][TIER - 1])
+            if (!instance.config.block[dst.x][TIER - 1] && !(dir == Upp && src.x == dst.x))
             {
                 int LB_temp = 0;
                 while (!instance.config.block[dst.x][dst.y - 1] && (dst.y > 0))
                     dst.y--;
-                if ((src.x == dst.x) && (src.y == dst.y))
-                {
-                    dst.y = TIER - 1;
-                    continue;
-                }
                 instance.config.block[dst.x][dst.y] = p;
                 instance.config.pos[p - 1] = dst;
                 LB_temp = instance.LB2a(dir);
@@ -950,16 +915,11 @@ int bb2a(Instance &instance, int UB_cur, Direction dir, clock_t start, int &T, i
         // 下側からの積み替え
         for (dst.x = 0; dst.x < STACK; dst.x++)
         {
-            if (!instance.config.block[dst.x][0])
+            if (!instance.config.block[dst.x][0] && !(dir == Low && src.x == dst.x))
             {
                 int LB_temp = 0;
                 while (!instance.config.block[dst.x][dst.y + 1] && (dst.y < TIER - 1))
                     dst.y++;
-                if ((src.x == dst.x) && (src.y == dst.y))
-                {
-                    dst.y = 0;
-                    continue;
-                }
                 instance.config.block[dst.x][dst.y] = p;
                 instance.config.pos[p - 1] = dst;
                 LB_temp = instance.LB2a(dir);
@@ -1189,15 +1149,10 @@ int bb3(Instance &instance, int UB_cur, Direction dir, clock_t start, int &T, in
             // 上側からの積み替え
             for (dst.x = 0; dst.x < STACK; dst.x++)
             {
-                if (!instance.config.block[dst.x][TIER - 1])
+                if (!instance.config.block[dst.x][TIER - 1] && !(src_vec[i].dir == Upp && src.x == dst.x))
                 {
                     while (!instance.config.block[dst.x][dst.y - 1] && (dst.y > 0))
                         dst.y--;
-                    if ((src.x == dst.x) && (src.y == dst.y))
-                    {
-                        dst.y = TIER - 1;
-                        continue;
-                    }
                     if (src_vec[i].dir == Right && src.y == dst.y && instance.config.pos[instance.config.priority - 1].x < dst.x)
                     {
                         dst.y = TIER - 1;
@@ -1218,15 +1173,10 @@ int bb3(Instance &instance, int UB_cur, Direction dir, clock_t start, int &T, in
             // 右側からの積み替え
             for (dst.y = 0; dst.y < TIER; dst.y++)
             {
-                if (!instance.config.block[STACK - 1][dst.y])
+                if (!instance.config.block[STACK - 1][dst.y] && !(src_vec[i].dir == Right && src.y == dst.y))
                 {
                     while (!instance.config.block[dst.x - 1][dst.y] && (dst.x > 0))
                         dst.x--;
-                    if ((src.y == dst.y) && (src.x == dst.x))
-                    {
-                        dst.x = STACK - 1;
-                        continue;
-                    }
                     if (dir == Upp && src.x == dst.x && instance.config.pos[instance.config.priority - 1].y < dst.y)
                     {
                         dst.x = STACK - 1;
@@ -1252,15 +1202,10 @@ int bb3(Instance &instance, int UB_cur, Direction dir, clock_t start, int &T, in
             // 下側からの積み替え
             for (dst.x = 0; dst.x < STACK; dst.x++)
             {
-                if (!instance.config.block[dst.x][0])
+                if (!instance.config.block[dst.x][0] && !(src_vec[i].dir == Low && src.x == dst.x))
                 {
                     while (!instance.config.block[dst.x][dst.y + 1] && (dst.y < TIER - 1))
                         dst.y++;
-                    if ((src.x == dst.x) && (src.y == dst.y))
-                    {
-                        dst.y = 0;
-                        continue;
-                    }
                     if (dir == Right && src.y == dst.y && instance.config.pos[instance.config.priority - 1].x < dst.x)
                     {
                         dst.y = 0;
@@ -1398,15 +1343,10 @@ int bb3(Instance &instance, int UB_cur, Direction dir, clock_t start, int &T, in
         // 上側からの積み替え
         for (dst.x = 0; dst.x < STACK; dst.x++)
         {
-            if (!instance.config.block[dst.x][TIER - 1])
+            if (!instance.config.block[dst.x][TIER - 1] && !(dir == Upp && src.x == dst.x))
             {
                 while (!instance.config.block[dst.x][dst.y - 1] && (dst.y > 0))
                     dst.y--;
-                if ((src.x == dst.x) && (src.y == dst.y))
-                {
-                    dst.y = TIER - 1;
-                    continue;
-                }
                 if (dir == Right && src.y == dst.y && instance.config.pos[instance.config.priority - 1].x < dst.x)
                 {
                     dst.y = TIER - 1;
@@ -1427,15 +1367,10 @@ int bb3(Instance &instance, int UB_cur, Direction dir, clock_t start, int &T, in
         // 右側からの積み替え
         for (dst.y = 0; dst.y < TIER; dst.y++)
         {
-            if (!instance.config.block[STACK - 1][dst.y])
+            if (!instance.config.block[STACK - 1][dst.y] && !(dir == Right && src.y == dst.y))
             {
                 while (!instance.config.block[dst.x - 1][dst.y] && (dst.x > 0))
                     dst.x--;
-                if ((src.y == dst.y) && (src.x == dst.x))
-                {
-                    dst.x = STACK - 1;
-                    continue;
-                }
                 if (dir == Upp && src.x == dst.x && instance.config.pos[instance.config.priority - 1].y < dst.y)
                 {
                     dst.x = STACK - 1;
@@ -1461,15 +1396,10 @@ int bb3(Instance &instance, int UB_cur, Direction dir, clock_t start, int &T, in
         // 下側からの積み替え
         for (dst.x = 0; dst.x < STACK; dst.x++)
         {
-            if (!instance.config.block[dst.x][0])
+            if (!instance.config.block[dst.x][0] && !(dir == Low && src.x == dst.x))
             {
                 while (!instance.config.block[dst.x][dst.y + 1] && (dst.y < TIER - 1))
                     dst.y++;
-                if ((src.x == dst.x) && (src.y == dst.y))
-                {
-                    dst.y = 0;
-                    continue;
-                }
                 if (dir == Right && src.y == dst.y && instance.config.pos[instance.config.priority - 1].x < dst.x)
                 {
                     dst.y = 0;
@@ -1728,15 +1658,10 @@ int bb4(Instance &instance, int UB_cur, Direction dir, clock_t start, int &T, in
             // 上側からの積み替え
             for (dst.x = 0; dst.x < STACK; dst.x++)
             {
-                if (!instance.config.block[dst.x][TIER - 1])
+                if (!instance.config.block[dst.x][TIER - 1] && !(src_vec[i].dir == Upp && src.x == dst.x))
                 {
                     while (!instance.config.block[dst.x][dst.y - 1] && (dst.y > 0))
                         dst.y--;
-                    if ((src.x == dst.x) && (src.y == dst.y))
-                    {
-                        dst.y = TIER - 1;
-                        continue;
-                    }
                     if (src_vec[i].dir == Right && src.y == dst.y && instance.config.pos[instance.config.priority - 1].x < dst.x)
                     {
                         dst.y = TIER - 1;
@@ -1762,15 +1687,10 @@ int bb4(Instance &instance, int UB_cur, Direction dir, clock_t start, int &T, in
             // 右側からの積み替え
             for (dst.y = 0; dst.y < TIER; dst.y++)
             {
-                if (!instance.config.block[STACK - 1][dst.y])
+                if (!instance.config.block[STACK - 1][dst.y] && !(src_vec[i].dir == Right && src.y == dst.y))
                 {
                     while (!instance.config.block[dst.x - 1][dst.y] && (dst.x > 0))
                         dst.x--;
-                    if ((src.y == dst.y) && (src.x == dst.x))
-                    {
-                        dst.x = STACK - 1;
-                        continue;
-                    }
                     if (src_vec[i].dir == Upp && src.x == dst.x && instance.config.pos[instance.config.priority - 1].y < dst.y)
                     {
                         dst.x = STACK - 1;
@@ -1796,15 +1716,10 @@ int bb4(Instance &instance, int UB_cur, Direction dir, clock_t start, int &T, in
             // 下側からの積み替え
             for (dst.x = 0; dst.x < STACK; dst.x++)
             {
-                if (!instance.config.block[dst.x][0])
+                if (!instance.config.block[dst.x][0] && !(src_vec[i].dir == Low && src.x == dst.x))
                 {
                     while (!instance.config.block[dst.x][dst.y + 1] && (dst.y < TIER - 1))
                         dst.y++;
-                    if ((src.x == dst.x) && (src.y == dst.y))
-                    {
-                        dst.y = 0;
-                        continue;
-                    }
                     if (src_vec[i].dir == Right && src.y == dst.y && instance.config.pos[instance.config.priority - 1].x < dst.x)
                     {
                         dst.y = 0;
@@ -1830,15 +1745,10 @@ int bb4(Instance &instance, int UB_cur, Direction dir, clock_t start, int &T, in
             // 左側からの積み替え
             for (dst.y = 0; dst.y < TIER; dst.y++)
             {
-                if (!instance.config.block[0][dst.y])
+                if (!instance.config.block[0][dst.y] && !(src_vec[i].dir == Left && src.y == dst.y))
                 {
                     while (!instance.config.block[dst.x + 1][dst.y] && (dst.x < STACK - 1))
                         dst.x++;
-                    if ((src.y == dst.y) && (src.x == dst.x))
-                    {
-                        dst.x = 0;
-                        continue;
-                    }
                     if (src_vec[i].dir == Upp && src.x == dst.x && instance.config.pos[instance.config.priority - 1].y < dst.y)
                     {
                         dst.x = 0;
@@ -1995,15 +1905,10 @@ int bb4(Instance &instance, int UB_cur, Direction dir, clock_t start, int &T, in
         // 上側からの積み替え
         for (dst.x = 0; dst.x < STACK; dst.x++)
         {
-            if (!instance.config.block[dst.x][TIER - 1])
+            if (!instance.config.block[dst.x][TIER - 1] && !(dir == Upp && src.x == dst.x))
             {
                 while (!instance.config.block[dst.x][dst.y - 1] && (dst.y > 0))
                     dst.y--;
-                if ((src.x == dst.x) && (src.y == dst.y))
-                {
-                    dst.y = TIER - 1;
-                    continue;
-                }
                 if (dir == Right && src.y == dst.y && instance.config.pos[instance.config.priority - 1].x < dst.x)
                 {
                     dst.y = TIER - 1;
@@ -2029,15 +1934,10 @@ int bb4(Instance &instance, int UB_cur, Direction dir, clock_t start, int &T, in
         // 右側からの積み替え
         for (dst.y = 0; dst.y < TIER; dst.y++)
         {
-            if (!instance.config.block[STACK - 1][dst.y])
+            if (!instance.config.block[STACK - 1][dst.y] && !(dir == Right && src.y == dst.y))
             {
                 while (!instance.config.block[dst.x - 1][dst.y] && (dst.x > 0))
                     dst.x--;
-                if ((src.y == dst.y) && (src.x == dst.x))
-                {
-                    dst.x = STACK - 1;
-                    continue;
-                }
                 if (dir == Upp && src.x == dst.x && instance.config.pos[instance.config.priority - 1].y < dst.y)
                 {
                     dst.x = STACK - 1;
@@ -2063,15 +1963,10 @@ int bb4(Instance &instance, int UB_cur, Direction dir, clock_t start, int &T, in
         // 下側からの積み替え
         for (dst.x = 0; dst.x < STACK; dst.x++)
         {
-            if (!instance.config.block[dst.x][0])
+            if (!instance.config.block[dst.x][0] && !(dir == Low && src.x == dst.x))
             {
                 while (!instance.config.block[dst.x][dst.y + 1] && (dst.y < TIER - 1))
                     dst.y++;
-                if ((src.x == dst.x) && (src.y == dst.y))
-                {
-                    dst.y = 0;
-                    continue;
-                }
                 if (dir == Right && src.y == dst.y && instance.config.pos[instance.config.priority - 1].x < dst.x)
                 {
                     dst.y = 0;
@@ -2097,15 +1992,10 @@ int bb4(Instance &instance, int UB_cur, Direction dir, clock_t start, int &T, in
         // 左側からの積み替え
         for (dst.y = 0; dst.y < TIER; dst.y++)
         {
-            if (!instance.config.block[0][dst.y])
+            if (!instance.config.block[0][dst.y] && !(dir == Left && src.y == dst.y))
             {
                 while (!instance.config.block[dst.x + 1][dst.y] && (dst.x < STACK - 1))
                     dst.x++;
-                if ((src.y == dst.y) && (src.x == dst.x))
-                {
-                    dst.x = 0;
-                    continue;
-                }
                 if (dir == Upp && src.x == dst.x && instance.config.pos[instance.config.priority - 1].y < dst.y)
                 {
                     dst.x = 0;

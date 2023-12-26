@@ -9,7 +9,7 @@
 #define TEST 1
 #define UB_TEST 1
 
-#define BB 3
+#define BB 2
 
 using namespace std;
 
