@@ -1379,9 +1379,6 @@ public:
                                         dst.x = i;
                                         dst.y = dst_y;
                                     }
-
-                                    Point src = {config_temp.pos[n - 1].x, j};
-                                    config_temp.relocate(src, dst);
                                 }
                             }
                             // 左方向
